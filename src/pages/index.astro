@@ -1,17 +1,115 @@
 ---
+// src/pages/index.astro
+// Home-Seite — alle Sektionen in horizontalem Layout.
 
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navigation from '../components/Navigation.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import ShowcaseCard from '../components/ShowcaseCard.astro';
+import ShowcaseModal from '../components/ShowcaseModal.astro';
+import Skills from '../components/Skills.astro';
+import Contact from '../components/Contact.astro';
+
+import { getCollection } from 'astro:content';
+
+interface Props {
+  initialModalSlug?: string;
+}
+
+const { initialModalSlug } = Astro.props;
+
+// Showcases laden, nach order-Feld sortieren
+const showcases = (await getCollection('showcases'))
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout initialModalSlug={initialModalSlug}>
+
+  <Navigation />
+
+  <!-- Scroll-Container: GSAP pinnt diesen und scrollt .horizontal-track -->
+  <div class="scroll-container">
+    <div class="horizontal-track">
+
+      <Hero />
+      <About />
+
+      <!-- Work-Sektion mit 4 Showcase-Karten -->
+      <section class="section work" id="work" aria-label="Work">
+        <div class="work__inner">
+          <header class="work__header">
+            <span class="work__label">Selected Work</span>
+            <h2 class="work__heading">Case Studies</h2>
+          </header>
+          <div class="work__grid">
+            {showcases.map((showcase) => (
+              <ShowcaseCard showcase={showcase} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Skills />
+      <Contact />
+
+    </div>
+  </div>
+
+  <!-- Modal liegt außerhalb des Scroll-Containers -->
+  <ShowcaseModal />
+
+</BaseLayout>
+
+<!-- Scripts werden am Ende geladen (is:inline deferred) -->
+<script>
+  import '../scripts/scroll';
+  import '../scripts/modal';
+  import '../scripts/navigation';
+</script>
+
+<style>
+  .work {
+    display: flex;
+    align-items: center;
+    /* Work-Sektion ist breiter als 100vw — Platz für 4 Karten nebeneinander -->
+    width: calc(4 * 50vw);   /* Anpassen je nach finalem Layout */
+  }
+
+  .work__inner {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .work__label {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .work__heading {
+    font-size: var(--size-3xl);
+    font-weight: 200;
+    margin-top: var(--space-2);
+  }
+
+  .work__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 40vw);
+    gap: var(--space-5);
+  }
+
+  @media (max-width: 768px) {
+    .work {
+      width: 100vw;
+    }
+
+    .work__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

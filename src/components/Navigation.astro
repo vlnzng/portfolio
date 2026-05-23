@@ -1,0 +1,131 @@
+---
+// src/components/Navigation.astro
+// Section-Indicator (Punkte), Pfeil-Buttons, Wordmark-Logo oben links.
+---
+
+<nav class="nav" aria-label="Main navigation">
+
+  <!-- Wordmark oben links -->
+  <a href="/" class="nav__wordmark" aria-label="Valentin Lenzing — Home">
+    <!-- SVG Wordmark wird hier eingesetzt sobald vorhanden -->
+    <span class="nav__wordmark-text">VL</span>
+  </a>
+
+  <!-- Section Indicator — Punkte rechts -->
+  <ol class="nav__indicator" role="list" aria-label="Page sections">
+    <li>
+      <a href="#hero" class="nav__dot nav__dot--active" aria-label="Hero" data-section="hero">
+        <span class="sr-only">Hero</span>
+      </a>
+    </li>
+    <li>
+      <a href="#about" class="nav__dot" aria-label="About" data-section="about">
+        <span class="sr-only">About</span>
+      </a>
+    </li>
+    <li>
+      <a href="#work" class="nav__dot" aria-label="Work" data-section="work">
+        <span class="sr-only">Work</span>
+      </a>
+    </li>
+    <li>
+      <a href="#skills" class="nav__dot" aria-label="Skills" data-section="skills">
+        <span class="sr-only">Skills</span>
+      </a>
+    </li>
+    <li>
+      <a href="#contact" class="nav__dot" aria-label="Contact" data-section="contact">
+        <span class="sr-only">Contact</span>
+      </a>
+    </li>
+  </ol>
+
+</nav>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-nav);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-5);
+    pointer-events: none;   /* Nav selbst ist nicht klickbar, nur Kinder */
+  }
+
+  .nav__wordmark,
+  .nav__indicator {
+    pointer-events: auto;
+  }
+
+  .nav__wordmark {
+    font-family: var(--font-display);
+    font-size: var(--size-lg);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .nav__wordmark:hover {
+    text-decoration: none;
+  }
+
+  .nav__indicator {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-2);
+  }
+
+  .nav__dot {
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-muted);
+    transition: background-color var(--duration-fast) var(--ease-out),
+                transform var(--duration-fast) var(--ease-out);
+  }
+
+  .nav__dot:hover,
+  .nav__dot--active {
+    background-color: var(--color-text);
+    transform: scale(1.5);
+    text-decoration: none;
+  }
+
+  /* Screen-reader-only Text */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Mobile: Indicator unten zentriert */
+  @media (max-width: 768px) {
+    .nav {
+      bottom: var(--space-4);
+      top: auto;
+      justify-content: center;
+    }
+
+    .nav__wordmark {
+      display: none;
+    }
+
+    .nav__indicator {
+      flex-direction: row;
+    }
+  }
+</style>

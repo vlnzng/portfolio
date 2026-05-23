@@ -1,0 +1,19 @@
+---
+// src/pages/work/[slug].astro
+// Dynamische Route für direkte Modal-URL-Aufrufe: /work/fair-monetisation
+// Rendert die Home-Seite mit dem Modal initial geöffnet.
+
+import { getCollection } from 'astro:content';
+import HomePage from '../index.astro';
+
+export async function getStaticPaths() {
+  const showcases = await getCollection('showcases');
+  return showcases.map((showcase) => ({
+    params: { slug: showcase.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+---
+
+<HomePage initialModalSlug={slug} />

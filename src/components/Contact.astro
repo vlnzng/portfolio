@@ -1,0 +1,140 @@
+---
+// src/components/Contact.astro
+// Letzte Sektion. CTA, Links, Impressum-Hinweis.
+---
+
+<section class="section contact" id="contact" aria-label="Contact">
+
+  <div class="contact__inner">
+
+    <header class="contact__header">
+      <span class="contact__label">Contact</span>
+      <h2 class="contact__heading">
+        Let's work<br />together
+      </h2>
+    </header>
+
+    <div class="contact__links">
+      <a
+        href="mailto:valentin.lenzing@gmail.com"
+        class="contact__link contact__link--primary"
+      >
+        valentin.lenzing@gmail.com
+      </a>
+
+      <a
+        href="https://linkedin.com/in/valentin-lenzing"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="contact__link"
+      >
+        LinkedIn ↗
+      </a>
+
+      <a
+        href="https://github.com/vlnzng"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="contact__link"
+      >
+        GitHub ↗
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="contact__footer">
+    <p class="contact__legal">
+      &copy; {new Date().getFullYear()} Valentin Lenzing
+    </p>
+    <nav class="contact__legal-nav" aria-label="Legal">
+      <a href="/imprint">Imprint</a>
+      <a href="/privacy">Privacy</a>
+    </nav>
+  </footer>
+
+</section>
+
+<style>
+  .contact {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: var(--space-5);
+  }
+
+  .contact__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .contact__label {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .contact__heading {
+    font-size: var(--size-display);
+    font-weight: 200;
+    line-height: 0.95;
+    letter-spacing: var(--tracking-tight);
+    margin-top: var(--space-3);
+  }
+
+  .contact__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .contact__link {
+    font-size: var(--size-lg);
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-3);
+    transition: color var(--duration-fast) var(--ease-out),
+                border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .contact__link--primary {
+    font-size: var(--size-xl);
+    border-color: var(--color-text);
+  }
+
+  .contact__link:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .contact__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--color-muted);
+  }
+
+  .contact__legal-nav {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .contact__legal-nav a {
+    color: var(--color-muted);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .contact__legal-nav a:hover {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+</style>

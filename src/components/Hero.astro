@@ -1,0 +1,112 @@
+---
+// src/components/Hero.astro
+// Erste Sektion. Wordmark + Titel + kurzer Pitch.
+// Der Hero-Übergangs-Effekt (vertikal → horizontal) wird via GSAP in scroll.ts gesteuert.
+---
+
+<section class="section hero" id="hero" aria-label="Hero">
+
+  <div class="hero__content">
+
+    <p class="hero__eyebrow">UX &amp; Product Designer</p>
+
+    <h1 class="hero__headline">
+      <!-- Finaler Text folgt aus Konzept-Chat -->
+      Valentin<br />Lenzing
+    </h1>
+
+    <p class="hero__pitch">
+      <!-- Finaler Pitch-Text folgt -->
+      Designing for gaming and digital products —
+      research-informed, interaction-focused.
+    </p>
+
+  </div>
+
+  <!-- Scroll-Hinweis — verschwindet sobald gescrollt wird -->
+  <div class="hero__scroll-hint" aria-hidden="true">
+    <span>Scroll</span>
+    <div class="hero__scroll-line"></div>
+  </div>
+
+</section>
+
+<style>
+  .hero {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+
+  .hero__content {
+    max-width: 800px;
+  }
+
+  .hero__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .hero__headline {
+    font-size: var(--size-display);
+    font-weight: 200;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-5);
+  }
+
+  .hero__pitch {
+    font-size: var(--size-lg);
+    line-height: var(--leading-snug);
+    color: var(--color-muted);
+    max-width: 40ch;
+  }
+
+  .hero__scroll-hint {
+    position: absolute;
+    bottom: var(--space-5);
+    right: var(--space-5);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-muted);
+    writing-mode: vertical-rl;
+  }
+
+  .hero__scroll-line {
+    width: 1px;
+    height: 60px;
+    background: currentColor;
+    transform-origin: top;
+    animation: scroll-line 1.5s ease-in-out infinite;
+  }
+
+  @keyframes scroll-line {
+    0%   { transform: scaleY(0); opacity: 0; }
+    50%  { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(0); opacity: 0; }
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: calc(var(--section-padding) * 2);
+    }
+
+    .hero__scroll-hint {
+      writing-mode: horizontal-tb;
+      right: auto;
+      bottom: var(--space-6);
+      left: var(--section-padding);
+    }
+  }
+</style>

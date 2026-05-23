@@ -1,0 +1,99 @@
+---
+// src/components/About.astro
+// Persönliche Sektion. Text + evtl. Bild.
+---
+
+<section class="section about" id="about" aria-label="About">
+
+  <div class="about__inner">
+
+    <header class="about__header">
+      <span class="about__label">About</span>
+      <h2 class="about__heading">
+        <!-- Finaler Text folgt -->
+        Hi, I'm Valentin
+      </h2>
+    </header>
+
+    <div class="about__body">
+      <p class="about__text">
+        <!-- Finaler Bio-Text folgt aus Konzept-Chat -->
+        Born in Berlin, currently based in Brandenburg.
+        Master's degree in Digital Media — before that,
+        a Bachelor's in Social Media Systems.
+      </p>
+      <p class="about__text">
+        I design for gaming and digital products: research-informed,
+        interaction-focused, with enough frontend knowledge to
+        collaborate closely with engineers.
+      </p>
+    </div>
+
+    <footer class="about__footer">
+      <a href="#work" class="about__cta">
+        See my work
+        <span aria-hidden="true">→</span>
+      </a>
+    </footer>
+
+  </div>
+
+</section>
+
+<style>
+  .about {
+    display: flex;
+    align-items: center;
+  }
+
+  .about__inner {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--space-6);
+    max-width: 600px;
+  }
+
+  .about__label {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .about__heading {
+    font-size: var(--size-3xl);
+    font-weight: 200;
+    margin-top: var(--space-2);
+  }
+
+  .about__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .about__text {
+    font-size: var(--size-lg);
+    line-height: var(--leading-loose);
+    color: var(--color-muted);
+  }
+
+  .about__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--size-sm);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text);
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+    transition: gap var(--duration-fast) var(--ease-out);
+  }
+
+  .about__cta:hover {
+    gap: var(--space-3);
+    text-decoration: none;
+  }
+</style>

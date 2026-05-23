@@ -1,0 +1,134 @@
+---
+// src/components/ShowcaseModal.astro
+// Fullscreen Overlay für die Detail-Ansicht eines Showcases.
+// Wird per JS gesteuert (modal.ts), nicht direkt per Astro-Props.
+---
+
+<div
+  class="modal"
+  id="showcase-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+  aria-hidden="true"
+>
+
+  <!-- Backdrop — Klick schließt Modal -->
+  <div class="modal__backdrop" id="modal-backdrop" aria-hidden="true"></div>
+
+  <div class="modal__panel">
+
+    <!-- Header -->
+    <header class="modal__header">
+      <div class="modal__meta" id="modal-meta">
+        <!-- Wird per JS befüllt -->
+      </div>
+      <button
+        class="modal__close"
+        id="modal-close"
+        aria-label="Close case study"
+        type="button"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </header>
+
+    <!-- Content-Bereich — scrollbar -->
+    <div class="modal__body" id="modal-body" tabindex="-1">
+      <!-- MDX-Inhalt wird hier per JS eingesetzt -->
+    </div>
+
+    <!-- Footer mit externem Link falls vorhanden -->
+    <footer class="modal__footer" id="modal-footer">
+      <!-- Wird per JS befüllt -->
+    </footer>
+
+  </div>
+
+</div>
+
+<style>
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    display: grid;
+    place-items: center;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .modal[aria-hidden="false"] {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgb(from var(--color-text) r g b / 0.8);
+    opacity: 0;
+    transition: opacity var(--duration-slow) var(--ease-out);
+    cursor: pointer;
+  }
+
+  .modal[aria-hidden="false"] .modal__backdrop {
+    opacity: 1;
+  }
+
+  .modal__panel {
+    position: relative;
+    z-index: 1;
+    width: min(900px, 90vw);
+    max-height: 90vh;
+    background-color: var(--color-bg);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+    transform: translateY(2rem);
+    opacity: 0;
+    transition:
+      transform var(--duration-slow) var(--ease-out),
+      opacity var(--duration-slow) var(--ease-out);
+  }
+
+  .modal[aria-hidden="false"] .modal__panel {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .modal__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: var(--size-2xl);
+    color: var(--color-text);
+    line-height: 1;
+    padding: var(--space-1);
+    margin: calc(-1 * var(--space-1));
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .modal__close:hover {
+    color: var(--color-accent);
+  }
+
+  .modal__body {
+    overflow-y: auto;
+    padding: var(--space-6) var(--space-5);
+    overscroll-behavior: contain;
+  }
+
+  .modal__footer {
+    padding: var(--space-4) var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+</style>
