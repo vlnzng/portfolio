@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-label="ToolSynergy visual placeholder">
+  <rect width="1200" height="900" fill="#1A1816"/>
+  <rect x="100" y="100" width="1000" height="700" fill="#252220" stroke="#3A3631"/>
+  <circle cx="310" cy="300" r="100" fill="#D9B36C" fill-opacity=".18"/>
+  <rect x="500" y="210" width="380" height="70" fill="none" stroke="#D9B36C" stroke-opacity=".55"/>
+  <rect x="500" y="330" width="520" height="70" fill="none" stroke="#EDE6D9" stroke-opacity=".16"/>
+  <rect x="180" y="520" width="190" height="190" fill="none" stroke="#EDE6D9" stroke-opacity=".18"/>
+  <rect x="425" y="520" width="190" height="190" fill="none" stroke="#EDE6D9" stroke-opacity=".18"/>
+  <rect x="670" y="520" width="190" height="190" fill="none" stroke="#EDE6D9" stroke-opacity=".18"/>
+  <text x="500" y="705" fill="#EDE6D9" font-family="Georgia, serif" font-size="62" font-weight="700">ToolSynergy</text>
+</svg>

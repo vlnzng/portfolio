@@ -35,8 +35,7 @@ const phases = [
 
   <div class="process__inner">
     <header class="process__header">
-      <p class="process__label">Process</p>
-      <h2>From fuzzy questions to working interfaces.</h2>
+      <h2>Process</h2>
     </header>
 
     <div class="process__grid">
@@ -44,10 +43,17 @@ const phases = [
         <article class="process__phase">
           <p class="process__phase-kicker">{phase.subtitle}</p>
           <h3>{phase.title}</h3>
-          <ul role="list" class="process__items">
-            {phase.items.map((item) => <li>{item}</li>)}
-          </ul>
-          <p class="process__tools">{phase.tools.join(' · ')}</p>
+          <div class="process__items">
+            {phase.items.map((item) => <p>{item}</p>)}
+          </div>
+          <p class="process__tools">
+            {phase.tools.map((tool, index) => (
+              <>
+                <span>{tool}</span>
+                {index < phase.tools.length - 1 && <span aria-hidden="true"> &middot; </span>}
+              </>
+            ))}
+          </p>
         </article>
       ))}
     </div>
@@ -73,19 +79,8 @@ const phases = [
     width: 100%;
   }
 
-  .process__header {
-    max-width: 46rem;
-  }
-
-  .process__label {
-    margin-bottom: var(--space-3);
-    font-size: var(--size-xs);
-    text-transform: uppercase;
-    color: var(--color-accent);
-  }
-
   .process__header h2 {
-    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-size: clamp(3rem, 7vw, 7rem);
     font-weight: 700;
   }
 
@@ -101,7 +96,7 @@ const phases = [
     gap: var(--space-4);
     min-height: 28rem;
     padding: var(--space-5);
-    background: rgb(37 34 32 / 0.74);
+    background: rgb(37 34 32 / 0.72);
     border: 1px solid var(--color-border);
     transition:
       border-color var(--duration-fast) var(--ease-out),
@@ -127,8 +122,11 @@ const phases = [
   .process__items {
     display: grid;
     gap: var(--space-3);
-    list-style: none;
     color: var(--color-text);
+  }
+
+  .process__items p {
+    line-height: 1.15;
   }
 
   .process__tools {
@@ -149,14 +147,14 @@ const phases = [
   .process__diamonds {
     position: absolute;
     inset: 0;
-    opacity: 0.16;
+    opacity: 0.22;
     pointer-events: none;
   }
 
   .process__diamonds span {
     position: absolute;
-    top: 18%;
-    width: 32vw;
+    top: 20%;
+    width: 31vw;
     aspect-ratio: 1;
     border: 1px solid var(--color-accent);
     transform: rotate(45deg);

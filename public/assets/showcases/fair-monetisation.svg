@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-label="Fair Monetisation visual placeholder">
+  <rect width="1200" height="900" fill="#1A1816"/>
+  <rect x="90" y="90" width="1020" height="720" fill="#252220" stroke="#3A3631"/>
+  <path d="M180 650h840M180 520h640M180 390h760" stroke="#D9B36C" stroke-opacity=".55" stroke-width="2"/>
+  <rect x="210" y="160" width="260" height="160" fill="none" stroke="#EDE6D9" stroke-opacity=".18"/>
+  <rect x="520" y="160" width="260" height="160" fill="none" stroke="#EDE6D9" stroke-opacity=".18"/>
+  <rect x="830" y="160" width="160" height="160" fill="none" stroke="#EDE6D9" stroke-opacity=".18"/>
+  <circle cx="340" cy="240" r="46" fill="#D9B36C" fill-opacity=".2"/>
+  <circle cx="650" cy="240" r="46" fill="#D9B36C" fill-opacity=".12"/>
+  <circle cx="910" cy="240" r="46" fill="#D9B36C" fill-opacity=".08"/>
+  <text x="180" y="735" fill="#EDE6D9" font-family="Georgia, serif" font-size="54" font-weight="700">Fair Monetisation</text>
+</svg>

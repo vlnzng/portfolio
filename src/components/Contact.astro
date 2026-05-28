@@ -3,9 +3,15 @@ const encodedMail = 'hello&#64;valentin-lenzing.de';
 ---
 
 <section class="section contact" id="contact" aria-label="Contact">
-  <div class="contact__visual" aria-hidden="true">
-    <span>VL</span>
-  </div>
+  <figure class="contact__visual" aria-label="Desk or secondary portrait image">
+    <img
+      src="/images/contact-visual.webp"
+      alt=""
+      loading="lazy"
+      decoding="async"
+      onerror="this.hidden=true"
+    />
+  </figure>
 
   <p class="contact__line">
     Get in touch,<br />
@@ -15,7 +21,13 @@ const encodedMail = 'hello&#64;valentin-lenzing.de';
   </p>
 
   <div class="contact__panel">
-    <a class="contact__mail" href="mailto:hello@valentin-lenzing.de">
+    <a
+      class="contact__mail"
+      href="#contact"
+      data-mail-link
+      data-mail-user="hello"
+      data-mail-domain="valentin-lenzing.de"
+    >
       <span set:html={encodedMail}></span>
     </a>
 
@@ -41,6 +53,14 @@ const encodedMail = 'hello&#64;valentin-lenzing.de';
   </nav>
 </section>
 
+<script>
+  const mailLink = document.querySelector<HTMLAnchorElement>('[data-mail-link]');
+  if (mailLink) {
+    const address = `${mailLink.dataset.mailUser}@${mailLink.dataset.mailDomain}`;
+    mailLink.href = `mailto:${address}`;
+  }
+</script>
+
 <style>
   .contact {
     display: grid;
@@ -53,19 +73,19 @@ const encodedMail = 'hello&#64;valentin-lenzing.de';
   .contact__visual {
     align-self: stretch;
     min-height: min(68vh, 45rem);
-    display: grid;
-    place-items: center;
+    overflow: hidden;
     background:
       linear-gradient(160deg, rgb(217 179 108 / 0.18), transparent 50%),
-      var(--color-surface);
+      linear-gradient(180deg, var(--color-surface), #151311);
     border: 1px solid var(--color-border);
   }
 
-  .contact__visual span {
-    font-family: var(--font-display);
-    font-size: clamp(7rem, 14vw, 15rem);
-    font-weight: 700;
-    color: rgb(217 179 108 / 0.32);
+  .contact__visual img {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    display: block;
+    object-fit: cover;
   }
 
   .contact__line {
@@ -130,11 +150,11 @@ const encodedMail = 'hello&#64;valentin-lenzing.de';
   .contact__legal {
     position: absolute;
     right: var(--space-4);
-    bottom: var(--section-padding);
+    top: 50%;
     display: flex;
     gap: var(--space-4);
-    transform: rotate(90deg);
-    transform-origin: right bottom;
+    writing-mode: vertical-rl;
+    transform: translateY(-50%);
     font-size: var(--size-xs);
     color: var(--color-muted);
   }
@@ -159,6 +179,9 @@ const encodedMail = 'hello&#64;valentin-lenzing.de';
     .contact__legal {
       right: auto;
       left: var(--section-padding);
+      top: auto;
+      bottom: var(--space-4);
+      writing-mode: horizontal-tb;
       transform: none;
     }
   }

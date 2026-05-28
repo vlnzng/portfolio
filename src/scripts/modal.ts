@@ -45,7 +45,7 @@ function openModal(slug: string): void {
   ].filter(Boolean);
 
   modalMeta.innerHTML = `
-    <p class="modal__eyebrow">${escapeHtml(data.tags.join(' · '))}</p>
+    <p class="modal__eyebrow">${data.tags.map((tag) => escapeHtml(tag)).join(' &middot; ')}</p>
     <h2 id="modal-title" class="modal__title">${escapeHtml(data.title)}</h2>
     <p class="modal__subtitle">${escapeHtml(data.subtitle)}</p>
     <div class="modal__meta-bar">${metaItems.map((item) => `<span>${escapeHtml(item)}</span>`).join('')}</div>

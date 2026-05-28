@@ -50,10 +50,7 @@ const showcaseData = showcases.map((showcase) => ({
 
       <section class="section work" id="work" aria-label="Work">
         <div class="work__inner">
-          <header class="work__header">
-            <p class="work__label">Selected Work</p>
-            <h2>Four ways of thinking through products.</h2>
-          </header>
+          <h2 class="sr-only">Work</h2>
 
           <div class="work__grid">
             {showcases.map((showcase) => <ShowcaseCard showcase={showcase} />)}
@@ -97,23 +94,7 @@ const showcaseData = showcases.map((showcase) => ({
   .work__inner {
     width: 100%;
     display: grid;
-    gap: var(--space-7);
-  }
-
-  .work__header {
-    max-width: 54rem;
-  }
-
-  .work__label {
-    margin-bottom: var(--space-3);
-    font-size: var(--size-xs);
-    text-transform: uppercase;
-    color: var(--color-accent);
-  }
-
-  .work__header h2 {
-    font-size: clamp(2.5rem, 5vw, 5rem);
-    font-weight: 700;
+    gap: var(--space-5);
   }
 
   .work__grid {

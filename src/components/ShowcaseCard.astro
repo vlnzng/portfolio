@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { showcase } = Astro.props;
-const { title, subtitle, cardMeta, tags, order } = showcase.data;
+const { title, subtitle, cardMeta, tags, order, heroImage } = showcase.data;
 const slug = showcase.id.replace(/\.mdx$/, '').split('/').pop() ?? showcase.id;
 ---
 
@@ -18,17 +18,29 @@ const slug = showcase.id.replace(/\.mdx$/, '').split('/').pop() ?? showcase.id;
   aria-haspopup="dialog"
   aria-label={`Open case study: ${title}`}
 >
-  <div class="showcase-card__visual" aria-hidden="true">
-    <span class="showcase-card__number">{String(order).padStart(2, '0')}</span>
-  </div>
+  <figure class="showcase-card__media" aria-hidden="true">
+    <img src={heroImage} alt="" loading="lazy" decoding="async" onerror="this.hidden=true" />
+  </figure>
 
   <div class="showcase-card__content">
     <h3 class="showcase-card__title">{title}</h3>
     <p class="showcase-card__subtitle">{subtitle}</p>
-    <p class="showcase-card__meta">{cardMeta}</p>
-    <div class="showcase-card__tags" aria-label="Tags">
-      {tags.map((tag) => <span>{tag}</span>)}
-    </div>
+    <p class="showcase-card__meta">
+      {cardMeta.map((item, index) => (
+        <>
+          <span>{item}</span>
+          {index < cardMeta.length - 1 && <span aria-hidden="true"> &middot; </span>}
+        </>
+      ))}
+    </p>
+    <p class="showcase-card__tags" aria-label="Tags">
+      {tags.map((tag, index) => (
+        <>
+          <span>{tag}</span>
+          {index < tags.length - 1 && <span class="showcase-card__separator" aria-hidden="true">&middot;</span>}
+        </>
+      ))}
+    </p>
   </div>
 </article>
 
@@ -58,39 +70,42 @@ const slug = showcase.id.replace(/\.mdx$/, '').split('/').pop() ?? showcase.id;
     outline-offset: 4px;
   }
 
-  .showcase-card__visual {
+  .showcase-card__media {
     position: relative;
     min-height: 100%;
+    overflow: hidden;
     background:
-      linear-gradient(145deg, rgb(217 179 108 / 0.22), transparent 55%),
+      linear-gradient(145deg, rgb(217 179 108 / 0.18), transparent 55%),
       linear-gradient(180deg, #302b26, #141210);
     border-right: 1px solid var(--color-border);
   }
 
-  .showcase-card__visual::before,
-  .showcase-card__visual::after {
+  .showcase-card__media::before,
+  .showcase-card__media::after {
     content: "";
     position: absolute;
-    border: 1px solid rgb(237 230 217 / 0.16);
+    pointer-events: none;
   }
 
-  .showcase-card__visual::before {
-    inset: 16%;
+  .showcase-card__media::before {
+    inset: 15%;
+    border: 1px solid rgb(237 230 217 / 0.14);
   }
 
-  .showcase-card__visual::after {
-    inset: 32% 18%;
-    transform: rotate(45deg);
-  }
-
-  .showcase-card__number {
-    position: absolute;
+  .showcase-card__media::after {
     left: var(--space-4);
+    right: var(--space-4);
     bottom: var(--space-4);
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 6vw, 6rem);
-    font-weight: 700;
-    color: rgb(237 230 217 / 0.12);
+    height: 1px;
+    background: rgb(217 179 108 / 0.55);
+  }
+
+  .showcase-card__media img {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    display: block;
+    object-fit: cover;
   }
 
   .showcase-card__content {
@@ -127,14 +142,15 @@ const slug = showcase.id.replace(/\.mdx$/, '').split('/').pop() ?? showcase.id;
   .showcase-card__tags {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-2);
+    gap: 0 var(--space-2);
     padding-top: var(--space-4);
     border-top: 1px solid var(--color-border);
-  }
-
-  .showcase-card__tags span {
     font-size: var(--size-xs);
     color: var(--color-accent);
+  }
+
+  .showcase-card__separator {
+    color: var(--color-muted);
   }
 
   .showcase-card--2,
@@ -142,8 +158,8 @@ const slug = showcase.id.replace(/\.mdx$/, '').split('/').pop() ?? showcase.id;
     grid-template-columns: 1fr 45%;
   }
 
-  .showcase-card--2 .showcase-card__visual,
-  .showcase-card--4 .showcase-card__visual {
+  .showcase-card--2 .showcase-card__media,
+  .showcase-card--4 .showcase-card__media {
     order: 2;
     border-right: 0;
     border-left: 1px solid var(--color-border);
@@ -157,9 +173,9 @@ const slug = showcase.id.replace(/\.mdx$/, '').split('/').pop() ?? showcase.id;
       min-height: 0;
     }
 
-    .showcase-card__visual,
-    .showcase-card--2 .showcase-card__visual,
-    .showcase-card--4 .showcase-card__visual {
+    .showcase-card__media,
+    .showcase-card--2 .showcase-card__media,
+    .showcase-card--4 .showcase-card__media {
       order: 0;
       min-height: 14rem;
       border-left: 0;

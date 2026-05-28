@@ -2,10 +2,10 @@
 ---
 
 <section class="section hero" id="hero" aria-label="Hero">
-  <div class="hero__wordmark" data-hero-wordmark aria-hidden="true">
+  <h1 class="hero__wordmark" data-hero-wordmark>
     <span>Valentin</span>
     <span>Lenzing</span>
-  </div>
+  </h1>
 
   <div class="hero__copy" data-hero-copy>
     <p class="hero__role">UX &amp; Product Designer</p>
@@ -18,19 +18,23 @@
     </p>
   </div>
 
-  <figure class="hero__portrait" aria-label="Portrait placeholder">
-    <div class="hero__portrait-inner">
-      <span>VL</span>
-    </div>
+  <figure class="hero__portrait" aria-label="Portrait of Valentin Lenzing">
+    <img
+      src="/images/valentin-lenzing-portrait.webp"
+      alt=""
+      loading="eager"
+      decoding="async"
+      onerror="this.hidden=true"
+    />
   </figure>
 
-  <div class="hero__arrow" data-hero-arrow aria-hidden="true">↓</div>
+  <div class="hero__arrow" data-hero-arrow aria-hidden="true">&darr;</div>
 </section>
 
 <style>
   .hero {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(16rem, 33vw);
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 34vw);
     align-items: end;
     gap: var(--space-7);
     padding-top: calc(var(--section-padding) * 1.5);
@@ -41,14 +45,19 @@
     top: clamp(5rem, 11vh, 8rem);
     left: var(--section-padding);
     z-index: 2;
-    display: flex;
-    flex-direction: column;
+    display: grid;
     font-family: var(--font-display);
     font-size: clamp(4rem, 11vw, 10.5rem);
     font-weight: 700;
     line-height: 0.86;
+    letter-spacing: 0;
     color: var(--color-text);
     transform-origin: left top;
+  }
+
+  .hero__wordmark span:last-child {
+    margin-top: -0.09em;
+    margin-left: clamp(2rem, 7vw, 7rem);
   }
 
   .hero__copy {
@@ -91,22 +100,34 @@
       linear-gradient(135deg, var(--color-surface), #161412);
   }
 
-  .hero__portrait::before {
+  .hero__portrait::before,
+  .hero__portrait::after {
     content: "";
     position: absolute;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .hero__portrait::before {
     inset: 12% 12% 0;
     border: 1px solid rgb(237 230 217 / 0.22);
   }
 
-  .hero__portrait-inner {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    font-family: var(--font-display);
-    font-size: clamp(7rem, 16vw, 16rem);
-    font-weight: 700;
-    color: rgb(237 230 217 / 0.1);
+  .hero__portrait::after {
+    left: var(--space-4);
+    bottom: var(--space-4);
+    width: 34%;
+    height: 1px;
+    background: var(--color-accent);
+  }
+
+  .hero__portrait img {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    display: block;
+    object-fit: cover;
+    object-position: 50% 18%;
   }
 
   .hero__arrow {
