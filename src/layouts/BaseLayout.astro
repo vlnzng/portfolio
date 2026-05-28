@@ -1,22 +1,20 @@
 ---
-// src/layouts/BaseLayout.astro
-// Basis-HTML-Wrapper für alle Seiten. Meta-Tags, Fonts, globales CSS.
-
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
-  initialModalSlug?: string;   // Für direkte Modal-URL-Aufrufe (/work/[slug])
+  initialModalSlug?: string;
 }
 
 const {
-  title = 'Valentin Lenzing — UX & Product Designer',
-  description = 'Portfolio of Valentin Lenzing, UX & Product Designer focused on Gaming and B2C products.',
+  title = 'Valentin Lenzing | UX & Product Designer',
+  description = 'Portfolio of Valentin Lenzing, UX & Product Designer working across research, interaction design, and front-end implementation.',
   ogImage = '/og-image.jpg',
   initialModalSlug,
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const site = Astro.site ?? new URL(Astro.url.origin);
+const canonicalURL = new URL(Astro.url.pathname, site);
 ---
 
 <!doctype html>
@@ -26,42 +24,33 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Primary Meta -->
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
 
-    <!-- Open Graph / Social -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta property="og:image" content={new URL(ogImage, site)} />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
+    <meta name="twitter:image" content={new URL(ogImage, site)} />
 
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <!-- Kein synchrones JS im Head -->
   </head>
 
   <body>
-    <!-- Skip Link für Keyboard-Navigation / Screen Reader -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <main id="main-content">
       <slot />
     </main>
 
-    <!-- Falls Seite direkt über Modal-URL aufgerufen wurde -->
     {initialModalSlug && (
       <script define:vars={{ initialModalSlug }}>
-        // Modal sofort öffnen wenn Seite über /work/[slug] aufgerufen wurde
         window.__initialModalSlug = initialModalSlug;
       </script>
     )}

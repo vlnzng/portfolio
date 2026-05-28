@@ -1,140 +1,165 @@
 ---
-// src/components/Contact.astro
-// Letzte Sektion. CTA, Links, Impressum-Hinweis.
+const encodedMail = 'hello&#64;valentin-lenzing.de';
 ---
 
 <section class="section contact" id="contact" aria-label="Contact">
-
-  <div class="contact__inner">
-
-    <header class="contact__header">
-      <span class="contact__label">Contact</span>
-      <h2 class="contact__heading">
-        Let's work<br />together
-      </h2>
-    </header>
-
-    <div class="contact__links">
-      <a
-        href="mailto:valentin.lenzing@gmail.com"
-        class="contact__link contact__link--primary"
-      >
-        valentin.lenzing@gmail.com
-      </a>
-
-      <a
-        href="https://linkedin.com/in/valentin-lenzing"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="contact__link"
-      >
-        LinkedIn ↗
-      </a>
-
-      <a
-        href="https://github.com/vlnzng"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="contact__link"
-      >
-        GitHub ↗
-      </a>
-    </div>
-
+  <div class="contact__visual" aria-hidden="true">
+    <span>VL</span>
   </div>
 
-  <!-- Footer -->
-  <footer class="contact__footer">
-    <p class="contact__legal">
-      &copy; {new Date().getFullYear()} Valentin Lenzing
-    </p>
-    <nav class="contact__legal-nav" aria-label="Legal">
-      <a href="/imprint">Imprint</a>
-      <a href="/privacy">Privacy</a>
-    </nav>
-  </footer>
+  <p class="contact__line">
+    Get in touch,<br />
+    whether it's a job,<br />
+    a question, or just<br />
+    a hello.
+  </p>
 
+  <div class="contact__panel">
+    <a class="contact__mail" href="mailto:hello@valentin-lenzing.de">
+      <span set:html={encodedMail}></span>
+    </a>
+
+    <div class="contact__links">
+      <a href="https://linkedin.com/in/valentin-lenzing" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://github.com/vlnzng" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+
+    <div class="contact__status">
+      <p>Brandenburg, Germany</p>
+      <p>Available immediately</p>
+    </div>
+
+    <div class="contact__cv" aria-label="CV downloads">
+      <a href="/cv/valentin-lenzing-cv-de.pdf">CV (DE)</a>
+      <a href="/cv/valentin-lenzing-cv-en.pdf">CV (EN)</a>
+    </div>
+  </div>
+
+  <nav class="contact__legal" aria-label="Legal">
+    <a href="/imprint">Imprint</a>
+    <a href="/privacy">Privacy</a>
+  </nav>
 </section>
 
 <style>
   .contact {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-bottom: var(--space-5);
-  }
-
-  .contact__inner {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(18rem, 36vw) minmax(20rem, 34rem);
+    grid-template-rows: 1fr auto;
+    align-items: center;
     gap: var(--space-7);
-    margin-top: auto;
-    margin-bottom: auto;
   }
 
-  .contact__label {
-    font-family: var(--font-mono);
-    font-size: var(--size-xs);
-    letter-spacing: var(--tracking-widest);
-    text-transform: uppercase;
-    color: var(--color-muted);
+  .contact__visual {
+    align-self: stretch;
+    min-height: min(68vh, 45rem);
+    display: grid;
+    place-items: center;
+    background:
+      linear-gradient(160deg, rgb(217 179 108 / 0.18), transparent 50%),
+      var(--color-surface);
+    border: 1px solid var(--color-border);
   }
 
-  .contact__heading {
-    font-size: var(--size-display);
-    font-weight: 200;
-    line-height: 0.95;
-    letter-spacing: var(--tracking-tight);
-    margin-top: var(--space-3);
+  .contact__visual span {
+    font-family: var(--font-display);
+    font-size: clamp(7rem, 14vw, 15rem);
+    font-weight: 700;
+    color: rgb(217 179 108 / 0.32);
   }
 
-  .contact__links {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .contact__link {
-    font-size: var(--size-lg);
+  .contact__line {
+    position: absolute;
+    left: var(--section-padding);
+    bottom: var(--section-padding);
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 4.7rem);
+    font-weight: 700;
+    line-height: 1;
     color: var(--color-text);
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: var(--space-3);
-    transition: color var(--duration-fast) var(--ease-out),
-                border-color var(--duration-fast) var(--ease-out);
   }
 
-  .contact__link--primary {
-    font-size: var(--size-xl);
-    border-color: var(--color-text);
+  .contact__panel {
+    display: grid;
+    gap: var(--space-5);
   }
 
-  .contact__link:hover {
-    color: var(--color-accent);
-    border-color: var(--color-accent);
+  .contact__mail {
+    width: fit-content;
+    font-size: clamp(1.35rem, 2vw, 2rem);
+    color: var(--color-text);
+    border-bottom: 1px solid currentColor;
     text-decoration: none;
   }
 
-  .contact__footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-family: var(--font-mono);
-    font-size: var(--size-xs);
-    color: var(--color-muted);
+  .contact__links,
+  .contact__status,
+  .contact__cv {
+    display: grid;
+    gap: var(--space-3);
   }
 
-  .contact__legal-nav {
-    display: flex;
-    gap: var(--space-4);
-  }
-
-  .contact__legal-nav a {
+  .contact__links a,
+  .contact__cv a {
+    width: fit-content;
     color: var(--color-muted);
     transition: color var(--duration-fast) var(--ease-out);
   }
 
-  .contact__legal-nav a:hover {
-    color: var(--color-text);
+  .contact__links a:hover,
+  .contact__cv a:hover,
+  .contact__legal a:hover,
+  .contact__mail:hover {
+    color: var(--color-accent);
     text-decoration: none;
+  }
+
+  .contact__status {
+    color: var(--color-text);
+  }
+
+  .contact__cv {
+    grid-template-columns: repeat(2, max-content);
+  }
+
+  .contact__cv a {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+  }
+
+  .contact__legal {
+    position: absolute;
+    right: var(--space-4);
+    bottom: var(--section-padding);
+    display: flex;
+    gap: var(--space-4);
+    transform: rotate(90deg);
+    transform-origin: right bottom;
+    font-size: var(--size-xs);
+    color: var(--color-muted);
+  }
+
+  @media (max-width: 840px) {
+    .contact {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+      padding-bottom: 9rem;
+    }
+
+    .contact__visual {
+      min-height: 36vh;
+    }
+
+    .contact__line {
+      position: relative;
+      left: auto;
+      bottom: auto;
+    }
+
+    .contact__legal {
+      right: auto;
+      left: var(--section-padding);
+      transform: none;
+    }
   }
 </style>

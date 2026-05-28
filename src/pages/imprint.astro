@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Imprint | Valentin Lenzing">
+  <section class="legal-page">
+    <a href="/#contact" class="legal-page__back">Back</a>
+    <h1>Imprint</h1>
+    <p>
+      This page is reserved for the legally required provider identification.
+      Final postal address, contact details, and responsibility information need to be added before launch.
+    </p>
+    <p>Email: hello@valentin-lenzing.de</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal-page {
+    min-height: 100svh;
+    display: grid;
+    align-content: center;
+    gap: var(--space-4);
+    padding: var(--section-padding);
+    max-width: 52rem;
+  }
+
+  .legal-page__back {
+    width: fit-content;
+    color: var(--color-accent);
+  }
+
+  h1 {
+    font-size: clamp(3rem, 8vw, 7rem);
+  }
+
+  p {
+    color: var(--color-muted);
+    line-height: var(--leading-loose);
+  }
+</style>

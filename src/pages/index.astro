@@ -1,17 +1,14 @@
 ---
-// src/pages/index.astro
-// Home-Seite — alle Sektionen in horizontalem Layout.
-
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Navigation from '../components/Navigation.astro';
 import Hero from '../components/Hero.astro';
 import About from '../components/About.astro';
 import ShowcaseCard from '../components/ShowcaseCard.astro';
 import ShowcaseModal from '../components/ShowcaseModal.astro';
-import Skills from '../components/Skills.astro';
+import Process from '../components/Process.astro';
 import Contact from '../components/Contact.astro';
 
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 
 interface Props {
   initialModalSlug?: string;
@@ -19,49 +16,71 @@ interface Props {
 
 const { initialModalSlug } = Astro.props;
 
-// Showcases laden, nach order-Feld sortieren
-const showcases = (await getCollection('showcases'))
-  .sort((a, b) => a.data.order - b.data.order);
+const showcases = (await getCollection('showcases')).sort((a, b) => a.data.order - b.data.order);
+const getSlug = (id: string) => id.replace(/\.mdx$/, '').split('/').pop() ?? id;
+const renderedShowcases = await Promise.all(
+  showcases.map(async (showcase) => {
+    const { Content } = await render(showcase);
+    return { showcase, Content };
+  }),
+);
+
+const showcaseData = showcases.map((showcase) => ({
+  slug: getSlug(showcase.id),
+  title: showcase.data.title,
+  subtitle: showcase.data.subtitle,
+  year: showcase.data.year,
+  role: showcase.data.role,
+  type: showcase.data.type,
+  duration: showcase.data.duration,
+  tools: showcase.data.tools,
+  tags: showcase.data.tags,
+  externalLink: showcase.data.externalLink,
+  githubLink: showcase.data.githubLink,
+}));
 ---
 
 <BaseLayout initialModalSlug={initialModalSlug}>
-
   <Navigation />
 
-  <!-- Scroll-Container: GSAP pinnt diesen und scrollt .horizontal-track -->
   <div class="scroll-container">
     <div class="horizontal-track">
-
       <Hero />
       <About />
 
-      <!-- Work-Sektion mit 4 Showcase-Karten -->
       <section class="section work" id="work" aria-label="Work">
         <div class="work__inner">
           <header class="work__header">
-            <span class="work__label">Selected Work</span>
-            <h2 class="work__heading">Case Studies</h2>
+            <p class="work__label">Selected Work</p>
+            <h2>Four ways of thinking through products.</h2>
           </header>
+
           <div class="work__grid">
-            {showcases.map((showcase) => (
-              <ShowcaseCard showcase={showcase} />
-            ))}
+            {showcases.map((showcase) => <ShowcaseCard showcase={showcase} />)}
           </div>
         </div>
       </section>
 
-      <Skills />
+      <Process />
       <Contact />
-
     </div>
   </div>
 
-  <!-- Modal liegt außerhalb des Scroll-Containers -->
-  <ShowcaseModal />
+  <div class="case-templates" hidden>
+    {renderedShowcases.map(({ showcase, Content }) => (
+      <template id={`case-template-${getSlug(showcase.id)}`}>
+        <div class="case-content">
+          <Content />
+        </div>
+      </template>
+    ))}
+  </div>
 
+  <script type="application/json" id="showcase-data" set:html={JSON.stringify(showcaseData)}></script>
+
+  <ShowcaseModal />
 </BaseLayout>
 
-<!-- Scripts werden am Ende geladen (is:inline deferred) -->
 <script>
   import '../scripts/scroll';
   import '../scripts/modal';
@@ -70,40 +89,40 @@ const showcases = (await getCollection('showcases'))
 
 <style>
   .work {
+    width: 220vw;
     display: flex;
     align-items: center;
-    /* Work-Sektion ist breiter als 100vw — Platz für 4 Karten nebeneinander -->
-    width: calc(4 * 50vw);   /* Anpassen je nach finalem Layout */
   }
 
   .work__inner {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  .work__header {
+    max-width: 54rem;
   }
 
   .work__label {
-    font-family: var(--font-mono);
+    margin-bottom: var(--space-3);
     font-size: var(--size-xs);
-    letter-spacing: var(--tracking-widest);
     text-transform: uppercase;
-    color: var(--color-muted);
+    color: var(--color-accent);
   }
 
-  .work__heading {
-    font-size: var(--size-3xl);
-    font-weight: 200;
-    margin-top: var(--space-2);
+  .work__header h2 {
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 700;
   }
 
   .work__grid {
     display: grid;
-    grid-template-columns: repeat(4, 40vw);
+    grid-template-columns: repeat(4, minmax(34rem, 1fr));
     gap: var(--space-5);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     .work {
       width: 100vw;
     }

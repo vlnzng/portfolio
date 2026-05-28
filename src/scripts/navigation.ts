@@ -1,64 +1,69 @@
-// src/scripts/navigation.ts
-// Section-Indicator Punkte aktiv setzen + Keyboard-Navigation
+declare global {
+  interface Window {
+    __portfolioScrollTo?: (id: string) => void;
+    __portfolioSetActive?: (id: string) => void;
+  }
+}
 
-// ------------------------------------------------------------------
-// Section-Indicator updaten beim Scrollen
-// ------------------------------------------------------------------
-const dots = document.querySelectorAll<HTMLAnchorElement>('.nav__dot');
-const sections = document.querySelectorAll<HTMLElement>('.section');
+const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-section-link]'));
+const sections = Array.from(document.querySelectorAll<HTMLElement>('.section'));
 
-const observerOptions: IntersectionObserverInit = {
-  root: null,
-  rootMargin: '0px',
-  threshold: 0.5,   // Sektion muss zu 50% sichtbar sein
+window.__portfolioSetActive = (id: string) => {
+  links.forEach((link) => {
+    const isActive = link.dataset.sectionLink === id;
+    link.classList.toggle('is-active', isActive && id !== 'hero');
+    if (isActive && id !== 'hero') {
+      link.setAttribute('aria-current', 'page');
+    } else {
+      link.removeAttribute('aria-current');
+    }
+  });
 };
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (!entry.isIntersecting) return;
+links.forEach((link) => {
+  link.addEventListener('click', (event) => {
+    const id = link.dataset.sectionLink;
+    if (!id) return;
 
-    const sectionId = entry.target.id;
-
-    dots.forEach((dot) => {
-      const isActive = dot.dataset.section === sectionId;
-      dot.classList.toggle('nav__dot--active', isActive);
-      dot.setAttribute('aria-current', isActive ? 'true' : 'false');
-    });
+    event.preventDefault();
+    window.__portfolioScrollTo?.(id);
   });
-}, observerOptions);
+});
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) window.__portfolioSetActive?.(entry.target.id);
+    });
+  },
+  { threshold: 0.55 },
+);
 
 sections.forEach((section) => observer.observe(section));
 
-// ------------------------------------------------------------------
-// Keyboard-Navigation zwischen Sektionen
-// ------------------------------------------------------------------
-// Auf Desktop: Pfeiltasten navigieren zwischen Sektionen
-// (GSAP ScrollTrigger übernimmt die eigentliche Scroll-Bewegung)
+const sectionIds = sections.map((section) => section.id);
 
-const sectionIds = Array.from(sections).map((s) => s.id);
-
-document.addEventListener('keydown', (e: KeyboardEvent) => {
-  // Nicht triggern wenn Fokus in Modal oder Input ist
-  const target = e.target as HTMLElement;
+document.addEventListener('keydown', (event) => {
+  const target = event.target as HTMLElement;
   if (target.closest('[role="dialog"]')) return;
   if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
 
-  const currentActive = document.querySelector('.nav__dot--active');
-  const currentSection = currentActive?.getAttribute('data-section');
-  const currentIndex = sectionIds.indexOf(currentSection ?? '');
+  const activeLink = links.find((link) => link.classList.contains('is-active'));
+  const currentId = activeLink?.dataset.sectionLink ?? 'hero';
+  const currentIndex = Math.max(0, sectionIds.indexOf(currentId));
 
   let nextIndex = currentIndex;
-
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-    e.preventDefault();
+  if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
     nextIndex = Math.min(currentIndex + 1, sectionIds.length - 1);
-  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-    e.preventDefault();
+  }
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
     nextIndex = Math.max(currentIndex - 1, 0);
   }
 
   if (nextIndex !== currentIndex) {
-    const nextSection = document.getElementById(sectionIds[nextIndex]);
-    nextSection?.scrollIntoView({ behavior: 'smooth' });
+    event.preventDefault();
+    window.__portfolioScrollTo?.(sectionIds[nextIndex]);
   }
 });
+
+export {};

@@ -6,8 +6,10 @@ const showcases = defineCollection({
   schema: z.object({
     title: z.string(),
     subtitle: z.string(),
+    cardMeta: z.string(),
     year: z.number(),
     role: z.string(),
+    type: z.string().optional(),
     team: z.string().optional(),
     duration: z.string().optional(),
     tools: z.array(z.string()),

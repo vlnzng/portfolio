@@ -1,46 +1,29 @@
 ---
-// src/components/Navigation.astro
-// Section-Indicator (Punkte), Pfeil-Buttons, Wordmark-Logo oben links.
+const links = [
+  { id: 'about', label: 'About' },
+  { id: 'work', label: 'Work' },
+  { id: 'process', label: 'Process' },
+  { id: 'contact', label: 'Contact' },
+];
 ---
 
 <nav class="nav" aria-label="Main navigation">
-
-  <!-- Wordmark oben links -->
-  <a href="/" class="nav__wordmark" aria-label="Valentin Lenzing — Home">
-    <!-- SVG Wordmark wird hier eingesetzt sobald vorhanden -->
-    <span class="nav__wordmark-text">VL</span>
+  <a href="/#hero" class="nav__wordmark" aria-label="Valentin Lenzing home" data-section-link="hero">
+    Valentin Lenzing
   </a>
 
-  <!-- Section Indicator — Punkte rechts -->
-  <ol class="nav__indicator" role="list" aria-label="Page sections">
-    <li>
-      <a href="#hero" class="nav__dot nav__dot--active" aria-label="Hero" data-section="hero">
-        <span class="sr-only">Hero</span>
+  <div class="nav__links">
+    {links.map((link) => (
+      <a href={`/#${link.id}`} class="nav__link" data-section-link={link.id}>
+        {link.label}
       </a>
-    </li>
-    <li>
-      <a href="#about" class="nav__dot" aria-label="About" data-section="about">
-        <span class="sr-only">About</span>
-      </a>
-    </li>
-    <li>
-      <a href="#work" class="nav__dot" aria-label="Work" data-section="work">
-        <span class="sr-only">Work</span>
-      </a>
-    </li>
-    <li>
-      <a href="#skills" class="nav__dot" aria-label="Skills" data-section="skills">
-        <span class="sr-only">Skills</span>
-      </a>
-    </li>
-    <li>
-      <a href="#contact" class="nav__dot" aria-label="Contact" data-section="contact">
-        <span class="sr-only">Contact</span>
-      </a>
-    </li>
-  </ol>
-
+    ))}
+  </div>
 </nav>
+
+<div class="scroll-progress" aria-hidden="true">
+  <span class="scroll-progress__bar"></span>
+</div>
 
 <style>
   .nav {
@@ -50,82 +33,112 @@
     right: 0;
     z-index: var(--z-nav);
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    padding: var(--space-4) var(--space-5);
-    pointer-events: none;   /* Nav selbst ist nicht klickbar, nur Kinder */
+    gap: var(--space-4);
+    padding: var(--space-4) var(--section-padding);
+    pointer-events: none;
   }
 
   .nav__wordmark,
-  .nav__indicator {
+  .nav__links {
     pointer-events: auto;
   }
 
   .nav__wordmark {
     font-family: var(--font-display);
-    font-size: var(--size-lg);
-    font-weight: 300;
-    letter-spacing: var(--tracking-wide);
+    font-size: var(--size-base);
+    font-weight: 700;
     color: var(--color-text);
     text-decoration: none;
-  }
-
-  .nav__wordmark:hover {
-    text-decoration: none;
-  }
-
-  .nav__indicator {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    padding: var(--space-2);
-  }
-
-  .nav__dot {
-    display: block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: var(--color-muted);
-    transition: background-color var(--duration-fast) var(--ease-out),
-                transform var(--duration-fast) var(--ease-out);
-  }
-
-  .nav__dot:hover,
-  .nav__dot--active {
-    background-color: var(--color-text);
-    transform: scale(1.5);
-    text-decoration: none;
-  }
-
-  /* Screen-reader-only Text */
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
     white-space: nowrap;
-    border-width: 0;
+    transition: color var(--duration-fast) var(--ease-out);
   }
 
-  /* Mobile: Indicator unten zentriert */
-  @media (max-width: 768px) {
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2.5rem);
+  }
+
+  .nav__link {
+    position: relative;
+    font-size: var(--size-sm);
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .nav__link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.35rem;
+    height: 1px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+
+  .nav__link:hover,
+  .nav__link.is-active,
+  .nav__wordmark:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .nav__link.is-active::after {
+    transform: scaleX(1);
+  }
+
+  .scroll-progress {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-nav);
+    height: 2px;
+    background: transparent;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+
+  .scroll-progress.is-visible {
+    opacity: 1;
+  }
+
+  .scroll-progress__bar {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  @media (max-width: 700px) {
     .nav {
-      bottom: var(--space-4);
-      top: auto;
-      justify-content: center;
+      align-items: flex-start;
+      padding-top: var(--space-3);
     }
 
     .nav__wordmark {
-      display: none;
+      max-width: 9rem;
+      line-height: 1.05;
+      white-space: normal;
     }
 
-    .nav__indicator {
-      flex-direction: row;
+    .nav__links {
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav__link {
+      font-size: var(--size-xs);
     }
   }
 </style>

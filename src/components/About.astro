@@ -1,99 +1,123 @@
 ---
-// src/components/About.astro
-// Persönliche Sektion. Text + evtl. Bild.
 ---
 
 <section class="section about" id="about" aria-label="About">
+  <figure class="about__photo" aria-label="Portrait placeholder">
+    <div class="about__photo-mark">VL</div>
+  </figure>
 
-  <div class="about__inner">
-
-    <header class="about__header">
-      <span class="about__label">About</span>
-      <h2 class="about__heading">
-        <!-- Finaler Text folgt -->
-        Hi, I'm Valentin
-      </h2>
-    </header>
-
-    <div class="about__body">
-      <p class="about__text">
-        <!-- Finaler Bio-Text folgt aus Konzept-Chat -->
-        Born in Berlin, currently based in Brandenburg.
-        Master's degree in Digital Media — before that,
-        a Bachelor's in Social Media Systems.
+  <div class="about__content">
+    <div class="about__text">
+      <p>
+        My path into design has been shaped by business, technology, and media. I am interested in how digital products are structured, how they guide people, and how they create trust. For me, design is not only about the surface, but about clarity, usability, and the small decisions that make an experience feel effortless.
       </p>
-      <p class="about__text">
-        I design for gaming and digital products: research-informed,
-        interaction-focused, with enough frontend knowledge to
-        collaborate closely with engineers.
+      <p>
+        What fascinates me about UX is that good design often goes unnoticed. When it works, people simply understand where they are, what they can do, and what happens next. That is the kind of design I want to create: useful, trustworthy, and calm, but with enough character to feel distinct.
+      </p>
+      <p>
+        I grew up during a time of rapid digital change, from life before smartphones to a world shaped by platforms, games, and AI. That shift is one reason I am drawn to UX: it sits close to technology, but stays close to people.
+      </p>
+      <p>
+        Outside of design, I am drawn to experiences that combine structure, atmosphere, and detail, whether in games, films, or cooking. I like when many small decisions come together to create something people remember.
       </p>
     </div>
 
-    <footer class="about__footer">
-      <a href="#work" class="about__cta">
-        See my work
-        <span aria-hidden="true">→</span>
-      </a>
-    </footer>
-
+    <dl class="about__facts">
+      <div>
+        <dt>Education</dt>
+        <dd>M.Sc. Digital Media, THB</dd>
+        <dd>B.Sc. Social Media Systems, THM</dd>
+      </div>
+      <div>
+        <dt>Languages &amp; Location</dt>
+        <dd>German native, English C1</dd>
+        <dd>Brandenburg, Germany · open to relocate</dd>
+      </div>
+    </dl>
   </div>
-
 </section>
 
 <style>
   .about {
-    display: flex;
-    align-items: center;
-  }
-
-  .about__inner {
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-columns: minmax(18rem, 37vw) minmax(28rem, 46rem);
+    align-items: center;
+    gap: clamp(3rem, 7vw, 8rem);
+  }
+
+  .about__photo {
+    min-height: min(74vh, 52rem);
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, transparent, rgb(217 179 108 / 0.09)),
+      linear-gradient(135deg, var(--color-surface), #12100f);
+    border-right: 1px solid var(--color-border);
+  }
+
+  .about__photo-mark {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: clamp(7rem, 16vw, 14rem);
+    font-weight: 700;
+    color: rgb(237 230 217 / 0.11);
+  }
+
+  .about__content {
+    display: grid;
     gap: var(--space-6);
-    max-width: 600px;
-  }
-
-  .about__label {
-    font-family: var(--font-mono);
-    font-size: var(--size-xs);
-    letter-spacing: var(--tracking-widest);
-    text-transform: uppercase;
-    color: var(--color-muted);
-  }
-
-  .about__heading {
-    font-size: var(--size-3xl);
-    font-weight: 200;
-    margin-top: var(--space-2);
-  }
-
-  .about__body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
   }
 
   .about__text {
-    font-size: var(--size-lg);
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .about__text p {
+    font-size: clamp(1rem, 1.25vw, 1.2rem);
     line-height: var(--leading-loose);
     color: var(--color-muted);
   }
 
-  .about__cta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-family: var(--font-mono);
-    font-size: var(--size-sm);
-    letter-spacing: var(--tracking-wide);
-    color: var(--color-text);
-    border-bottom: 1px solid currentColor;
-    padding-bottom: 2px;
-    transition: gap var(--duration-fast) var(--ease-out);
+  .about__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
   }
 
-  .about__cta:hover {
-    gap: var(--space-3);
-    text-decoration: none;
+  .about__facts div {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .about__facts dt {
+    margin-bottom: var(--space-1);
+    font-size: var(--size-xs);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .about__facts dd {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 900px) {
+    .about {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+
+    .about__photo {
+      min-height: 44vh;
+    }
+
+    .about__facts {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

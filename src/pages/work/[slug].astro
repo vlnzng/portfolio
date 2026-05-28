@@ -9,7 +9,7 @@ import HomePage from '../index.astro';
 export async function getStaticPaths() {
   const showcases = await getCollection('showcases');
   return showcases.map((showcase) => ({
-    params: { slug: showcase.slug },
+    params: { slug: showcase.id.replace(/\.mdx$/, '').split('/').pop() ?? showcase.id },
   }));
 }
 

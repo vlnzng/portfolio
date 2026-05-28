@@ -1,8 +1,4 @@
 ---
-// src/components/ShowcaseCard.astro
-// Wiederverwendbare Karte für jeden Showcase.
-// Klick öffnet das Modal via modal.ts und updated die URL.
-
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -10,101 +6,106 @@ interface Props {
 }
 
 const { showcase } = Astro.props;
-const { title, subtitle, year, role, tags, heroImage } = showcase.data;
-const slug = showcase.slug;
+const { title, subtitle, cardMeta, tags, order } = showcase.data;
+const slug = showcase.id.replace(/\.mdx$/, '').split('/').pop() ?? showcase.id;
 ---
 
 <article
-  class="showcase-card"
+  class={`showcase-card showcase-card--${order}`}
   data-slug={slug}
   role="button"
   tabindex="0"
   aria-haspopup="dialog"
   aria-label={`Open case study: ${title}`}
 >
-
-  <div class="showcase-card__image-wrapper">
-    <!-- Bild wird hier eingesetzt sobald Astro Image Component verfügbar -->
-    <div class="showcase-card__image-placeholder" aria-hidden="true"></div>
+  <div class="showcase-card__visual" aria-hidden="true">
+    <span class="showcase-card__number">{String(order).padStart(2, '0')}</span>
   </div>
 
-  <footer class="showcase-card__meta">
-
-    <div class="showcase-card__tags" aria-label="Tags">
-      {tags.map((tag) => (
-        <span class="showcase-card__tag">{tag}</span>
-      ))}
-    </div>
-
+  <div class="showcase-card__content">
     <h3 class="showcase-card__title">{title}</h3>
     <p class="showcase-card__subtitle">{subtitle}</p>
-
-    <div class="showcase-card__footer">
-      <span class="showcase-card__year">{year}</span>
-      <span class="showcase-card__cta" aria-hidden="true">View case →</span>
+    <p class="showcase-card__meta">{cardMeta}</p>
+    <div class="showcase-card__tags" aria-label="Tags">
+      {tags.map((tag) => <span>{tag}</span>)}
     </div>
-
-  </footer>
-
+  </div>
 </article>
 
 <style>
   .showcase-card {
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    height: 100%;
+    min-height: 32rem;
+    display: grid;
+    grid-template-columns: 45% 1fr;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     outline: none;
+    overflow: hidden;
+    transition:
+      transform var(--duration-base) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .showcase-card:hover,
+  .showcase-card:focus-visible {
+    transform: translateY(-0.5rem);
+    border-color: var(--color-accent);
   }
 
   .showcase-card:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 4px;
-    border-radius: 2px;
   }
 
-  .showcase-card__image-wrapper {
-    flex: 1;
-    overflow: hidden;
-    background-color: var(--color-surface);
+  .showcase-card__visual {
+    position: relative;
+    min-height: 100%;
+    background:
+      linear-gradient(145deg, rgb(217 179 108 / 0.22), transparent 55%),
+      linear-gradient(180deg, #302b26, #141210);
+    border-right: 1px solid var(--color-border);
   }
 
-  .showcase-card__image-placeholder {
-    width: 100%;
-    height: 100%;
-    min-height: 300px;
-    background-color: var(--color-surface);
-    /* Wird durch echtes Bild ersetzt */
+  .showcase-card__visual::before,
+  .showcase-card__visual::after {
+    content: "";
+    position: absolute;
+    border: 1px solid rgb(237 230 217 / 0.16);
   }
 
-  .showcase-card__meta {
+  .showcase-card__visual::before {
+    inset: 16%;
+  }
+
+  .showcase-card__visual::after {
+    inset: 32% 18%;
+    transform: rotate(45deg);
+  }
+
+  .showcase-card__number {
+    position: absolute;
+    left: var(--space-4);
+    bottom: var(--space-4);
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 6rem);
+    font-weight: 700;
+    color: rgb(237 230 217 / 0.12);
+  }
+
+  .showcase-card__content {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  .showcase-card__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .showcase-card__tag {
-    font-family: var(--font-mono);
-    font-size: var(--size-xs);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--color-muted);
-    border: 1px solid var(--color-border);
-    padding: 2px var(--space-2);
+    justify-content: flex-end;
+    gap: var(--space-4);
+    padding: var(--space-5);
   }
 
   .showcase-card__title {
-    font-family: var(--font-display);
-    font-size: var(--size-2xl);
-    font-weight: 300;
-    line-height: var(--leading-tight);
+    max-width: 13ch;
+    font-size: clamp(2rem, 3vw, 3.3rem);
+    font-weight: 700;
+    color: var(--color-text);
     transition: color var(--duration-fast) var(--ease-out);
   }
 
@@ -113,35 +114,57 @@ const slug = showcase.slug;
   }
 
   .showcase-card__subtitle {
-    font-size: var(--size-sm);
+    font-size: var(--size-base);
+    line-height: var(--leading-normal);
     color: var(--color-muted);
-    max-width: 45ch;
   }
 
-  .showcase-card__footer {
+  .showcase-card__meta {
+    font-size: var(--size-sm);
+    color: var(--color-text);
+  }
+
+  .showcase-card__tags {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: var(--space-2);
-    padding-top: var(--space-3);
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding-top: var(--space-4);
     border-top: 1px solid var(--color-border);
   }
 
-  .showcase-card__year {
-    font-family: var(--font-mono);
+  .showcase-card__tags span {
     font-size: var(--size-xs);
-    color: var(--color-muted);
+    color: var(--color-accent);
   }
 
-  .showcase-card__cta {
-    font-family: var(--font-mono);
-    font-size: var(--size-xs);
-    letter-spacing: var(--tracking-wide);
-    color: var(--color-text);
-    transition: letter-spacing var(--duration-fast) var(--ease-out);
+  .showcase-card--2,
+  .showcase-card--4 {
+    grid-template-columns: 1fr 45%;
   }
 
-  .showcase-card:hover .showcase-card__cta {
-    letter-spacing: 0.1em;
+  .showcase-card--2 .showcase-card__visual,
+  .showcase-card--4 .showcase-card__visual {
+    order: 2;
+    border-right: 0;
+    border-left: 1px solid var(--color-border);
+  }
+
+  @media (max-width: 760px) {
+    .showcase-card,
+    .showcase-card--2,
+    .showcase-card--4 {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+
+    .showcase-card__visual,
+    .showcase-card--2 .showcase-card__visual,
+    .showcase-card--4 .showcase-card__visual {
+      order: 0;
+      min-height: 14rem;
+      border-left: 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--color-border);
+    }
   }
 </style>

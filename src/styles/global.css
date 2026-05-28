@@ -1,69 +1,58 @@
-/* ==========================================================================
-   Global Styles
-   Importiert Reset + Tokens, definiert dann globale Basis-Stile.
-   ========================================================================== */
-
 @import './reset.css';
 @import './tokens.css';
 
-/* --------------------------------------------------------------------------
-   Font Faces — selbst gehostet (WOFF2 Dateien nach public/fonts/)
-   Fraunces und Inter werden hier eingebunden sobald die Dateien vorliegen.
-   -------------------------------------------------------------------------- */
-
 /*
+  Add self-hosted files at public/fonts/Lora-Bold.woff2 and
+  public/fonts/Inter-Variable.woff2 before launch. The stack never calls
+  Google Fonts, so the current fallback remains privacy-friendly.
+*/
 @font-face {
-  font-family: 'Fraunces';
-  src: url('/fonts/Fraunces-Variable.woff2') format('woff2');
-  font-weight: 100 900;
+  font-family: 'Lora';
+  src: local('Lora Bold');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: 'Inter';
-  src: url('/fonts/Inter-Variable.woff2') format('woff2');
+  src: local('Inter');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
-*/
-
-/* Temporär: Google Fonts CDN bis Dateien selbst gehostet werden */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300;400;500;600&display=swap');
-
-/* --------------------------------------------------------------------------
-   Base
-   -------------------------------------------------------------------------- */
 
 html {
   font-size: 16px;
-  background-color: var(--color-bg);
+  background: var(--color-bg);
   color: var(--color-text);
 }
 
 body {
+  min-width: 320px;
   font-family: var(--font-body);
   font-size: var(--size-base);
   line-height: var(--leading-normal);
-  background-color: var(--color-bg);
+  background:
+    radial-gradient(circle at 10% 10%, rgb(217 179 108 / 0.08), transparent 23rem),
+    linear-gradient(180deg, #1A1816, #151311);
   color: var(--color-text);
   overflow-x: hidden;
 }
 
-/* --------------------------------------------------------------------------
-   Typography Defaults
-   -------------------------------------------------------------------------- */
-
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
-  font-weight: 300;    /* Fraunces wirkt besser in Light */
+  letter-spacing: 0;
 }
 
 p {
-  max-width: 65ch;     /* Optimale Lesbarkeit */
+  max-width: 65ch;
 }
 
 a {
@@ -71,15 +60,12 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
+a:focus-visible,
+button:focus-visible,
+[role='button']:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
 }
-
-/* --------------------------------------------------------------------------
-   Skip Link — Accessibility
-   Versteckt, aber via Tab erreichbar und dann sichtbar.
-   -------------------------------------------------------------------------- */
 
 .skip-link {
   position: absolute;
@@ -88,21 +74,16 @@ a:hover {
   z-index: var(--z-overlay);
   padding: var(--space-2) var(--space-4);
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-bg);
   font-size: var(--size-sm);
-  font-weight: 500;
+  font-weight: 700;
   text-decoration: none;
-  border-radius: 0 0 4px 4px;
   transition: top var(--duration-fast) var(--ease-out);
 }
 
 .skip-link:focus {
   top: 0;
 }
-
-/* --------------------------------------------------------------------------
-   Horizontal Scroll Container — Desktop
-   -------------------------------------------------------------------------- */
 
 .scroll-container {
   position: relative;
@@ -111,7 +92,8 @@ a:hover {
 .horizontal-track {
   display: flex;
   flex-direction: row;
-  width: max-content;   /* GSAP berechnet die tatsächliche Breite */
+  width: max-content;
+  will-change: transform;
 }
 
 .section {
@@ -123,19 +105,21 @@ a:hover {
   overflow: hidden;
 }
 
-/* --------------------------------------------------------------------------
-   Mobile — Vertikales Layout
-   -------------------------------------------------------------------------- */
+@media (max-width: 768px), (prefers-reduced-motion: reduce) {
+  body {
+    overflow-x: hidden;
+  }
 
-@media (max-width: 768px) {
   .horizontal-track {
     flex-direction: column;
     width: 100%;
+    transform: none !important;
   }
 
   .section {
-    width: 100vw;
+    width: 100vw !important;
     height: auto;
-    min-height: 100svh;   /* svh = small viewport height, besser auf Mobile */
+    min-height: 100svh;
+    overflow: visible;
   }
 }

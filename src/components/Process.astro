@@ -1,0 +1,188 @@
+---
+const phases = [
+  {
+    title: 'Discover',
+    subtitle: 'research',
+    items: ['User interviews', 'Heuristic evaluation', 'Stakeholder workshops', 'Desk research'],
+    tools: ['Notion', 'Maze'],
+  },
+  {
+    title: 'Define',
+    subtitle: 'synthesis',
+    items: ['Personas', 'Problem framing', 'User flows', 'Information architecture'],
+    tools: ['Miro', 'Trello', 'Whimsical', 'FigJam'],
+  },
+  {
+    title: 'Develop',
+    subtitle: 'design',
+    items: ['Wireframes', 'Visual design', 'Prototyping', 'Component systems'],
+    tools: ['Figma', 'Adobe CC', 'Affinity Suite', 'Unity'],
+  },
+  {
+    title: 'Deliver',
+    subtitle: 'code',
+    items: ['Frontend development', 'Prototypes', 'Documentation', 'Design system handoff'],
+    tools: ['HTML', 'CSS', 'JS', 'TS', 'Astro', 'Git'],
+  },
+];
+---
+
+<section class="section process" id="process" aria-label="Process">
+  <div class="process__diamonds" aria-hidden="true">
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="process__inner">
+    <header class="process__header">
+      <p class="process__label">Process</p>
+      <h2>From fuzzy questions to working interfaces.</h2>
+    </header>
+
+    <div class="process__grid">
+      {phases.map((phase) => (
+        <article class="process__phase">
+          <p class="process__phase-kicker">{phase.subtitle}</p>
+          <h3>{phase.title}</h3>
+          <ul role="list" class="process__items">
+            {phase.items.map((item) => <li>{item}</li>)}
+          </ul>
+          <p class="process__tools">{phase.tools.join(' · ')}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="process__note">
+      Familiar with each of these phases. Happy to focus on one or work across them, depending on what a project needs.
+    </p>
+  </div>
+</section>
+
+<style>
+  .process {
+    width: 120vw;
+    display: flex;
+    align-items: center;
+  }
+
+  .process__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-7);
+    width: 100%;
+  }
+
+  .process__header {
+    max-width: 46rem;
+  }
+
+  .process__label {
+    margin-bottom: var(--space-3);
+    font-size: var(--size-xs);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .process__header h2 {
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 700;
+  }
+
+  .process__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(14rem, 1fr));
+    gap: var(--space-4);
+  }
+
+  .process__phase {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: var(--space-4);
+    min-height: 28rem;
+    padding: var(--space-5);
+    background: rgb(37 34 32 / 0.74);
+    border: 1px solid var(--color-border);
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
+  }
+
+  .process__phase:hover {
+    transform: translateY(-0.35rem);
+    border-color: var(--color-accent);
+  }
+
+  .process__phase-kicker {
+    font-size: var(--size-xs);
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .process__phase h3 {
+    font-size: clamp(1.7rem, 2.4vw, 2.5rem);
+    font-weight: 700;
+  }
+
+  .process__items {
+    display: grid;
+    gap: var(--space-3);
+    list-style: none;
+    color: var(--color-text);
+  }
+
+  .process__tools {
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+    font-size: var(--size-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-muted);
+  }
+
+  .process__note {
+    max-width: 48rem;
+    font-size: var(--size-lg);
+    line-height: var(--leading-snug);
+    color: var(--color-muted);
+  }
+
+  .process__diamonds {
+    position: absolute;
+    inset: 0;
+    opacity: 0.16;
+    pointer-events: none;
+  }
+
+  .process__diamonds span {
+    position: absolute;
+    top: 18%;
+    width: 32vw;
+    aspect-ratio: 1;
+    border: 1px solid var(--color-accent);
+    transform: rotate(45deg);
+  }
+
+  .process__diamonds span:first-child {
+    left: 18%;
+  }
+
+  .process__diamonds span:last-child {
+    left: 43%;
+  }
+
+  @media (max-width: 1000px) {
+    .process {
+      width: 100vw;
+    }
+
+    .process__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .process__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
