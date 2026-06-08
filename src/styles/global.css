@@ -1,26 +1,9 @@
 @import './reset.css';
 @import './tokens.css';
 
-/*
-  Add self-hosted files at public/fonts/Lora-Bold.woff2 and
-  public/fonts/Inter-Variable.woff2 before launch. The stack never calls
-  Google Fonts, so the current fallback remains privacy-friendly.
-*/
-@font-face {
-  font-family: 'Lora';
-  src: local('Lora Bold');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Inter';
-  src: local('Inter');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
+/* Fonts: self-hosted via @fontsource-variable (Lora + Inter), imported in
+   src/layouts/BaseLayout.astro. No Google CDN, no external requests (GDPR).
+   Families: 'Lora Variable' / 'Inter Variable'. */
 
 html {
   font-size: 16px;

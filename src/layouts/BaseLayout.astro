@@ -1,4 +1,9 @@
 ---
+import '@fontsource-variable/lora/index.css';
+import '@fontsource-variable/inter/index.css';
+import SpeedInsights from '@vercel/speed-insights/astro';
+import Analytics from '@vercel/analytics/astro';
+
 interface Props {
   title?: string;
   description?: string;
@@ -54,6 +59,9 @@ const canonicalURL = new URL(Astro.url.pathname, site);
         window.__initialModalSlug = initialModalSlug;
       </script>
     )}
+
+    <SpeedInsights />
+    <Analytics />
   </body>
 </html>
 

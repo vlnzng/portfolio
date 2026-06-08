@@ -8,7 +8,7 @@ node_modules/
 # Astro cache
 .astro/
 
-# Environment variables — NIEMALS committen
+# Environment variables — never commit
 .env
 .env.*
 !.env.example
@@ -20,3 +20,10 @@ Thumbs.db
 # Editor
 .vscode/settings.json
 *.swp
+
+# Claude Code — local, not for sharing
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Design handoff — local reference material, keep out of the repo
+design_handoff_portfolio/
