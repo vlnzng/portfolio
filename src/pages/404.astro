@@ -1,0 +1,140 @@
+---
+// src/pages/404.astro
+// Custom not-found page. Astro builds this statically; Vercel serves it for any
+// unmatched route (including a mistyped /work/<slug>). Same editorial dark
+// language as the rest of the site — a wrong turn should still feel on-brand.
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page not found (404) — Valentin Lenzing"
+  description="That page doesn't exist. Head back to Valentin Lenzing's portfolio."
+>
+  <header class="nf-head">
+    <a class="nf-mark" href="/" aria-label="Valentin Lenzing — home"><span class="v">V</span>L</a>
+  </header>
+
+  <section class="nf">
+    <p class="nf-code" aria-hidden="true">404</p>
+    <h1 class="nf-title">An unhandled exception.</h1>
+    <p class="nf-lede">
+      This path doesn&rsquo;t exist. No complex routing needed here though.<br />
+      The entire portfolio lives on a single, continuous page!
+    </p>
+    <a class="nf-cta" href="/">
+      <span class="arr" aria-hidden="true">&rarr;</span>
+      <span class="nf-cta-label">Back to the portfolio</span>
+    </a>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Quiet brand anchor, top-left — no bar, to keep the composition centred. */
+  .nf-head {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 26px clamp(24px, 6vw, 80px);
+  }
+
+  .nf-mark {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 1px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .nf-mark .v {
+    color: var(--color-accent);
+  }
+
+  .nf-mark:hover {
+    opacity: 0.82;
+  }
+
+  /* Centred typographic composition. */
+  .nf {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: clamp(80px, 12vh, 140px) clamp(24px, 6vw, 40px);
+    text-align: center;
+  }
+
+  .nf-code {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(48px, 7vw, 92px);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: var(--color-accent);
+  }
+
+  .nf-title {
+    margin: clamp(10px, 1.5vh, 16px) 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(40px, 7vw, 84px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .nf-lede {
+    margin: clamp(24px, 4vh, 36px) 0 0;
+    max-width: 54ch;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(15px, 1.4vw, 17px);
+    line-height: 1.7;
+    color: #c4bcae; /* muted cream — between --color-text and --color-muted */
+  }
+
+  .nf-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin: clamp(36px, 6vh, 56px) 0 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(22px, 3vw, 34px);
+    letter-spacing: -0.01em;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: opacity 0.22s ease;
+  }
+
+  .nf-cta .arr,
+  .nf-cta-label {
+    transition: transform 0.25s var(--ease-out);
+  }
+
+  .nf-cta .arr {
+    font-style: normal;
+  }
+
+  .nf-cta:hover {
+    opacity: 0.85;
+  }
+
+  .nf-cta:hover .arr,
+  .nf-cta:hover .nf-cta-label {
+    transform: translateX(6px);
+  }
+
+  @media (max-width: 600px) {
+    .nf-head {
+      padding: 18px 20px;
+    }
+  }
+</style>

@@ -19,7 +19,9 @@ const {
 } = Astro.props;
 
 const site = Astro.site ?? new URL(Astro.url.origin);
-const canonicalURL = new URL(Astro.url.pathname, site);
+// The /work/<slug> deep links serve the homepage HTML (the modal opens via JS),
+// so they're duplicate content — point their canonical at the homepage.
+const canonicalURL = new URL(initialModalSlug ? '/' : Astro.url.pathname, site);
 ---
 
 <!doctype html>
