@@ -1,0 +1,100 @@
+---
+// Fixed, morphing wordmark. At rest it is the large hero lockup (top-left);
+// scroll.ts drives it through the morph into the small VL home button in the
+// navbar corner (the tails "alentin"/"enzing" fade, V/L stay, it flies up).
+---
+
+<a class="wordmark" href="/#hero" aria-label="Valentin Lenzing — home" data-wordmark data-section-link="hero">
+  <span class="wordmark__line">
+    <span class="wordmark__initial wordmark__initial--v">V</span><span class="wordmark__tail" data-wm-tail>alentin</span>
+  </span>
+  <span class="wordmark__line">
+    <span class="wordmark__initial">L</span><span class="wordmark__tail" data-wm-tail>enzing</span>
+  </span>
+</a>
+
+<style>
+  .wordmark {
+    /* tuning knobs — same geometry we dialled in on the hero */
+    --cap-size: clamp(3.5rem, 8.5vw, 9rem);
+    --cap-leading: 0.55;
+    --suffix-ratio: 0.484;
+    --l-shift-x: 0.4em;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 65;
+    /* resting position ≈ hero top-left, until the engine takes over (also the
+       reduced-motion fallback) */
+    transform: translate(5.5vw, 18vh);
+    transform-origin: left top;
+    width: max-content;
+    font-family: var(--font-display);
+    font-size: var(--cap-size);
+    font-weight: 700;
+    color: var(--color-text);
+    text-decoration: none;
+    user-select: none;
+    will-change: transform;
+  }
+
+  .wordmark__line {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .wordmark__line + .wordmark__line {
+    margin-left: var(--l-shift-x);
+  }
+
+  .wordmark__initial {
+    display: inline-block;
+    line-height: var(--cap-leading);
+    letter-spacing: -0.02em;
+  }
+
+  /* the V carries the accent — like the VL monogram */
+  .wordmark__initial--v {
+    color: var(--color-accent);
+  }
+
+  .wordmark__tail {
+    display: inline-block;
+    font-size: calc(1em * var(--suffix-ratio));
+    font-weight: 600;
+    line-height: 0.74;
+    letter-spacing: -0.01em;
+    margin-top: 0.16em;
+    margin-left: 0.04em;
+    white-space: nowrap;
+    will-change: opacity, transform;
+  }
+
+  /* once collapsed into the corner it behaves like a button */
+  .wordmark.is-collapsed {
+    cursor: pointer;
+  }
+
+  @media (max-width: 820px), (prefers-reduced-motion: reduce) {
+    .wordmark {
+      /* mobile: a static lockup at the top that scrolls away with the page */
+      position: absolute;
+      left: 7vw;
+      top: 8vh;
+      transform: none !important;
+      --cap-size: clamp(3.25rem, 15vw, 5.5rem);
+    }
+
+    .wordmark__tail {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wordmark {
+      transition: none;
+    }
+  }
+</style>

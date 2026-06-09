@@ -1,0 +1,79 @@
+---
+// Fixed scroll hint, bottom-centre. The arrow points down during the wordmark
+// morph, then rotates to "→" and reads "Explore" as the side-pan begins;
+// fades out once panning is underway. scroll.ts drives it.
+---
+
+<button class="scrollcue" type="button" aria-label="Scroll to explore" data-scrollcue>
+  <span class="scrollcue__label" data-scrollcue-label>Scroll</span>
+  <span class="scrollcue__track"><span class="scrollcue__arrow" data-scrollcue-arrow>&darr;</span></span>
+</button>
+
+<style>
+  .scrollcue {
+    position: fixed;
+    left: 50%;
+    bottom: 38px;
+    transform: translateX(-50%);
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: var(--color-muted);
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    transition: opacity 0.4s ease;
+  }
+
+  .scrollcue__label {
+    transition: color 0.25s ease;
+  }
+
+  .scrollcue:hover {
+    color: var(--color-text);
+  }
+
+  .scrollcue__track {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    transition: border-color 0.3s ease;
+  }
+
+  .scrollcue__arrow {
+    font-size: 15px;
+    color: var(--color-accent);
+    transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+    animation: cuebob 1.9s ease-in-out infinite;
+  }
+
+  .scrollcue.is-moved .scrollcue__track {
+    border-color: var(--color-accent);
+  }
+
+  @keyframes cuebob {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  @media (max-width: 820px), (prefers-reduced-motion: reduce) {
+    .scrollcue {
+      bottom: 26px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scrollcue__arrow {
+      animation: none;
+    }
+  }
+</style>

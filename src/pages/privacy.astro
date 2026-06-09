@@ -1,149 +1,355 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/legal.css';
+
+const mailUser = 'valentin.lenzing';
+const mailDomain = 'gmail.com';
 ---
 
-<BaseLayout title="Privacy Policy | Valentin Lenzing">
-  <article class="legal">
-    <a href="/#contact" class="legal__back">← Back</a>
+<BaseLayout title="Privacy Policy — Datenschutz | Valentin Lenzing">
+  <header class="lg-bar">
+    <a class="lg-mark" href="/" aria-label="Valentin Lenzing — home"><span class="v">V</span>L</a>
+    <a class="lg-back" href="/#contact">
+      <span class="arr" aria-hidden="true">&larr;</span><span class="lbl-full">Back to portfolio</span>
+    </a>
+  </header>
 
-    <!-- German is the legally authoritative version. -->
-    <h1>Datenschutzerklärung</h1>
-    <p class="legal__sub">
-      Informationen gemäß DSGVO · <em>Platzhalter — vor Veröffentlichung vervollständigen und rechtlich prüfen.</em>
+  <main class="lg-wrap">
+    <p class="lg-eyebrow">Rechtliches</p>
+    <h1 class="lg-title">Datenschutz&shy;erklärung</h1>
+    <p class="lg-lede">
+      Information über die Verarbeitung personenbezogener Daten auf dieser Website gemäß Datenschutz-Grundverordnung
+      (DSGVO). Diese Website ist ein statisches, nicht-kommerzielles Portfolio ohne Tracking, Werbung oder Cookies.
+      Die deutsche Fassung ist maßgeblich; eine englische Übersetzung folgt darunter.
     </p>
 
-    <h3>Verantwortlicher</h3>
-    <p>
-      Valentin Lenzing · [Anschrift]<br />
-      E-Mail: <a href="mailto:valentin.lenzing@gmail.com">valentin.lenzing@gmail.com</a>
-    </p>
+    <div class="lg-note" role="note">
+      <span class="ico" aria-hidden="true">&lsaquo;/&rsaquo;</span>
+      <p>
+        <strong>Vor der Veröffentlichung:</strong> Felder in <span class="fill">[eckigen Klammern]</span>
+        (insbesondere der Hosting-Anbieter und dessen Datenschutzangaben) ergänzen und diesen Hinweiskasten
+        entfernen. Eine rechtliche Prüfung wird empfohlen.
+      </p>
+    </div>
 
-    <h3>Hosting &amp; Server-Logfiles</h3>
-    <p>
-      Diese Website wird bei Vercel gehostet. Beim Aufruf verarbeitet der Server technisch
-      notwendige Zugriffsdaten (z. B. gekürzte IP-Adresse, Zeitpunkt, abgerufene Seite) zur
-      Auslieferung, Sicherheit und Stabilität. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.
-    </p>
+    <hr class="lg-rule" />
 
-    <h3>Reichweiten- &amp; Performance-Messung</h3>
-    <p>
-      Eingesetzt werden Vercel Web Analytics und Vercel Speed Insights — anonym und cookielos.
-      Es werden keine Cookies gesetzt und keine personenbezogenen Profile gebildet; die
-      Verarbeitung erfolgt durch Vercel als Auftragsverarbeiter. Rechtsgrundlage:
-      Art. 6 Abs. 1 lit. f DSGVO.
-    </p>
+    <section class="lg-sec" id="verantwortlicher">
+      <div class="lg-sec-head"><span class="lg-sec-no">§1</span><h2 class="lg-sec-title">Verantwortlicher</h2></div>
+      <div class="lg-body">
+        <p>Verantwortlich für die Datenverarbeitung auf dieser Website im Sinne von Art. 4 Nr. 7 DSGVO ist:</p>
+        <address class="lg-addr">
+          <strong>Valentin Lenzing</strong><br />
+          <span class="fill">[Straße &amp; Hausnummer]</span> · <span class="fill">[PLZ Ort]</span><br />
+          E-Mail:
+          <a class="lg-mail" href="#" data-mail-user={mailUser} data-mail-domain={mailDomain}>
+            <span data-mail-text>{mailUser} [at] {mailDomain}</span>
+          </a>
+        </address>
+      </div>
+    </section>
 
-    <h3>Schriftarten</h3>
-    <p>Schriften werden lokal vom eigenen Server ausgeliefert; es besteht keine Verbindung zu Google Fonts.</p>
+    <section class="lg-sec" id="grundlagen">
+      <div class="lg-sec-head"><span class="lg-sec-no">§2</span><h2 class="lg-sec-title">Grundsätzliches &amp; Rechtsgrundlagen</h2></div>
+      <div class="lg-body">
+        <p>
+          Personenbezogene Daten werden auf dieser Website nur im technisch notwendigen Umfang verarbeitet. Eine
+          Verarbeitung erfolgt ausschließlich auf Grundlage der gesetzlichen Bestimmungen — insbesondere
+          Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am sicheren und stabilen Betrieb der Website) sowie,
+          bei einer Kontaktaufnahme, Art. 6 Abs. 1 lit. a und b DSGVO.
+        </p>
+        <p>
+          Diese Website nutzt keine Cookies und keine Werbe-Netzwerke. Zur Reichweiten- und
+          Performance-Messung kommt eine cookielose, datensparsame Analyse des Hosting-Anbieters
+          zum Einsatz (Vercel Web Analytics &amp; Speed Insights, siehe §3).
+        </p>
+      </div>
+    </section>
 
-    <h3>Ihre Rechte</h3>
-    <p>
-      Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit und Widerspruch
-      (Art. 15–21 DSGVO) sowie Beschwerde bei einer Aufsichtsbehörde. Eine formlose Mitteilung an
-      die oben genannte E-Mail genügt.
-    </p>
+    <section class="lg-sec" id="logfiles">
+      <div class="lg-sec-head"><span class="lg-sec-no">§3</span><h2 class="lg-sec-title">Hosting, Server-Logfiles &amp; Reichweitenmessung</h2></div>
+      <div class="lg-body">
+        <p>
+          Diese Website wird bei <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133, Walnut, CA 91789, USA,
+          gehostet. Der Anbieter verarbeitet in meinem Auftrag die zur Auslieferung der Website notwendigen
+          Daten auf Grundlage eines Auftragsverarbeitungsvertrags nach Art. 28 DSGVO. Eine Übermittlung in die
+          USA ist durch geeignete Garantien (EU-Standardvertragsklauseln bzw. EU-US Data Privacy Framework)
+          abgesichert.
+        </p>
+        <p>
+          Beim Aufruf der Website erhebt der Server automatisch Informationen in sogenannten Server-Logfiles, die
+          Ihr Browser automatisch übermittelt:
+        </p>
+        <ul>
+          <li>anonymisierte bzw. gekürzte IP-Adresse</li>
+          <li>Datum und Uhrzeit des Zugriffs</li>
+          <li>aufgerufene Seite / Datei</li>
+          <li>verwendeter Browsertyp und dessen Version</li>
+          <li>verwendetes Betriebssystem</li>
+          <li>Referrer-URL (zuvor besuchte Seite)</li>
+        </ul>
+        <p>
+          Diese Daten dienen ausschließlich der technischen Auslieferung, der Sicherheit und der Stabilität der
+          Website. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Eine Zusammenführung dieser Daten mit anderen
+          Datenquellen oder eine Auswertung zu Marketingzwecken findet nicht statt. Die Logfiles werden nach
+          spätestens <span class="fill">[Speicherdauer, z. B. 7 Tagen]</span> gelöscht.
+        </p>
+        <p>
+          Zur Reichweiten- und Performance-Messung nutze ich <strong>Vercel Web Analytics</strong> und
+          <strong>Vercel Speed Insights</strong> (Dienste von Vercel Inc.). Diese arbeiten cookielos und ohne
+          geräteübergreifende Wiedererkennung; erfasst werden ausschließlich aggregierte, anonyme Nutzungs- und
+          Ladezeit-Daten (z. B. aufgerufene Seite, ungefähre Herkunftsregion, Gerätetyp) ohne Personenbezug und
+          ohne Zusammenführung mit anderen Datenquellen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO
+          (berechtigtes Interesse an einer datensparsamen Analyse von Reichweite und Performance). Weitere
+          Informationen: <span class="fill">[Link zur Vercel-Datenschutzerklärung]</span>.
+        </p>
+      </div>
+    </section>
 
-    <hr class="legal__divider" />
+    <section class="lg-sec" id="fonts">
+      <div class="lg-sec-head"><span class="lg-sec-no">§4</span><h2 class="lg-sec-title">Schriftarten</h2></div>
+      <div class="lg-body">
+        <p>
+          Die auf dieser Website verwendeten Schriftarten werden vom eigenen Server (lokales Hosting) ausgeliefert.
+          Beim Laden der Seite wird keine Verbindung zu Servern Dritter — etwa Google Fonts — aufgebaut, und es
+          werden keine personenbezogenen Daten an Dritte übertragen.
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec" id="kontakt">
+      <div class="lg-sec-head"><span class="lg-sec-no">§5</span><h2 class="lg-sec-title">Kontaktaufnahme per E-Mail</h2></div>
+      <div class="lg-body">
+        <p>
+          Wenn Sie mir per E-Mail schreiben, werden Ihre Angaben (Name, E-Mail-Adresse, Inhalt der Nachricht) zum
+          Zweck der Bearbeitung Ihrer Anfrage gespeichert. Rechtsgrundlage ist Art. 6 Abs. 1 lit. a und b DSGVO.
+          Diese Daten gebe ich nicht ohne Ihre Einwilligung weiter und lösche sie, sobald die Anfrage abschließend
+          bearbeitet ist und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec" id="ssl">
+      <div class="lg-sec-head"><span class="lg-sec-no">§6</span><h2 class="lg-sec-title">SSL-/TLS-Verschlüsselung</h2></div>
+      <div class="lg-body">
+        <p>
+          Diese Website nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte eine
+          SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie am „https://" in der
+          Adresszeile Ihres Browsers.
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec" id="rechte">
+      <div class="lg-sec-head"><span class="lg-sec-no">§7</span><h2 class="lg-sec-title">Ihre Rechte als betroffene Person</h2></div>
+      <div class="lg-body">
+        <p>Im Rahmen der geltenden gesetzlichen Bestimmungen stehen Ihnen jederzeit folgende Rechte zu:</p>
+        <ul>
+          <li>Recht auf Auskunft über Ihre verarbeiteten Daten (Art. 15 DSGVO)</li>
+          <li>Recht auf Berichtigung unrichtiger Daten (Art. 16 DSGVO)</li>
+          <li>Recht auf Löschung (Art. 17 DSGVO)</li>
+          <li>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
+          <li>Recht auf Datenübertragbarkeit (Art. 20 DSGVO)</li>
+          <li>Recht auf Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)</li>
+          <li>Recht auf Widerruf einer erteilten Einwilligung (Art. 7 Abs. 3 DSGVO)</li>
+        </ul>
+        <p>Zur Ausübung dieser Rechte genügt eine formlose Mitteilung an die oben genannte E-Mail-Adresse.</p>
+      </div>
+    </section>
+
+    <section class="lg-sec" id="beschwerde">
+      <div class="lg-sec-head"><span class="lg-sec-no">§8</span><h2 class="lg-sec-title">Beschwerderecht bei der Aufsichtsbehörde</h2></div>
+      <div class="lg-body">
+        <p>
+          Unbeschadet anderweitiger verwaltungsrechtlicher oder gerichtlicher Rechtsbehelfe steht Ihnen das Recht
+          auf Beschwerde bei einer Datenschutz-Aufsichtsbehörde zu, wenn Sie der Ansicht sind, dass die
+          Verarbeitung Ihrer Daten gegen die DSGVO verstößt. Zuständig ist die Aufsichtsbehörde des Bundeslandes
+          Ihres Wohnsitzes oder des Sitzes des Verantwortlichen — für Brandenburg die Landesbeauftragte für den
+          Datenschutz und für das Recht auf Akteneinsicht (LDA Brandenburg).
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec" id="aktualitaet">
+      <div class="lg-sec-head"><span class="lg-sec-no">§9</span><h2 class="lg-sec-title">Aktualität dieser Erklärung</h2></div>
+      <div class="lg-body">
+        <p>
+          Diese Datenschutzerklärung ist aktuell gültig. Durch die Weiterentwicklung der Website oder geänderte
+          gesetzliche bzw. behördliche Vorgaben kann es notwendig werden, diese Erklärung anzupassen. Es gilt
+          jeweils die hier veröffentlichte Fassung.
+        </p>
+      </div>
+    </section>
+
+    <hr class="lg-rule" />
 
     <!-- English version — the German text above prevails. -->
-    <h2>Privacy Policy (English)</h2>
-    <p class="legal__sub">GDPR information. The German version above is legally authoritative.</p>
-
-    <h3>Controller</h3>
-    <p>
-      Valentin Lenzing · [Address]<br />
-      Email: <a href="mailto:valentin.lenzing@gmail.com">valentin.lenzing@gmail.com</a>
+    <p class="lg-eyebrow">English</p>
+    <h2 class="lg-title is-sub">Privacy Policy</h2>
+    <p class="lg-lede">
+      Information on the processing of personal data on this website under the GDPR. This is a static,
+      non-commercial portfolio with no tracking, advertising, or cookies. Courtesy translation; the German
+      version above is authoritative.
     </p>
 
-    <h3>Hosting &amp; server logs</h3>
-    <p>
-      This site is hosted on Vercel. On access, the server processes technically necessary log
-      data (e.g. shortened IP address, timestamp, requested page) for delivery, security, and
-      stability. Legal basis: Art. 6(1)(f) GDPR.
-    </p>
+    <div style="height: clamp(28px, 4vh, 44px)"></div>
 
-    <h3>Audience &amp; performance measurement</h3>
-    <p>
-      The site uses Vercel Web Analytics and Vercel Speed Insights — anonymous and cookieless.
-      No cookies are set and no personal profiles are built; processing is carried out by Vercel
-      as a processor. Legal basis: Art. 6(1)(f) GDPR.
-    </p>
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§1</span><h2 class="lg-sec-title">Controller</h2></div>
+      <div class="lg-body">
+        <p>The controller for data processing on this website within the meaning of Art. 4 (7) GDPR is:</p>
+        <address class="lg-addr">
+          <strong>Valentin Lenzing</strong><br />
+          <span class="fill">[Street &amp; number]</span> · <span class="fill">[Postal code, City]</span><br />
+          Email:
+          <a class="lg-mail" href="#" data-mail-user={mailUser} data-mail-domain={mailDomain}>
+            <span data-mail-text>{mailUser} [at] {mailDomain}</span>
+          </a>
+        </address>
+      </div>
+    </section>
 
-    <h3>Fonts</h3>
-    <p>Fonts are served locally from this server; there is no connection to Google Fonts.</p>
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§2</span><h2 class="lg-sec-title">Principles &amp; legal bases</h2></div>
+      <div class="lg-body">
+        <p>
+          Personal data is processed on this website only to the extent technically necessary, exclusively on the
+          basis of statutory provisions — in particular Art. 6 (1)(f) GDPR (legitimate interest in the secure and
+          stable operation of the website) and, for contact, Art. 6 (1)(a) and (b) GDPR.
+        </p>
+        <p>
+          This website uses no cookies and no advertising networks. For reach and performance measurement,
+          a cookieless, data-minimal analytics tool from the hosting provider is used (Vercel Web Analytics
+          &amp; Speed Insights, see §3).
+        </p>
+      </div>
+    </section>
 
-    <h3>Your rights</h3>
-    <p>
-      Access, rectification, erasure, restriction, portability, and objection (Art. 15–21 GDPR),
-      plus the right to lodge a complaint with a supervisory authority. An informal email to the
-      address above is enough.
-    </p>
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§3</span><h2 class="lg-sec-title">Hosting, server log files &amp; analytics</h2></div>
+      <div class="lg-body">
+        <p>
+          This website is hosted by <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133, Walnut, CA 91789, USA.
+          The provider processes, on my behalf, the data required to deliver the website on the basis of a data
+          processing agreement under Art. 28 GDPR. Any transfer to the USA is safeguarded by appropriate measures
+          (EU Standard Contractual Clauses / EU-US Data Privacy Framework).
+        </p>
+        <p>When the website is accessed, the server automatically collects information in server log files:</p>
+        <ul>
+          <li>anonymised or shortened IP address</li>
+          <li>date and time of access</li>
+          <li>page / file requested</li>
+          <li>browser type and version</li>
+          <li>operating system used</li>
+          <li>referrer URL (previously visited page)</li>
+        </ul>
+        <p>
+          This data serves solely the technical delivery, security, and stability of the website. The legal basis
+          is Art. 6 (1)(f) GDPR. This data is not merged with other data sources or evaluated for marketing
+          purposes. The log files are deleted after <span class="fill">[retention, e.g. 7 days]</span> at the latest.
+        </p>
+        <p>
+          For reach and performance measurement I use <strong>Vercel Web Analytics</strong> and
+          <strong>Vercel Speed Insights</strong> (services of Vercel Inc.). They work without cookies and without
+          cross-device recognition; only aggregated, anonymous usage and load-time data is collected (e.g. page
+          viewed, approximate region, device type), with no personal reference and no merging with other data
+          sources. The legal basis is Art. 6 (1)(f) GDPR (legitimate interest in a data-minimal analysis of reach
+          and performance). More information: <span class="fill">[link to Vercel's privacy policy]</span>.
+        </p>
+      </div>
+    </section>
 
-    <p class="legal__note">
-      Placeholder draft — to be completed and legally reviewed before launch.
-    </p>
-  </article>
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§4</span><h2 class="lg-sec-title">Fonts</h2></div>
+      <div class="lg-body">
+        <p>
+          The fonts used on this website are served from my own server (local hosting). No connection to
+          third-party servers — such as Google Fonts — is established when the page loads, and no personal data is
+          transmitted to third parties.
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§5</span><h2 class="lg-sec-title">Contact by email</h2></div>
+      <div class="lg-body">
+        <p>
+          If you write to me by email, your details (name, email address, message content) are stored for the
+          purpose of processing your request. The legal basis is Art. 6 (1)(a) and (b) GDPR. I do not pass this
+          data on without your consent and delete it once your request has been conclusively processed and no
+          statutory retention obligations apply.
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§6</span><h2 class="lg-sec-title">SSL/TLS encryption</h2></div>
+      <div class="lg-body">
+        <p>
+          For security reasons and to protect the transmission of confidential content, this website uses SSL/TLS
+          encryption. You can recognise an encrypted connection by the “https://" in your browser's address bar.
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§7</span><h2 class="lg-sec-title">Your rights as a data subject</h2></div>
+      <div class="lg-body">
+        <p>Within the applicable statutory provisions, you have the following rights at any time:</p>
+        <ul>
+          <li>right of access to your processed data (Art. 15 GDPR)</li>
+          <li>right to rectification of inaccurate data (Art. 16 GDPR)</li>
+          <li>right to erasure (Art. 17 GDPR)</li>
+          <li>right to restriction of processing (Art. 18 GDPR)</li>
+          <li>right to data portability (Art. 20 GDPR)</li>
+          <li>right to object to processing (Art. 21 GDPR)</li>
+          <li>right to withdraw a given consent (Art. 7 (3) GDPR)</li>
+        </ul>
+        <p>To exercise these rights, an informal message to the email address above is sufficient.</p>
+      </div>
+    </section>
+
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§8</span><h2 class="lg-sec-title">Right to lodge a complaint</h2></div>
+      <div class="lg-body">
+        <p>
+          Without prejudice to any other administrative or judicial remedy, you have the right to lodge a complaint
+          with a data protection supervisory authority if you consider that the processing of your data infringes
+          the GDPR. Responsible is the authority of the federal state of your residence or of the controller's
+          seat — for Brandenburg, the State Commissioner for Data Protection and the Right to Inspect Files (LDA
+          Brandenburg).
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§9</span><h2 class="lg-sec-title">Validity of this policy</h2></div>
+      <div class="lg-body">
+        <p>
+          This privacy policy is currently valid. As the website develops or due to changed legal or regulatory
+          requirements, it may become necessary to adapt this policy. The version published here applies in each case.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="lg-foot">
+    <p class="lg-stand">Stand / Last updated: <span class="fill">[Monat Jahr]</span></p>
+    <nav class="lg-foot-links" aria-label="Legal pages">
+      <a href="/imprint">Legal Notice</a>
+      <a href="/privacy" aria-current="page">Privacy Policy</a>
+      <a href="/">Portfolio</a>
+    </nav>
+  </footer>
 </BaseLayout>
 
-<style>
-  .legal {
-    max-width: 48rem;
-    margin: 0 auto;
-    padding: calc(var(--space-8) + 2rem) var(--section-padding) var(--space-8);
-  }
-
-  .legal__back {
-    display: inline-block;
-    margin-bottom: var(--space-6);
-    color: var(--color-accent);
-  }
-
-  .legal h1 {
-    font-size: clamp(2.4rem, 6vw, 4rem);
-    margin: 0 0 var(--space-2);
-  }
-
-  .legal h2 {
-    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-    margin: 0 0 var(--space-2);
-  }
-
-  .legal h3 {
-    font-size: var(--size-lg);
-    color: var(--color-text);
-    margin: var(--space-5) 0 var(--space-2);
-  }
-
-  .legal__sub {
-    color: var(--color-muted);
-    margin: 0 0 var(--space-5);
-  }
-
-  .legal p {
-    color: var(--color-muted);
-    line-height: var(--leading-loose);
-    margin: 0 0 var(--space-3);
-  }
-
-  .legal a {
-    color: var(--color-text);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .legal a:hover {
-    color: var(--color-accent);
-  }
-
-  .legal__note {
-    border-left: 2px solid var(--color-accent);
-    padding-left: var(--space-3);
-    font-size: var(--size-sm);
-  }
-
-  .legal__divider {
-    border: 0;
-    border-top: 1px solid var(--color-border);
-    margin: var(--space-7) 0;
-  }
-</style>
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('a[data-mail-user]').forEach((link) => {
+    const user = link.dataset.mailUser ?? '';
+    const domain = link.dataset.mailDomain ?? '';
+    const address = `${user}@${domain}`;
+    link.href = `mailto:${address}`;
+    const text = link.querySelector<HTMLElement>('[data-mail-text]');
+    if (text) text.textContent = address;
+  });
+</script>

@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Navigation from '../components/Navigation.astro';
+import Wordmark from '../components/Wordmark.astro';
+import SharedPortrait from '../components/SharedPortrait.astro';
+import ScrollCue from '../components/ScrollCue.astro';
 import Hero from '../components/Hero.astro';
 import About from '../components/About.astro';
 import ShowcaseCard from '../components/ShowcaseCard.astro';
@@ -27,8 +30,11 @@ const renderedShowcases = await Promise.all(
 
 const showcaseData = showcases.map((showcase) => ({
   slug: getSlug(showcase.id),
+  order: showcase.data.order,
   title: showcase.data.title,
   subtitle: showcase.data.subtitle,
+  summary: showcase.data.summary,
+  heroCaption: showcase.data.heroCaption,
   year: showcase.data.year,
   role: showcase.data.role,
   type: showcase.data.type,
@@ -42,6 +48,9 @@ const showcaseData = showcases.map((showcase) => ({
 
 <BaseLayout initialModalSlug={initialModalSlug}>
   <Navigation />
+  <Wordmark />
+  <SharedPortrait />
+  <ScrollCue />
 
   <div class="scroll-container">
     <div class="horizontal-track">
@@ -49,10 +58,10 @@ const showcaseData = showcases.map((showcase) => ({
       <About />
 
       <section class="section work" id="work" aria-label="Work">
-        <div class="work__inner">
+        <div class="work-inner">
           <h2 class="sr-only">Work</h2>
 
-          <div class="work__grid">
+          <div class="work-row">
             {showcases.map((showcase) => <ShowcaseCard showcase={showcase} />)}
           </div>
         </div>
@@ -86,30 +95,39 @@ const showcaseData = showcases.map((showcase) => ({
 
 <style>
   .work {
-    width: 220vw;
+    width: 100vw;
+    padding: 0;
+    background: var(--color-bg);
+  }
+
+  .work-inner {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
+    justify-content: center;
+    padding: 0 5.5vw;
   }
 
-  .work__inner {
+  /* enumeration row — four uniform image-top cards on one level */
+  .work-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(22px, 2.3vw, 50px);
     width: 100%;
-    display: grid;
-    gap: var(--space-5);
+    align-items: start;
   }
 
-  .work__grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(34rem, 1fr));
-    gap: var(--space-5);
-  }
-
-  @media (max-width: 1000px) {
-    .work {
-      width: 100vw;
+  @media (max-width: 820px), (prefers-reduced-motion: reduce) {
+    .work-inner {
+      position: static;
+      display: block;
+      padding: 16vh 7vw 12vh;
     }
 
-    .work__grid {
+    .work-row {
       grid-template-columns: 1fr;
+      gap: 40px;
     }
   }
 </style>

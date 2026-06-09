@@ -1,117 +1,274 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/legal.css';
+
+// Email assembled client-side (see script) so the literal address never
+// appears as a contiguous "user@domain" string in the served HTML.
+const mailUser = 'valentin.lenzing';
+const mailDomain = 'gmail.com';
 ---
 
-<BaseLayout title="Legal Notice | Valentin Lenzing">
-  <article class="legal">
-    <a href="/#contact" class="legal__back">← Back</a>
+<BaseLayout title="Legal Notice — Impressum | Valentin Lenzing">
+  <header class="lg-bar">
+    <a class="lg-mark" href="/" aria-label="Valentin Lenzing — home"><span class="v">V</span>L</a>
+    <a class="lg-back" href="/#contact">
+      <span class="arr" aria-hidden="true">&larr;</span><span class="lbl-full">Back to portfolio</span>
+    </a>
+  </header>
+
+  <main class="lg-wrap">
+    <p class="lg-eyebrow">Rechtliches</p>
+    <h1 class="lg-title">Impressum</h1>
+    <p class="lg-lede">
+      Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG) und § 18 Abs. 2 Medienstaatsvertrag (MStV).
+      Die deutsche Fassung ist rechtlich maßgeblich; eine englische Übersetzung folgt darunter.
+    </p>
+
+    <div class="lg-note" role="note">
+      <span class="ico" aria-hidden="true">&lsaquo;/&rsaquo;</span>
+      <p>
+        <strong>Vor der Veröffentlichung:</strong> Felder in <span class="fill">[eckigen Klammern]</span>
+        mit den eigenen Daten füllen und diesen Hinweiskasten entfernen. Eine kurze rechtliche Prüfung
+        der finalen Texte wird empfohlen.
+      </p>
+    </div>
+
+    <hr class="lg-rule" />
 
     <!-- German is the legally authoritative version. -->
-    <h1>Impressum</h1>
-    <p class="legal__sub">
-      Angaben gemäß § 5 DDG · <em>Platzhalter — vor Veröffentlichung vervollständigen.</em>
-    </p>
+    <section class="lg-sec" id="anbieter">
+      <div class="lg-sec-head"><span class="lg-sec-no">§1</span><h2 class="lg-sec-title">Diensteanbieter</h2></div>
+      <div class="lg-body">
+        <address class="lg-addr">
+          <strong>Valentin Lenzing</strong><br />
+          <span class="fill">[Straße &amp; Hausnummer]</span><br />
+          <span class="fill">[PLZ Ort]</span><br />
+          Deutschland
+        </address>
+        <p>
+          Dieses Portfolio ist eine private, nicht-kommerzielle Website. Eine Umsatzsteuer-Identifikationsnummer
+          gemäß § 27 a Umsatzsteuergesetz liegt nicht vor.
+        </p>
+      </div>
+    </section>
 
-    <h3>Diensteanbieter</h3>
-    <p>
-      Valentin Lenzing<br />
-      [Straße &amp; Hausnummer]<br />
-      [PLZ Ort], Deutschland
-    </p>
+    <section class="lg-sec" id="kontakt">
+      <div class="lg-sec-head"><span class="lg-sec-no">§2</span><h2 class="lg-sec-title">Kontakt</h2></div>
+      <div class="lg-body">
+        <dl class="lg-dl">
+          <dt>E-Mail</dt>
+          <dd>
+            <a class="lg-mail" href="#" data-mail-user={mailUser} data-mail-domain={mailDomain}>
+              <span data-mail-text>{mailUser} [at] {mailDomain}</span>
+            </a>
+          </dd>
+          <dt>Telefon</dt>
+          <dd><span class="fill">[Telefonnummer, optional]</span></dd>
+        </dl>
+      </div>
+    </section>
 
-    <h3>Kontakt</h3>
-    <p>E-Mail: <a href="mailto:valentin.lenzing@gmail.com">valentin.lenzing@gmail.com</a></p>
+    <section class="lg-sec" id="verantwortlich">
+      <div class="lg-sec-head"><span class="lg-sec-no">§3</span><h2 class="lg-sec-title">Verantwortlich für den Inhalt</h2></div>
+      <div class="lg-body">
+        <p>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:</p>
+        <address class="lg-addr"><strong>Valentin Lenzing</strong><br />Anschrift wie unter §1</address>
+      </div>
+    </section>
 
-    <h3>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h3>
-    <p>Valentin Lenzing, Anschrift wie oben.</p>
+    <section class="lg-sec" id="streit">
+      <div class="lg-sec-head"><span class="lg-sec-no">§4</span><h2 class="lg-sec-title">Verbraucherstreitbeilegung</h2></div>
+      <div class="lg-body">
+        <p>
+          Ich bin nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer
+          Verbraucherschlichtungsstelle teilzunehmen.
+        </p>
+      </div>
+    </section>
 
-    <p class="legal__note">
-      Privates, nicht-kommerzielles Portfolio. Diese Fassung ist ein Platzhalter; finale Angaben
-      und eine rechtliche Prüfung folgen vor dem Launch.
-    </p>
+    <section class="lg-sec" id="haftung-inhalt">
+      <div class="lg-sec-head"><span class="lg-sec-no">§5</span><h2 class="lg-sec-title">Haftung für Inhalte</h2></div>
+      <div class="lg-body">
+        <p>
+          Als Diensteanbieter bin ich gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den
+          allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG bin ich als Diensteanbieter jedoch nicht
+          verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen
+          zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+        </p>
+        <p>
+          Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen
+          Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der
+          Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden entsprechender Rechtsverletzungen
+          werde ich diese Inhalte umgehend entfernen.
+        </p>
+      </div>
+    </section>
 
-    <hr class="legal__divider" />
+    <section class="lg-sec" id="haftung-links">
+      <div class="lg-sec-head"><span class="lg-sec-no">§6</span><h2 class="lg-sec-title">Haftung für Links</h2></div>
+      <div class="lg-body">
+        <p>
+          Dieses Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte ich keinen Einfluss habe.
+          Deshalb kann ich für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten
+          Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten
+          wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft; rechtswidrige Inhalte waren
+          zum Zeitpunkt der Verlinkung nicht erkennbar.
+        </p>
+        <p>
+          Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist ohne konkrete Anhaltspunkte einer
+          Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werde ich derartige Links
+          umgehend entfernen.
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec" id="urheberrecht">
+      <div class="lg-sec-head"><span class="lg-sec-no">§7</span><h2 class="lg-sec-title">Urheberrecht</h2></div>
+      <div class="lg-body">
+        <p>
+          Die durch den Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen
+          Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der
+          Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+        </p>
+        <p>
+          Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte
+          Dritter beachtet. Sollten Sie dennoch auf eine Urheberrechtsverletzung aufmerksam werden, bitte ich um
+          einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werde ich derartige Inhalte
+          umgehend entfernen.
+        </p>
+      </div>
+    </section>
+
+    <hr class="lg-rule" />
 
     <!-- English version — the German text above prevails. -->
-    <h2>Legal Notice (English)</h2>
-    <p class="legal__sub">Provider information pursuant to § 5 DDG. The German version above is legally authoritative.</p>
-
-    <h3>Provider</h3>
-    <p>
-      Valentin Lenzing<br />
-      [Street &amp; number]<br />
-      [Postal code, City], Germany
+    <p class="lg-eyebrow">English</p>
+    <h2 class="lg-title is-sub">Legal Notice</h2>
+    <p class="lg-lede">
+      Information pursuant to § 5 DDG and § 18 (2) MStV. This is a courtesy translation; the German version
+      above is legally authoritative.
     </p>
 
-    <h3>Contact</h3>
-    <p>Email: <a href="mailto:valentin.lenzing@gmail.com">valentin.lenzing@gmail.com</a></p>
+    <div style="height: clamp(28px, 4vh, 44px)"></div>
 
-    <p class="legal__note">
-      Private, non-commercial portfolio. Placeholder — final details and a legal review will
-      follow before launch.
-    </p>
-  </article>
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§1</span><h2 class="lg-sec-title">Service provider</h2></div>
+      <div class="lg-body">
+        <address class="lg-addr">
+          <strong>Valentin Lenzing</strong><br />
+          <span class="fill">[Street &amp; number]</span><br />
+          <span class="fill">[Postal code, City]</span><br />
+          Germany
+        </address>
+        <p>
+          This portfolio is a private, non-commercial website. No VAT identification number under § 27a of the
+          German VAT Act exists.
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§2</span><h2 class="lg-sec-title">Contact</h2></div>
+      <div class="lg-body">
+        <dl class="lg-dl">
+          <dt>Email</dt>
+          <dd>
+            <a class="lg-mail" href="#" data-mail-user={mailUser} data-mail-domain={mailDomain}>
+              <span data-mail-text>{mailUser} [at] {mailDomain}</span>
+            </a>
+          </dd>
+          <dt>Phone</dt>
+          <dd><span class="fill">[Phone number, optional]</span></dd>
+        </dl>
+      </div>
+    </section>
+
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§3</span><h2 class="lg-sec-title">Responsible for content</h2></div>
+      <div class="lg-body">
+        <p>Responsible for the content pursuant to § 18 (2) MStV:</p>
+        <address class="lg-addr"><strong>Valentin Lenzing</strong><br />Address as under §1.</address>
+      </div>
+    </section>
+
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§4</span><h2 class="lg-sec-title">Dispute resolution</h2></div>
+      <div class="lg-body">
+        <p>
+          I am neither willing nor obliged to participate in dispute resolution proceedings before a consumer
+          arbitration board.
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§5</span><h2 class="lg-sec-title">Liability for content</h2></div>
+      <div class="lg-body">
+        <p>
+          As a service provider, I am responsible for my own content on these pages under the general laws
+          pursuant to § 7 (1) DDG. Under §§ 8 to 10 DDG, however, I am not obliged to monitor transmitted or
+          stored third-party information or to investigate circumstances that indicate unlawful activity.
+        </p>
+        <p>
+          Obligations to remove or block the use of information under the general laws remain unaffected.
+          Liability in this respect is, however, only possible from the point in time at which a concrete
+          infringement of the law becomes known. Upon becoming aware of such infringements, I will remove the
+          content immediately.
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§6</span><h2 class="lg-sec-title">Liability for links</h2></div>
+      <div class="lg-body">
+        <p>
+          This site contains links to external third-party websites over whose content I have no influence.
+          Therefore, I cannot assume any liability for this external content. The respective provider or operator
+          of the linked pages is always responsible for their content. The linked pages were checked for possible
+          legal violations at the time of linking; unlawful content was not recognisable at that time.
+        </p>
+        <p>
+          Permanent monitoring of the content of the linked pages is not reasonable without concrete evidence of
+          a legal violation. Upon becoming aware of legal violations, I will remove such links immediately.
+        </p>
+      </div>
+    </section>
+
+    <section class="lg-sec">
+      <div class="lg-sec-head"><span class="lg-sec-no">§7</span><h2 class="lg-sec-title">Copyright</h2></div>
+      <div class="lg-body">
+        <p>
+          The content and works created by the site operator on these pages are subject to German copyright law.
+          Duplication, processing, distribution, and any form of exploitation beyond the limits of copyright
+          require the written consent of the respective author or creator.
+        </p>
+        <p>
+          Insofar as the content on this site was not created by the operator, the copyrights of third parties are
+          respected. Should you nevertheless become aware of a copyright infringement, please notify me
+          accordingly. Upon becoming aware of legal violations, I will remove such content immediately.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="lg-foot">
+    <p class="lg-stand">Stand / Last updated: <span class="fill">[Monat Jahr]</span></p>
+    <nav class="lg-foot-links" aria-label="Legal pages">
+      <a href="/imprint" aria-current="page">Legal Notice</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/">Portfolio</a>
+    </nav>
+  </footer>
 </BaseLayout>
 
-<style>
-  .legal {
-    max-width: 48rem;
-    margin: 0 auto;
-    padding: calc(var(--space-8) + 2rem) var(--section-padding) var(--space-8);
-  }
-
-  .legal__back {
-    display: inline-block;
-    margin-bottom: var(--space-6);
-    color: var(--color-accent);
-  }
-
-  .legal h1 {
-    font-size: clamp(2.4rem, 6vw, 4rem);
-    margin: 0 0 var(--space-2);
-  }
-
-  .legal h2 {
-    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-    margin: 0 0 var(--space-2);
-  }
-
-  .legal h3 {
-    font-size: var(--size-lg);
-    color: var(--color-text);
-    margin: var(--space-5) 0 var(--space-2);
-  }
-
-  .legal__sub {
-    color: var(--color-muted);
-    margin: 0 0 var(--space-5);
-  }
-
-  .legal p {
-    color: var(--color-muted);
-    line-height: var(--leading-loose);
-    margin: 0 0 var(--space-3);
-  }
-
-  .legal a {
-    color: var(--color-text);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .legal a:hover {
-    color: var(--color-accent);
-  }
-
-  .legal__note {
-    border-left: 2px solid var(--color-accent);
-    padding-left: var(--space-3);
-    font-size: var(--size-sm);
-  }
-
-  .legal__divider {
-    border: 0;
-    border-top: 1px solid var(--color-border);
-    margin: var(--space-7) 0;
-  }
-</style>
+<script>
+  // Assemble obfuscated email addresses (parts kept in data-attributes).
+  document.querySelectorAll<HTMLAnchorElement>('a[data-mail-user]').forEach((link) => {
+    const user = link.dataset.mailUser ?? '';
+    const domain = link.dataset.mailDomain ?? '';
+    const address = `${user}@${domain}`;
+    link.href = `mailto:${address}`;
+    const text = link.querySelector<HTMLElement>('[data-mail-text]');
+    if (text) text.textContent = address;
+  });
+</script>

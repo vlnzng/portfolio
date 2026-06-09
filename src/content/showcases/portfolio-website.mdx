@@ -1,12 +1,15 @@
 ---
 title: "Portfolio Website"
-subtitle: "A redesign of my own site, from a 2024 student project to this 2026 version."
+subtitle: "A redesign of my own site — from a 2024 student project to this 2026 version."
+summary: "The site you are on, hand-built from concept to deployment."
+result: "Hand-built · Lighthouse 95+"
+heroCaption: "before / after — 2024 vs 2026"
 cardMeta: ["Personal project", "Solo"]
 year: 2026
-role: "UX, brand, frontend"
-type: "Personal project"
-duration: "Late 2025 to early 2026"
-tools: ["Astro", "TypeScript", "GSAP", "Lenis"]
+role: "Designer, Writer, Developer"
+type: "Personal project · Solo"
+duration: "6 weeks"
+tools: ["Figma", "Astro", "GSAP", "Lenis", "HTML/CSS/TS"]
 tags: ["UX", "Brand", "Code"]
 heroImage: "/assets/showcases/portfolio-website.svg"
 order: 4
@@ -15,24 +18,28 @@ githubLink: "https://github.com/vlnzng/portfolio"
 
 ## Context
 
-This site is a personal redesign that repositions an older 2024 student portfolio into a focused 2026 portfolio for junior UX and product design roles.
+This is the second version of my portfolio. The first one shipped in early 2024 as part of an Interface Design course at TH Brandenburg — a dark site with red accents, percent-bars for skills, and a slogan I no longer recognise as mine. It served its purpose for the course. It did not serve me as a working designer.
 
 ## Problem
 
-The previous portfolio was too generic. It showed that I could build a website, but it did not communicate my current direction: research-informed product thinking, interaction design, and enough implementation skill to make ideas tangible.
+The 2024 site reflected what I thought a portfolio should look like — generic dark theme, listed skills with arbitrary percentages, a tagline lifted from design-school stock phrases. It did not show how I actually work or think. By late 2025, every time I sent the link to a recruiter, I winced.
 
 ## Process
 
-I audited the old version, researched editorial portfolio formats, explored the technical stack, and iterated the copy with a strong focus on voice. The horizontal structure became a deliberate way to make the site feel like a composed sequence rather than a standard page.
+I started with an audit of the old version. What I kept: the V/L wordmark concept, set in Lora Bold, and the underlying idea that the site should feel personal. What I removed: the dark-red theme, the percent bars, the generic copy, and the assumption that scrolling has to be vertical.
+
+The concept work was the longest part — maybe four weeks of iteration on copy, structure, and tone before any code happened. I worked on positioning first, then on the hero statement, then on each section's individual job.
+
+The build itself took two weeks. Astro for the framework, Lenis for smooth scroll, GSAP with ScrollTrigger for the horizontal sidescroll on desktop. Fonts are self-hosted to stay compliant with EU privacy law.
 
 ## Solution
 
-The result is this hand-built Astro site with Lenis, GSAP, content collections, responsive fallback behavior, and modal case studies. It uses a dark editorial visual language, concise copy, and a focused set of four projects.
+This site. Horizontal scrolling on desktop, vertical fallback on mobile, dark editorial type system, and copy written with the same attention I would give to a client product. Built entirely by hand without a no-code builder.
 
 ## Impact
 
-The project turns the portfolio itself into a showcase of UX, brand, and code. It also gives recruiters a clearer path through my thinking, from conceptual work to practical design and implementation.
+From a generic 2024 student site to a hand-built editorial showcase with custom interaction logic. The Lighthouse scores are above 95 across all four categories. The site loads in under 200ms.
 
 ## Reflection
 
-Horizontal scrolling is a calculated risk. I will watch how people use it in testing and keep the mobile fallback straightforward, because the interaction should add character without becoming friction.
+The horizontal scroll is a calculated risk. It works for me as a way to make the unusual feel intentional, and it gives me something to talk about in interviews. I am watching whether it stays useful or starts to be a stylistic crutch — if six months from now I can't defend it on user-experience grounds, it goes.

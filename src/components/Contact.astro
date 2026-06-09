@@ -1,188 +1,434 @@
 ---
-const encodedMail = 'hello&#64;valentin-lenzing.de';
+// Email is assembled client-side so the literal address never appears as a
+// contiguous "user@domain" string in the served HTML (basic crawler defence).
+const mailUser = 'valentin.lenzing';
+const mailDomain = 'gmail.com';
 ---
 
 <section class="section contact" id="contact" aria-label="Contact">
-  <figure class="contact__visual" aria-label="Desk or secondary portrait image">
-    <img
-      src="/images/contact-visual.webp"
-      alt=""
-      loading="lazy"
-      decoding="async"
-      onerror="this.hidden=true"
-    />
-  </figure>
-
-  <p class="contact__line">
-    Get in touch,<br />
-    whether it's a job,<br />
-    a question, or just<br />
-    a hello.
-  </p>
-
-  <div class="contact__panel">
-    <a
-      class="contact__mail"
-      href="#contact"
-      data-mail-link
-      data-mail-user="hello"
-      data-mail-domain="valentin-lenzing.de"
-    >
-      <span set:html={encodedMail}></span>
-    </a>
-
-    <div class="contact__links">
-      <a href="https://linkedin.com/in/valentin-lenzing" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      <a href="https://github.com/vlnzng" target="_blank" rel="noopener noreferrer">GitHub</a>
+  <div class="cB-left">
+    <div class="cphoto cphoto--framed">
+      <div class="cphoto-stripe"></div>
+      <span class="cphoto-cap">second photo &middot; desk / detail shot</span>
     </div>
-
-    <div class="contact__status">
-      <p>Brandenburg, Germany</p>
-      <p>Available immediately</p>
-    </div>
-
-    <div class="contact__cv" aria-label="CV downloads">
-      <a href="/cv/valentin-lenzing-cv-de.pdf">CV (DE)</a>
-      <a href="/cv/valentin-lenzing-cv-en.pdf">CV (EN)</a>
+    <div class="cclose-wrap">
+      <p class="cclose-lead">Open to</p>
+      <ul class="cclose-list">
+        <li>Full-time opportunities</li>
+        <li>Design collaborations</li>
+        <li>Meaningful conversations</li>
+      </ul>
     </div>
   </div>
 
-  <nav class="contact__legal" aria-label="Legal">
-    <a href="/imprint">Legal Notice</a>
-    <a href="/privacy">Privacy Policy</a>
+  <div class="cB-right">
+    <div class="cblock">
+      <div class="cgroup">
+        <p class="clabel">Email</p>
+        <a
+          class="cmail"
+          href="#"
+          data-mail-user={mailUser}
+          data-mail-domain={mailDomain}
+          aria-label="Email Valentin Lenzing"
+        >
+          <span data-mail-text>{mailUser} [at] {mailDomain}</span>
+        </a>
+      </div>
+
+      <div class="cgroup">
+        <p class="clabel">Elsewhere</p>
+        <div class="clinks">
+          <a class="clink" href="https://www.linkedin.com/in/valentinlenzing" target="_blank" rel="noopener noreferrer">
+            LinkedIn <span class="clink-arrow" aria-hidden="true">&#8599;</span>
+          </a>
+          <a class="clink" href="https://github.com/vlnzng" target="_blank" rel="noopener noreferrer">
+            GitHub <span class="clink-arrow" aria-hidden="true">&#8599;</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="cgroup cgroup--meta">
+        <div class="cmeta-item">
+          <p class="clabel clabel--soft">Based in</p>
+          <p class="cmeta">Berlin Metropolitan Area</p>
+        </div>
+        <div class="cmeta-item">
+          <p class="clabel clabel--soft">Status</p>
+          <p class="cstatus"><span class="cdot" aria-hidden="true"></span>Available immediately</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="clegal" aria-label="Legal">
+    <a class="clegal-link" href="/imprint">Legal Notice</a>
+    <span class="clegal-dot" aria-hidden="true">&middot;</span>
+    <a class="clegal-link" href="/privacy">Privacy Policy</a>
   </nav>
 </section>
 
 <script>
-  const mailLink = document.querySelector<HTMLAnchorElement>('[data-mail-link]');
-  if (mailLink) {
-    const address = `${mailLink.dataset.mailUser}@${mailLink.dataset.mailDomain}`;
-    mailLink.href = `mailto:${address}`;
+  const link = document.querySelector<HTMLAnchorElement>('.cmail[data-mail-user]');
+  if (link) {
+    const user = link.dataset.mailUser ?? '';
+    const domain = link.dataset.mailDomain ?? '';
+    const address = `${user}@${domain}`;
+    link.href = `mailto:${address}`;
+    const text = link.querySelector<HTMLElement>('[data-mail-text]');
+    if (text) text.textContent = address;
   }
+
+  // Remember the scroll position when leaving for a legal page, so returning
+  // lands exactly where the link was clicked (restored in scroll.ts on load).
+  document.querySelectorAll<HTMLAnchorElement>('.clegal a').forEach((a) => {
+    a.addEventListener('click', () => {
+      try {
+        sessionStorage.setItem('vl:returnY', String(window.scrollY));
+      } catch {
+        /* sessionStorage unavailable — fall back to the #contact hash */
+      }
+    });
+  });
 </script>
 
 <style>
   .contact {
-    display: grid;
-    grid-template-columns: minmax(18rem, 36vw) minmax(20rem, 34rem);
-    grid-template-rows: 1fr auto;
-    align-items: center;
-    gap: var(--space-7);
+    width: 100vw;
+    padding: 0;
+    background: var(--color-bg);
   }
 
-  .contact__visual {
-    align-self: stretch;
-    min-height: min(68vh, 45rem);
-    overflow: hidden;
-    background:
-      linear-gradient(160deg, rgb(217 179 108 / 0.18), transparent 50%),
-      linear-gradient(180deg, var(--color-surface), #151311);
-    border: 1px solid var(--color-border);
-  }
-
-  .contact__visual img {
-    width: 100%;
-    height: 100%;
-    min-height: inherit;
-    display: block;
-    object-fit: cover;
-  }
-
-  .contact__line {
+  /* layout — framed photo left, address-forward block right */
+  .cB-left {
     position: absolute;
-    left: var(--section-padding);
-    bottom: var(--section-padding);
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 4vw, 4.7rem);
-    font-weight: 700;
-    line-height: 1;
-    color: var(--color-text);
-  }
-
-  .contact__panel {
-    display: grid;
-    gap: var(--space-5);
-  }
-
-  .contact__mail {
-    width: fit-content;
-    font-size: clamp(1.35rem, 2vw, 2rem);
-    color: var(--color-text);
-    border-bottom: 1px solid currentColor;
-    text-decoration: none;
-  }
-
-  .contact__links,
-  .contact__status,
-  .contact__cv {
-    display: grid;
-    gap: var(--space-3);
-  }
-
-  .contact__links a,
-  .contact__cv a {
-    width: fit-content;
-    color: var(--color-muted);
-    transition: color var(--duration-fast) var(--ease-out);
-  }
-
-  .contact__links a:hover,
-  .contact__cv a:hover,
-  .contact__legal a:hover,
-  .contact__mail:hover {
-    color: var(--color-accent);
-    text-decoration: none;
-  }
-
-  .contact__status {
-    color: var(--color-text);
-  }
-
-  .contact__cv {
-    grid-template-columns: repeat(2, max-content);
-  }
-
-  .contact__cv a {
-    padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--color-border);
-  }
-
-  .contact__legal {
-    position: absolute;
-    right: var(--space-4);
-    top: 50%;
+    left: 5.5vw;
+    top: 0;
+    bottom: 0;
+    width: clamp(280px, 24vw, 360px);
     display: flex;
-    gap: var(--space-4);
-    writing-mode: vertical-rl;
-    transform: translateY(-50%);
-    font-size: var(--size-xs);
+    flex-direction: column;
+    justify-content: center;
+    z-index: 3;
+  }
+
+  .cB-left .cclose-wrap {
+    margin-top: 34px;
+  }
+
+  .cB-right {
+    position: absolute;
+    left: 44vw;
+    right: 7vw;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 3;
+  }
+
+  .cB-right .cblock {
+    max-width: 540px;
+  }
+
+  /* closing line (Lora) */
+  .cclose-lead {
+    margin: 0 0 18px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-style: italic;
+    font-size: clamp(22px, 1.9vw, 28px);
+    color: var(--color-accent);
+  }
+
+  .cclose-list {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cclose-list li {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(17px, 1.3vw, 21px);
+    line-height: 1.2;
+    color: var(--color-text);
+  }
+
+  .cclose-list li::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    flex: 0 0 auto;
+    background: var(--color-accent);
+    transform: rotate(45deg);
+  }
+
+  /* framed photo placeholder */
+  .cphoto {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  .cphoto-stripe {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent 0 18px,
+      rgb(155 149 144 / 0.06) 18px 36px
+    );
+  }
+
+  .cphoto-cap {
+    position: absolute;
+    left: 18px;
+    bottom: 16px;
+    padding: 4px 9px;
+    background: rgb(26 24 22 / 0.5);
+    border: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.03em;
     color: var(--color-muted);
   }
 
-  @media (max-width: 840px) {
+  .cphoto--framed {
+    width: 100%;
+    height: clamp(360px, 52vh, 460px);
+    border: 1px solid var(--color-border);
+  }
+
+  .cphoto--framed::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 80px rgb(0 0 0 / 0.35);
+  }
+
+  /* contact block */
+  .cblock {
+    width: 100%;
+  }
+
+  .cgroup + .cgroup {
+    margin-top: 26px;
+    padding-top: 26px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .clabel {
+    margin: 0 0 16px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .clabel--soft {
+    margin-bottom: 10px;
+    color: var(--color-muted);
+  }
+
+  /* email — full width of the column */
+  .cmail {
+    display: block;
+    position: relative;
+    width: 100%;
+    font-family: var(--font-display);
+    font-weight: 700;
+    /* sized to keep the full address on one line in the column */
+    font-size: clamp(20px, 2vw, 30px);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .cmail::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -7px;
+    height: 2px;
+    background: rgb(217 179 108 / 0.38);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s var(--ease-out), background 0.3s ease;
+  }
+
+  .cmail:hover {
+    color: var(--color-accent);
+  }
+
+  .cmail:hover::after {
+    transform: scaleX(1);
+    background: var(--color-accent);
+  }
+
+  .clinks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .clink {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--color-text);
+    transition: color 0.2s ease;
+  }
+
+  .clink-arrow {
+    color: var(--color-accent);
+    font-size: 14px;
+    transition: transform 0.25s var(--ease-out);
+  }
+
+  .clink:hover {
+    color: var(--color-accent);
+  }
+
+  .clink:hover .clink-arrow {
+    transform: translate(3px, -3px);
+  }
+
+  .cgroup--meta {
+    display: flex;
+    gap: 44px;
+    flex-wrap: wrap;
+  }
+
+  .cmeta {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-text);
+  }
+
+  .cstatus {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--color-text);
+  }
+
+  .cdot {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: var(--color-accent);
+    animation: cpulse 2.6s ease-out infinite;
+  }
+
+  @keyframes cpulse {
+    0% { box-shadow: 0 0 0 0 rgb(217 179 108 / 0.5); }
+    70% { box-shadow: 0 0 0 9px rgb(217 179 108 / 0); }
+    100% { box-shadow: 0 0 0 0 rgb(217 179 108 / 0); }
+  }
+
+  /* vertical legal at the right edge */
+  .clegal {
+    position: absolute;
+    right: 26px;
+    top: 50%;
+    z-index: 50;
+    transform: translateY(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .clegal-link {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 11.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    transition: color 0.2s ease;
+  }
+
+  .clegal-link:hover {
+    color: var(--color-accent);
+  }
+
+  .clegal-dot {
+    color: var(--color-border);
+    font-size: 11px;
+  }
+
+  @media (max-width: 820px), (prefers-reduced-motion: reduce) {
     .contact {
-      grid-template-columns: 1fr;
-      gap: var(--space-5);
-      padding-bottom: 9rem;
+      min-height: auto;
     }
 
-    .contact__visual {
-      min-height: 36vh;
+    .cB-left,
+    .cB-right {
+      position: static;
+      width: auto;
+      display: block;
     }
 
-    .contact__line {
-      position: relative;
-      left: auto;
-      bottom: auto;
+    .cB-left {
+      padding: 16vh 7vw 0;
     }
 
-    .contact__legal {
-      right: auto;
-      left: var(--section-padding);
-      top: auto;
-      bottom: var(--space-4);
-      writing-mode: horizontal-tb;
+    .cphoto--framed {
+      width: 100%;
+      height: 64vw;
+      max-height: 460px;
+    }
+
+    .cB-left .cclose-wrap {
+      margin-top: 30px;
+    }
+
+    .cclose {
+      max-width: none;
+    }
+
+    .cB-right {
+      padding: 8vh 7vw 14vh;
+    }
+
+    .cB-right .cblock {
+      max-width: none;
+    }
+
+    .cmail {
+      font-size: clamp(18px, 5.2vw, 28px);
+    }
+
+    .clegal {
+      position: static;
       transform: none;
+      writing-mode: horizontal-tb;
+      justify-content: flex-start;
+      padding: 0 7vw 10vh;
     }
   }
 </style>

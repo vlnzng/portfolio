@@ -1,7 +1,10 @@
 interface ShowcaseData {
   slug: string;
+  order: number;
   title: string;
   subtitle: string;
+  summary?: string;
+  heroCaption?: string;
   year: number;
   role: string;
   type?: string;
@@ -17,10 +20,12 @@ const showcases: ShowcaseData[] = dataNode?.textContent ? JSON.parse(dataNode.te
 
 let currentSlug: string | null = null;
 let scrollPositionBeforeOpen = 0;
+let prevUrl: string | null = null;
 
 const modal = document.getElementById('showcase-modal');
-const modalBackdrop = document.getElementById('modal-backdrop');
+const modalScroll = document.getElementById('modal-scroll');
 const modalClose = document.getElementById('modal-close') as HTMLButtonElement | null;
+const modalHero = document.getElementById('modal-hero');
 const modalBody = document.getElementById('modal-body');
 const modalMeta = document.getElementById('modal-meta');
 const modalFooter = document.getElementById('modal-footer');
@@ -33,37 +38,55 @@ function openModal(slug: string): void {
 
   currentSlug = slug;
   scrollPositionBeforeOpen = window.scrollY;
+  // Remember where to return on close so we land exactly where we opened from.
+  prevUrl = location.pathname.startsWith('/work/')
+    ? '/'
+    : `${location.pathname}${location.search}${location.hash}`;
 
   history.pushState({ modal: slug }, '', `/work/${slug}`);
 
-  const metaItems = [
-    data.role,
-    data.type,
-    data.duration,
-    data.tools.join(', '),
-    String(data.year),
-  ].filter(Boolean);
+  const num = String(data.order).padStart(2, '0');
+
+  if (modalHero) {
+    const caption = data.heroCaption ?? `${data.title} — key image`;
+    modalHero.innerHTML =
+      `<div class="wstripe"></div><span class="wcard-cap">${escapeHtml(caption)}</span>`;
+  }
+
+  const metaPairs: [string, string | undefined][] = [
+    ['Role', data.role],
+    ['Type', data.type],
+    ['Duration', data.duration],
+    ['Tools', data.tools.join(' · ')],
+    ['Year', String(data.year)],
+  ];
 
   modalMeta.innerHTML = `
-    <p class="modal__eyebrow">${data.tags.map((tag) => escapeHtml(tag)).join(' &middot; ')}</p>
-    <h2 id="modal-title" class="modal__title">${escapeHtml(data.title)}</h2>
-    <p class="modal__subtitle">${escapeHtml(data.subtitle)}</p>
-    <div class="modal__meta-bar">${metaItems.map((item) => `<span>${escapeHtml(item)}</span>`).join('')}</div>
+    <span class="cs-num">${escapeHtml(num)}</span>
+    <h2 id="modal-title" class="cs-title">${escapeHtml(data.title)}</h2>
+    <p class="cs-sub">${escapeHtml(data.summary ?? data.subtitle)}</p>
+    <ul class="cs-meta">${metaPairs
+      .filter(([, value]) => Boolean(value))
+      .map(([key, value]) => `<li><span class="cs-meta-k">${escapeHtml(key)}</span><span class="cs-meta-v">${escapeHtml(value)}</span></li>`)
+      .join('')}</ul>
   `;
 
   modalBody.replaceChildren(template.content.cloneNode(true));
 
-  const links = [
-    data.externalLink ? `<a href="${data.externalLink}" target="_blank" rel="noopener noreferrer">Open live tool</a>` : '',
-    data.githubLink ? `<a href="${data.githubLink}" target="_blank" rel="noopener noreferrer">View source on GitHub</a>` : '',
+  const ctas = [
+    data.externalLink
+      ? `<a class="cs-btn cs-btn--primary" href="${data.externalLink}" target="_blank" rel="noopener noreferrer">Open live tool <span class="cs-btn-arrow">&#8599;</span></a>`
+      : '',
+    data.githubLink
+      ? `<a class="cs-btn cs-btn--ghost" href="${data.githubLink}" target="_blank" rel="noopener noreferrer">View source <span class="cs-btn-arrow">&#8599;</span></a>`
+      : '',
   ].filter(Boolean);
 
-  modalFooter.innerHTML = links.join('');
-  modalFooter.hidden = links.length === 0;
+  modalFooter.innerHTML = ctas.join('');
 
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
-  modalBody.scrollTop = 0;
+  if (modalScroll) modalScroll.scrollTop = 0;
   modalClose?.focus();
 }
 
@@ -74,7 +97,8 @@ function closeModal(updateUrl = true): void {
   document.body.style.overflow = '';
   currentSlug = null;
 
-  if (updateUrl) history.pushState(null, '', '/#work');
+  if (updateUrl) history.pushState(null, '', prevUrl ?? '/');
+  prevUrl = null;
   window.scrollTo({ top: scrollPositionBeforeOpen });
 }
 
@@ -88,7 +112,6 @@ function escapeHtml(value: unknown): string {
 }
 
 modalClose?.addEventListener('click', closeModal);
-modalBackdrop?.addEventListener('click', closeModal);
 
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && modal?.getAttribute('aria-hidden') === 'false') {

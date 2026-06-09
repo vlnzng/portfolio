@@ -1,0 +1,106 @@
+---
+// One fixed portrait that belongs to no panel. It rests on the RIGHT during
+// the hero (slightly cropped at the edge) and GLIDES to the LEFT as the page
+// pans into About — the same photo carrying you through the transition.
+// scroll.ts drives left / width / edge-fades from the pan progress.
+---
+
+<div class="portrait" aria-hidden="true" data-portrait>
+  <div class="portrait__glow"></div>
+  <img
+    src="/images/valentin-lenzing-portrait.webp"
+    alt=""
+    decoding="async"
+    onerror="this.style.display='none'"
+  />
+  <div class="portrait__fade portrait__fade--l" data-portrait-fade-l></div>
+  <div class="portrait__fade portrait__fade--r" data-portrait-fade-r></div>
+  <div class="portrait__fade portrait__fade--b"></div>
+</div>
+
+<style>
+  .portrait {
+    position: fixed;
+    top: 0;
+    left: 50vw;
+    width: 52vw;
+    height: 100vh;
+    z-index: 30;
+    overflow: hidden;
+    /* surface fallback if the photo is missing */
+    background:
+      linear-gradient(180deg, rgb(217 179 108 / 0.1), transparent 55%),
+      linear-gradient(135deg, var(--color-surface), #161412);
+    will-change: left, width, transform;
+  }
+
+  .portrait img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: 50% 14%;
+    filter: saturate(0.82) contrast(1.03) brightness(0.99);
+  }
+
+  .portrait__glow {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(56% 52% at 50% 32%, rgb(217 179 108 / 0.13), transparent 70%);
+  }
+
+  /* both inner edges dissolve into the page; the engine cross-fades which side
+     is active so the text-facing edge is always the soft one */
+  .portrait__fade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 44%;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .portrait__fade--l {
+    left: 0;
+    background: linear-gradient(90deg, var(--color-bg), rgb(26 24 22 / 0) 92%);
+  }
+
+  .portrait__fade--r {
+    right: 0;
+    opacity: 0;
+    background: linear-gradient(270deg, var(--color-bg), rgb(26 24 22 / 0) 92%);
+  }
+
+  .portrait__fade--b {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    width: auto;
+    height: 14%;
+    background: linear-gradient(0deg, var(--color-bg), rgb(26 24 22 / 0));
+  }
+
+  @media (max-width: 820px), (prefers-reduced-motion: reduce) {
+    /* a static hero photo on the right that scrolls away with the page */
+    .portrait {
+      position: absolute;
+      left: auto;
+      right: 0;
+      top: 8vh;
+      width: 72%;
+      height: 54vh;
+      transform: none !important;
+    }
+
+    .portrait__fade--l {
+      opacity: 0 !important;
+    }
+
+    .portrait__fade--r {
+      opacity: 1 !important;
+    }
+  }
+</style>
