@@ -1,20 +1,26 @@
 ---
 // One fixed portrait that belongs to no panel. It rests on the RIGHT during
-// the hero (slightly cropped at the edge) and GLIDES to the LEFT as the page
-// pans into About — the same photo carrying you through the transition.
-// scroll.ts drives left / width / edge-fades from the pan progress.
+// the hero and GLIDES to the LEFT as the page pans into About — the same
+// cut-out (freisteller) carrying you through the transition. Because it's a
+// transparent PNG it floats directly on the page: no background box, a soft
+// warm glow as a halo behind, and the lower edge dissolving into the bg.
+// scroll.ts drives left / width / transform from the pan progress.
+import { Picture } from 'astro:assets';
+import portrait from '../assets/images/portrait.png';
 ---
 
 <div class="portrait" aria-hidden="true" data-portrait>
   <div class="portrait__glow"></div>
-  <img
-    src="/images/valentin-lenzing-portrait.webp"
+  <Picture
+    src={portrait}
+    formats={['avif', 'webp']}
+    quality={80}
     alt=""
-    decoding="async"
-    onerror="this.style.display='none'"
+    widths={[960, 1440, 1920, 2560]}
+    sizes="(max-width: 820px) 72vw, 52vw"
+    loading="eager"
+    fetchpriority="high"
   />
-  <div class="portrait__fade portrait__fade--l" data-portrait-fade-l></div>
-  <div class="portrait__fade portrait__fade--r" data-portrait-fade-r></div>
   <div class="portrait__fade portrait__fade--b"></div>
 </div>
 
@@ -26,23 +32,21 @@
     width: 52vw;
     height: 100vh;
     z-index: 30;
-    overflow: hidden;
-    /* surface fallback if the photo is missing */
-    background:
-      linear-gradient(180deg, rgb(217 179 108 / 0.1), transparent 55%),
-      linear-gradient(135deg, var(--color-surface), #161412);
+    /* transparent: the cut-out floats directly on the page, no background box */
     will-change: left, width, transform;
   }
 
   .portrait img {
+    position: relative;
+    z-index: 2;
     width: 100%;
     height: 100%;
     display: block;
     object-fit: cover;
     object-position: 50% 14%;
-    filter: saturate(0.82) contrast(1.03) brightness(0.99);
   }
 
+  /* soft warm halo behind the cut-out (sits below the figure) */
   .portrait__glow {
     position: absolute;
     inset: 0;
@@ -51,40 +55,20 @@
     background: radial-gradient(56% 52% at 50% 32%, rgb(217 179 108 / 0.13), transparent 70%);
   }
 
-  /* both inner edges dissolve into the page; the engine cross-fades which side
-     is active so the text-facing edge is always the soft one */
-  .portrait__fade {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 44%;
-    z-index: 2;
-    pointer-events: none;
-  }
-
-  .portrait__fade--l {
-    left: 0;
-    background: linear-gradient(90deg, var(--color-bg), rgb(26 24 22 / 0) 92%);
-  }
-
-  .portrait__fade--r {
-    right: 0;
-    opacity: 0;
-    background: linear-gradient(270deg, var(--color-bg), rgb(26 24 22 / 0) 92%);
-  }
-
+  /* lower edge dissolves into the page so the torso isn't hard-cut */
   .portrait__fade--b {
+    position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    top: auto;
-    width: auto;
     height: 14%;
+    z-index: 3;
+    pointer-events: none;
     background: linear-gradient(0deg, var(--color-bg), rgb(26 24 22 / 0));
   }
 
   @media (max-width: 820px), (prefers-reduced-motion: reduce) {
-    /* a static hero photo on the right that scrolls away with the page */
+    /* a static hero cut-out on the right that scrolls away with the page */
     .portrait {
       position: absolute;
       left: auto;
@@ -93,14 +77,6 @@
       width: 72%;
       height: 54vh;
       transform: none !important;
-    }
-
-    .portrait__fade--l {
-      opacity: 0 !important;
-    }
-
-    .portrait__fade--r {
-      opacity: 1 !important;
     }
   }
 </style>

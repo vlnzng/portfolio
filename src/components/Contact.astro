@@ -1,4 +1,7 @@
 ---
+import { Picture } from 'astro:assets';
+import contactPhoto from '../assets/images/contact.jpg';
+
 // Email is assembled client-side so the literal address never appears as a
 // contiguous "user@domain" string in the served HTML (basic crawler defence).
 const mailUser = 'valentin.lenzing';
@@ -6,23 +9,26 @@ const mailDomain = 'gmail.com';
 ---
 
 <section class="section contact" id="contact" aria-label="Contact">
-  <div class="cB-left">
-    <div class="cphoto cphoto--framed">
-      <div class="cphoto-stripe"></div>
-      <span class="cphoto-cap">second photo &middot; desk / detail shot</span>
+  <div class="c-inner">
+    <div class="c-left">
+      <figure class="cphoto">
+        <Picture
+          src={contactPhoto}
+          formats={['avif', 'webp']}
+          quality={80}
+          alt="Valentin Lenzing"
+          widths={[360, 540, 720, 900]}
+          sizes="(max-width: 820px) 86vw, 380px"
+          loading="eager"
+        />
+      </figure>
+      <p class="cquote">
+        &ldquo;Ever since I was young, I wanted to optimize cross-functional
+        communication frameworks and streamline end-to-end user journeys.&rdquo;
+      </p>
     </div>
-    <div class="cclose-wrap">
-      <p class="cclose-lead">Open to</p>
-      <ul class="cclose-list">
-        <li>Full-time opportunities</li>
-        <li>Design collaborations</li>
-        <li>Meaningful conversations</li>
-      </ul>
-    </div>
-  </div>
 
-  <div class="cB-right">
-    <div class="cblock">
+    <div class="c-right">
       <div class="cgroup">
         <p class="clabel">Email</p>
         <a
@@ -38,24 +44,27 @@ const mailDomain = 'gmail.com';
 
       <div class="cgroup">
         <p class="clabel">Elsewhere</p>
-        <div class="clinks">
+        <p class="clinks">
           <a class="clink" href="https://www.linkedin.com/in/valentinlenzing" target="_blank" rel="noopener noreferrer">
             LinkedIn <span class="clink-arrow" aria-hidden="true">&#8599;</span>
           </a>
+          <span class="clink-sep" aria-hidden="true">&middot;</span>
           <a class="clink" href="https://github.com/vlnzng" target="_blank" rel="noopener noreferrer">
             GitHub <span class="clink-arrow" aria-hidden="true">&#8599;</span>
           </a>
-        </div>
+        </p>
       </div>
 
-      <div class="cgroup cgroup--meta">
+      <div class="cgroup cmeta-row">
         <div class="cmeta-item">
-          <p class="clabel clabel--soft">Based in</p>
-          <p class="cmeta">Berlin Metropolitan Area</p>
+          <p class="clabel">Based in</p>
+          <p class="cmeta-value">Berlin Metropolitan Area</p>
+          <p class="cmeta-sub">Open to relocate</p>
         </div>
         <div class="cmeta-item">
-          <p class="clabel clabel--soft">Status</p>
-          <p class="cstatus"><span class="cdot" aria-hidden="true"></span>Available immediately</p>
+          <p class="clabel">Status</p>
+          <p class="cmeta-value">Available immediately</p>
+          <p class="cmeta-sub">Full-time</p>
         </div>
       </div>
     </div>
@@ -99,124 +108,141 @@ const mailDomain = 'gmail.com';
     background: var(--color-bg);
   }
 
-  /* layout — framed photo left, address-forward block right */
-  .cB-left {
+  /* centered two-column layout: framed photo + quote · contact info */
+  .c-inner {
     position: absolute;
-    left: 5.5vw;
-    top: 0;
-    bottom: 0;
-    width: clamp(280px, 24vw, 360px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    inset: 0;
     z-index: 3;
-  }
-
-  .cB-left .cclose-wrap {
-    margin-top: 34px;
-  }
-
-  .cB-right {
-    position: absolute;
-    left: 44vw;
-    right: 7vw;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    z-index: 3;
-  }
-
-  .cB-right .cblock {
-    max-width: 540px;
-  }
-
-  /* closing line (Lora) */
-  .cclose-lead {
-    margin: 0 0 18px;
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-style: italic;
-    font-size: clamp(22px, 1.9vw, 28px);
-    color: var(--color-accent);
-  }
-
-  .cclose-list {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 clamp(40px, 7vw, 110px);
     display: grid;
-    gap: 12px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .cclose-list li {
-    display: flex;
+    grid-template-columns: clamp(290px, 30vw, 380px) 1fr;
     align-items: center;
-    gap: 13px;
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: clamp(17px, 1.3vw, 21px);
-    line-height: 1.2;
-    color: var(--color-text);
+    gap: clamp(56px, 8vw, 140px);
   }
 
-  .cclose-list li::before {
-    content: "";
-    width: 7px;
-    height: 7px;
-    flex: 0 0 auto;
-    background: var(--color-accent);
-    transform: rotate(45deg);
+  .c-left {
+    min-width: 0;
   }
 
-  /* framed photo placeholder */
+  /* ---- framed photo with a gold light that travels on hover ---- */
+  @property --c-frame-rot {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+  }
+
   .cphoto {
+    --frame-w: 3px;
     position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    margin: 0;
     overflow: hidden;
     background: var(--color-surface);
+    transition: box-shadow 0.5s var(--ease-out);
   }
 
-  .cphoto-stripe {
-    position: absolute;
-    inset: 0;
-    background-image: repeating-linear-gradient(
-      -45deg,
-      transparent 0 18px,
-      rgb(155 149 144 / 0.06) 18px 36px
-    );
+  /* soft gold glow on hover — unmistakable, elegant */
+  .cphoto:hover {
+    box-shadow: 0 0 42px rgb(217 179 108 / 0.32);
   }
 
-  .cphoto-cap {
-    position: absolute;
-    left: 18px;
-    bottom: 16px;
-    padding: 4px 9px;
-    background: rgb(26 24 22 / 0.5);
-    border: 1px solid var(--color-border);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.03em;
-    color: var(--color-muted);
-  }
-
-  .cphoto--framed {
+  .cphoto picture {
+    display: block;
     width: 100%;
-    height: clamp(360px, 52vh, 460px);
-    border: 1px solid var(--color-border);
+    height: 100%;
   }
 
-  .cphoto--framed::after {
-    content: "";
+  .cphoto img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* the static frame and the moving light share one masked ring */
+  .cphoto::before,
+  .cphoto::after {
+    content: '';
     position: absolute;
     inset: 0;
+    padding: var(--frame-w);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
     pointer-events: none;
-    box-shadow: inset 0 0 80px rgb(0 0 0 / 0.35);
   }
 
-  /* contact block */
-  .cblock {
-    width: 100%;
+  /* visible static gold frame — brightens on hover */
+  .cphoto::before {
+    background: rgb(217 179 108 / 0.6);
+    z-index: 2;
+    transition: background 0.45s var(--ease-out);
+  }
+
+  .cphoto:hover::before {
+    background: rgb(217 179 108 / 0.95);
+  }
+
+  /* a wide, bright gold light that drifts slowly around the frame on hover */
+  .cphoto::after {
+    background: conic-gradient(
+      from var(--c-frame-rot),
+      transparent 0deg,
+      rgb(245 224 175 / 0) 30deg,
+      rgb(245 224 175 / 0.55) 60deg,
+      rgb(255 240 208 / 1) 90deg,
+      rgb(245 224 175 / 0.55) 120deg,
+      rgb(245 224 175 / 0) 150deg,
+      transparent 360deg
+    );
+    opacity: 0;
+    transition: opacity 0.6s var(--ease-out);
+    z-index: 3;
+  }
+
+  .cphoto:hover::after {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cphoto:hover::after {
+      animation: c-frame-spin 6.5s linear infinite;
+    }
+  }
+
+  @keyframes c-frame-spin {
+    to {
+      --c-frame-rot: 360deg;
+    }
+  }
+
+  .cquote {
+    margin: clamp(20px, 2vw, 30px) 0 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(14.5px, 1.05vw, 17px);
+    line-height: 1.5;
+    color: var(--color-muted);
+    max-width: 40ch;
+    transition: color 0.45s var(--ease-out), text-shadow 0.45s var(--ease-out);
+  }
+
+  /* the quote wakes up with the photo hover */
+  .cphoto:hover + .cquote {
+    color: var(--color-text);
+    text-shadow: 0 0 16px rgb(217 179 108 / 0.25);
+  }
+
+  /* ---- right: contact info ---- */
+  .c-right {
+    min-width: 0;
+    max-width: 560px;
   }
 
   .cgroup + .cgroup {
@@ -226,7 +252,7 @@ const mailDomain = 'gmail.com';
   }
 
   .clabel {
-    margin: 0 0 16px;
+    margin: 0 0 14px;
     font-family: var(--font-body);
     font-weight: 600;
     font-size: 11px;
@@ -235,19 +261,12 @@ const mailDomain = 'gmail.com';
     color: var(--color-accent);
   }
 
-  .clabel--soft {
-    margin-bottom: 10px;
-    color: var(--color-muted);
-  }
-
-  /* email — full width of the column */
+  /* email — sized to keep the full address on one line */
   .cmail {
-    display: block;
+    display: inline-block;
     position: relative;
-    width: 100%;
     font-family: var(--font-display);
     font-weight: 700;
-    /* sized to keep the full address on one line in the column */
     font-size: clamp(20px, 2vw, 30px);
     line-height: 1.1;
     letter-spacing: -0.015em;
@@ -257,7 +276,7 @@ const mailDomain = 'gmail.com';
   }
 
   .cmail::after {
-    content: "";
+    content: '';
     position: absolute;
     left: 0;
     right: 0;
@@ -280,15 +299,15 @@ const mailDomain = 'gmail.com';
 
   .clinks {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
+    align-items: center;
+    gap: 16px;
+    margin: 0;
   }
 
   .clink {
     display: inline-flex;
     align-items: center;
-    gap: 9px;
+    gap: 8px;
     font-family: var(--font-body);
     font-weight: 500;
     font-size: 16px;
@@ -302,6 +321,11 @@ const mailDomain = 'gmail.com';
     transition: transform 0.25s var(--ease-out);
   }
 
+  .clink-sep {
+    color: var(--color-border);
+    font-size: 14px;
+  }
+
   .clink:hover {
     color: var(--color-accent);
   }
@@ -310,43 +334,27 @@ const mailDomain = 'gmail.com';
     transform: translate(3px, -3px);
   }
 
-  .cgroup--meta {
+  /* based in / status — side by side, gold values, no pulsing dot */
+  .cmeta-row {
     display: flex;
-    gap: 44px;
+    gap: clamp(40px, 5vw, 72px);
     flex-wrap: wrap;
   }
 
-  .cmeta {
+  .cmeta-value {
     margin: 0;
     font-family: var(--font-body);
     font-size: 15px;
-    line-height: 1.5;
+    line-height: 1.4;
     color: var(--color-text);
   }
 
-  .cstatus {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0;
+  .cmeta-sub {
+    margin: 5px 0 0;
     font-family: var(--font-body);
-    font-size: 15px;
-    color: var(--color-text);
-  }
-
-  .cdot {
-    width: 8px;
-    height: 8px;
-    flex: 0 0 auto;
-    border-radius: 50%;
-    background: var(--color-accent);
-    animation: cpulse 2.6s ease-out infinite;
-  }
-
-  @keyframes cpulse {
-    0% { box-shadow: 0 0 0 0 rgb(217 179 108 / 0.5); }
-    70% { box-shadow: 0 0 0 9px rgb(217 179 108 / 0); }
-    100% { box-shadow: 0 0 0 0 rgb(217 179 108 / 0); }
+    font-size: 12.5px;
+    line-height: 1.3;
+    color: var(--color-muted);
   }
 
   /* vertical legal at the right edge */
@@ -386,41 +394,30 @@ const mailDomain = 'gmail.com';
       min-height: auto;
     }
 
-    .cB-left,
-    .cB-right {
+    .c-inner {
       position: static;
-      width: auto;
       display: block;
+      max-width: none;
+      margin: 0;
+      padding: 14vh 7vw 8vh;
     }
 
-    .cB-left {
-      padding: 16vh 7vw 0;
+    .cphoto {
+      max-width: 340px;
     }
 
-    .cphoto--framed {
-      width: 100%;
-      height: 64vw;
-      max-height: 460px;
-    }
-
-    .cB-left .cclose-wrap {
-      margin-top: 30px;
-    }
-
-    .cclose {
+    .cquote {
       max-width: none;
     }
 
-    .cB-right {
-      padding: 8vh 7vw 14vh;
-    }
-
-    .cB-right .cblock {
+    .c-right {
+      margin-top: 9vh;
       max-width: none;
     }
 
     .cmail {
       font-size: clamp(18px, 5.2vw, 28px);
+      white-space: normal;
     }
 
     .clegal {
@@ -428,7 +425,7 @@ const mailDomain = 'gmail.com';
       transform: none;
       writing-mode: horizontal-tb;
       justify-content: flex-start;
-      padding: 0 7vw 10vh;
+      padding: 2vh 7vw 12vh;
     }
   }
 </style>

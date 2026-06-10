@@ -62,8 +62,6 @@ function initEngine(): void {
   const tails = Array.from(document.querySelectorAll<HTMLElement>('[data-wm-tail]'));
   const heroText = document.querySelector<HTMLElement>('[data-hero-text]');
   const portrait = document.querySelector<HTMLElement>('[data-portrait]');
-  const fadeL = document.querySelector<HTMLElement>('[data-portrait-fade-l]');
-  const fadeR = document.querySelector<HTMLElement>('[data-portrait-fade-r]');
   const cue = document.querySelector<HTMLElement>('[data-scrollcue]');
   const cueArrow = document.querySelector<HTMLElement>('[data-scrollcue-arrow]');
   const cueLabel = document.querySelector<HTMLElement>('[data-scrollcue-label]');
@@ -122,8 +120,6 @@ function initEngine(): void {
     portrait.style.left = `${lerp(0.5, -0.02, p) * vw - extra}px`;
     portrait.style.width = `${lerp(0.52, 0.46, p) * vw}px`;
     portrait.style.transform = `translateY(${lerp(0, 24, t)}px)`;
-    if (fadeL) fadeL.style.opacity = String(1 - p); // soft edge faces the text
-    if (fadeR) fadeR.style.opacity = String(p);
   }
 
   // ---- scroll cue ----
