@@ -33,7 +33,6 @@ const mailDomain = 'gmail.com';
         <p class="clabel">Email</p>
         <a
           class="cmail"
-          href="#"
           data-mail-user={mailUser}
           data-mail-domain={mailDomain}
           aria-label="Email Valentin Lenzing"
@@ -273,6 +272,7 @@ const mailDomain = 'gmail.com';
     color: var(--color-text);
     text-decoration: none;
     white-space: nowrap;
+    cursor: pointer;
   }
 
   .cmail::after {
