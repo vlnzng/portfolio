@@ -75,6 +75,41 @@ const links = [
     color: var(--color-text);
   }
 
+  /* load-in: items drop in one after another once the hero has settled */
+  :global(html.js) .navbar__item {
+    opacity: 0;
+    translate: 0 -10px;
+    transition:
+      color 0.22s ease,
+      opacity 0.65s ease var(--nav-d, 0.85s),
+      translate 0.65s var(--ease-glide) var(--nav-d, 0.85s);
+  }
+
+  :global(html.js) li:nth-child(2) .navbar__item {
+    --nav-d: 0.93s;
+  }
+
+  :global(html.js) li:nth-child(3) .navbar__item {
+    --nav-d: 1.01s;
+  }
+
+  :global(html.js) li:nth-child(4) .navbar__item {
+    --nav-d: 1.09s;
+  }
+
+  :global(html.js body.is-loaded) .navbar__item {
+    opacity: 1;
+    translate: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .navbar__item {
+      opacity: 1;
+      translate: none;
+      transition: color 0.22s ease;
+    }
+  }
+
   .navbar__item:hover span::after,
   .navbar__item.is-active span::after {
     right: 0;

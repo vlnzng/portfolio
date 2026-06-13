@@ -29,31 +29,46 @@ const phases = [
 
 <section class="section process" id="process" aria-label="Process">
   <div class="process-inner">
-    <!-- double diamond — Discover widens, Define narrows to the brief,
-         Develop widens, Deliver narrows -->
-    <svg class="pr-dia" viewBox="0 0 1600 760" preserveAspectRatio="none" aria-hidden="true">
-      <polygon points="0,380 400,80 800,380 400,680" pathLength="1"></polygon>
-      <polygon points="800,380 1200,80 1600,380 1200,680" pathLength="1"></polygon>
-    </svg>
-
     <h2 class="sr-only">Process</h2>
 
-    <div class="pr-cols">
-      {phases.map((phase) => (
-        <div class="pr-col">
-          <span class="pr-mark" aria-hidden="true"></span>
-          <span class="pr-tag">{phase.subtitle}</span>
-          <h3 class="pr-name">{phase.title}</h3>
-          <ul class="pr-acts">
-            {phase.items.map((item) => <li class="pr-act">{item}</li>)}
-          </ul>
-          <div class="pr-rule"></div>
-          <p class="pr-tools">{phase.tools.join(' · ')}</p>
-        </div>
-      ))}
+    <!-- the diamonds live in the same box as the columns, so their tips sit
+         exactly on the column boundaries and their waist on the columns'
+         vertical centre — double diamond: Discover widens, Define narrows
+         to the brief, Develop widens, Deliver narrows -->
+    <div class="pr-grid">
+      <!-- One continuous line drawn in a single stroke, "Haus vom Nikolaus"
+           style. Point order (labelled left→right, top/centre/bottom):
+             1 left tip · 2 peak 1 · 3 centre · 6 valley 2 · 5 right tip ·
+             4 peak 2 · (3) centre · 7 valley 1 · close.
+           So: over the first peak, down through the centre into the far
+           valley, up the right tip, back over the second peak to the centre,
+           and down to close — a flowing wave rather than two separate loops. -->
+      <svg class="pr-dia" viewBox="0 0 1600 760" preserveAspectRatio="none" aria-hidden="true">
+        <path
+          d="M0,380 L400,80 L800,380 L1200,680 L1600,380 L1200,80 L800,380 L400,680 Z"
+          pathLength="1"></path>
+      </svg>
+
+      <div class="pr-cols">
+        {
+          phases.map((phase, i) => (
+            <div class="pr-col reveal reveal-x" style={`--i:${i}`}>
+              <span class="pr-mark" aria-hidden="true" />
+              <span class="pr-tag">{phase.subtitle}</span>
+              <h3 class="pr-name">{phase.title}</h3>
+              <ul class="pr-acts">
+                {phase.items.map((item) => (
+                  <li class="pr-act">{item}</li>
+                ))}
+              </ul>
+              <p class="pr-tools">{phase.tools.join(' · ')}</p>
+            </div>
+          ))
+        }
+      </div>
     </div>
 
-    <p class="pr-statement">
+    <p class="pr-statement reveal reveal-rise" style="--i:4">
       The framework above is the foundation; the reality is iterative.<br />
       I use these phases to turn user insights into clean, buildable interfaces.
     </p>
@@ -77,24 +92,63 @@ const phases = [
     overflow: hidden;
   }
 
+  .pr-grid {
+    position: relative;
+  }
+
+  /* anchored to the columns' box: tips on the column boundaries, waist on
+     their vertical centre, peaks reaching a little beyond the text.
+     width must be explicit: as a replaced element an absolutely positioned
+     SVG may resolve its width from the viewBox aspect ratio instead of the
+     left/right stretch — on wide screens that left it ~40% too narrow and
+     the whole figure misaligned. */
   .pr-dia {
     position: absolute;
-    left: 5.5vw;
-    right: 5.5vw;
+    left: 0;
     top: 50%;
-    height: 62%;
-    transform: translateY(-54%);
+    display: block;
+    width: 100%;
+    height: 132%;
+    transform: translateY(-50%);
     z-index: 0;
     pointer-events: none;
   }
 
-  /* Static for now; Stage B's reveal system gates the draw-in behind .is-in. */
-  .pr-dia polygon {
+  /* The line draws itself in one continuous stroke — but only once the
+     visitor has actually arrived on the panel (.is-centred, not the early
+     .is-in), so the drawing is never half-missed while reading the previous
+     panel. pathLength="1" normalises the dash to the whole outline so the
+     single offset animation traces it end to end. Without JS or with
+     reduced motion it is simply visible. */
+  .pr-dia path {
     fill: none;
     stroke: var(--color-accent);
     stroke-width: 1.1;
     vector-effect: non-scaling-stroke;
+    opacity: 0.24;
+  }
+
+  :global(html.js) .pr-dia path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0;
+    transition:
+      stroke-dashoffset 4.2s cubic-bezier(0.4, 0, 0.18, 1),
+      opacity 0.9s ease;
+  }
+
+  :global(html.js) .process.is-centred .pr-dia path {
+    stroke-dashoffset: 0;
     opacity: 0.17;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .pr-dia path {
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+      opacity: 0.17;
+      transition: none;
+    }
   }
 
   .pr-cols {
@@ -104,9 +158,10 @@ const phases = [
     grid-template-columns: repeat(4, 1fr);
   }
 
+  /* hover-lift transition rides on the .reveal primitive (translate 0.45s),
+     so the column's own transition must not shadow the reveal transition */
   .pr-col {
     padding: 0 clamp(22px, 2.2vw, 44px);
-    transition: translate 0.4s var(--ease-out);
   }
 
   .pr-col:first-child {
@@ -125,7 +180,6 @@ const phases = [
     background: var(--color-accent);
     transform: rotate(45deg);
     box-shadow: 0 0 0 5px rgb(217 179 108 / 0.1);
-    transition: transform 0.35s var(--ease-out), box-shadow 0.35s ease;
   }
 
   .pr-tag {
@@ -169,45 +223,18 @@ const phases = [
     padding-top: 0;
   }
 
-  .pr-rule {
-    height: 1px;
-    margin: 22px 0 16px;
-    background: var(--color-border);
-    transition: background 0.4s ease;
-  }
-
+  /* tools sit in the brand gold permanently — they read as the phase's
+     toolkit, and the gold ties the four columns together under the diamond.
+     No separator rule: it crossed the drawn diamond line and added clutter.
+     The columns carry no hover state — they are a static reference, not a
+     control (the work cards own the clickable affordance). */
   .pr-tools {
-    margin: 0;
+    margin: 32px 0 0;
     font-family: var(--font-body);
     font-size: 12.5px;
     letter-spacing: 0.02em;
     line-height: 1.6;
-    color: var(--color-muted);
-  }
-
-  .pr-col:hover {
-    translate: 0 -7px;
-  }
-
-  .pr-col:hover .pr-mark {
-    transform: rotate(45deg) scale(1.25);
-    box-shadow: 0 0 0 6px rgb(217 179 108 / 0.12), 0 0 20px rgb(217 179 108 / 0.45);
-  }
-
-  .pr-col:hover .pr-name {
-    color: #fff;
-  }
-
-  .pr-col:hover .pr-rule {
-    background: var(--color-accent);
-  }
-
-  .pr-col:hover .pr-tag {
-    color: #e4c384;
-  }
-
-  .pr-col:hover .pr-act {
-    color: #ece5d9;
+    color: var(--color-accent);
   }
 
   .pr-statement {

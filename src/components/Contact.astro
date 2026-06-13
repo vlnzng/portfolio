@@ -11,7 +11,7 @@ const mailDomain = 'gmail.com';
 <section class="section contact" id="contact" aria-label="Contact">
   <div class="c-inner">
     <div class="c-left">
-      <figure class="cphoto">
+      <figure class="cphoto reveal reveal-x" style="--i:0">
         <Picture
           src={contactPhoto}
           formats={['avif', 'webp']}
@@ -22,14 +22,14 @@ const mailDomain = 'gmail.com';
           loading="eager"
         />
       </figure>
-      <p class="cquote">
+      <p class="cquote reveal" style="--i:2">
         &ldquo;Ever since I was young, I wanted to optimize cross-functional
         communication frameworks and streamline end-to-end user journeys.&rdquo;
       </p>
     </div>
 
     <div class="c-right">
-      <div class="cgroup">
+      <div class="cgroup reveal" style="--i:0">
         <p class="clabel">Email</p>
         <a
           class="cmail"
@@ -41,7 +41,7 @@ const mailDomain = 'gmail.com';
         </a>
       </div>
 
-      <div class="cgroup">
+      <div class="cgroup reveal" style="--i:1">
         <p class="clabel">Elsewhere</p>
         <p class="clinks">
           <a class="clink" href="https://www.linkedin.com/in/valentinlenzing" target="_blank" rel="noopener noreferrer">
@@ -54,7 +54,7 @@ const mailDomain = 'gmail.com';
         </p>
       </div>
 
-      <div class="cgroup cmeta-row">
+      <div class="cgroup cmeta-row reveal" style="--i:2">
         <div class="cmeta-item">
           <p class="clabel">Based in</p>
           <p class="cmeta-value">Berlin Metropolitan Area</p>
@@ -107,20 +107,22 @@ const mailDomain = 'gmail.com';
     background: var(--color-bg);
   }
 
-  /* centered two-column layout: framed photo + quote · contact info */
+  /* two-column layout: framed photo + quote · contact info. Shares the
+     5.5vw gutter of the other panels so the pan rhythm stays even — the
+     gap to the previous section reads like every other section break. */
   .c-inner {
     position: absolute;
     inset: 0;
     z-index: 3;
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: 0 clamp(40px, 7vw, 110px);
+    padding: 0 5.5vw;
     display: grid;
     grid-template-columns: clamp(290px, 30vw, 380px) 1fr;
     align-items: center;
-    gap: clamp(56px, 8vw, 140px);
+    gap: clamp(56px, 7vw, 120px);
   }
 
+  /* the whole left block (photo + quote) is one hover zone — the effect is
+     the same wherever inside it the cursor rests */
   .c-left {
     min-width: 0;
   }
@@ -140,12 +142,13 @@ const mailDomain = 'gmail.com';
     margin: 0;
     overflow: hidden;
     background: var(--color-surface);
-    transition: box-shadow 0.5s var(--ease-out);
+    /* slow build-up — the glow grows in rather than switching on */
+    transition: box-shadow 1.7s var(--ease-glide);
   }
 
-  /* soft gold glow on hover — unmistakable, elegant */
-  .cphoto:hover {
-    box-shadow: 0 0 42px rgb(217 179 108 / 0.32);
+  /* soft gold glow on hover — quiet, elegant */
+  .c-left:hover .cphoto {
+    box-shadow: 0 0 30px rgb(217 179 108 / 0.2);
   }
 
   .cphoto picture {
@@ -176,41 +179,42 @@ const mailDomain = 'gmail.com';
     pointer-events: none;
   }
 
-  /* visible static gold frame — brightens on hover */
+  /* visible static gold frame — brightens first on hover */
   .cphoto::before {
     background: rgb(217 179 108 / 0.6);
     z-index: 2;
-    transition: background 0.45s var(--ease-out);
+    transition: background 1.2s ease;
   }
 
-  .cphoto:hover::before {
-    background: rgb(217 179 108 / 0.95);
+  .c-left:hover .cphoto::before {
+    background: rgb(217 179 108 / 0.82);
   }
 
-  /* a wide, bright gold light that drifts slowly around the frame on hover */
+  /* a soft gold light that drifts slowly around the frame on hover */
   .cphoto::after {
     background: conic-gradient(
       from var(--c-frame-rot),
       transparent 0deg,
       rgb(245 224 175 / 0) 30deg,
-      rgb(245 224 175 / 0.55) 60deg,
-      rgb(255 240 208 / 1) 90deg,
-      rgb(245 224 175 / 0.55) 120deg,
+      rgb(245 224 175 / 0.35) 60deg,
+      rgb(255 240 208 / 0.7) 90deg,
+      rgb(245 224 175 / 0.35) 120deg,
       rgb(245 224 175 / 0) 150deg,
       transparent 360deg
     );
     opacity: 0;
-    transition: opacity 0.6s var(--ease-out);
+    /* the travelling light is the last layer to arrive */
+    transition: opacity 1.9s ease 0.3s;
     z-index: 3;
   }
 
-  .cphoto:hover::after {
+  .c-left:hover .cphoto::after {
     opacity: 1;
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .cphoto:hover::after {
-      animation: c-frame-spin 6.5s linear infinite;
+    .c-left:hover .cphoto::after {
+      animation: c-frame-spin 9.5s linear infinite;
     }
   }
 
@@ -229,19 +233,23 @@ const mailDomain = 'gmail.com';
     line-height: 1.5;
     color: var(--color-muted);
     max-width: 40ch;
-    transition: color 0.45s var(--ease-out), text-shadow 0.45s var(--ease-out);
+    transition: color 0.9s ease, text-shadow 0.9s ease;
   }
 
-  /* the quote wakes up with the photo hover */
-  .cphoto:hover + .cquote {
+  /* the quote wakes up with the same hover — it is part of the zone */
+  .c-left:hover .cquote {
     color: var(--color-text);
-    text-shadow: 0 0 16px rgb(217 179 108 / 0.25);
+    text-shadow: 0 0 16px rgb(217 179 108 / 0.18);
   }
 
   /* ---- right: contact info ---- */
+  /* centres itself in the room left of the photo, so the free space splits
+     evenly instead of pooling at the right edge */
   .c-right {
     min-width: 0;
-    max-width: 560px;
+    max-width: 640px;
+    width: 100%;
+    margin-inline: auto;
   }
 
   .cgroup + .cgroup {
@@ -260,13 +268,13 @@ const mailDomain = 'gmail.com';
     color: var(--color-accent);
   }
 
-  /* email — sized to keep the full address on one line */
+  /* email — the hero of this panel; sized to keep the address on one line */
   .cmail {
     display: inline-block;
     position: relative;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(20px, 2vw, 30px);
+    font-size: clamp(20px, 2.2vw, 34px);
     line-height: 1.1;
     letter-spacing: -0.015em;
     color: var(--color-text);
@@ -275,6 +283,32 @@ const mailDomain = 'gmail.com';
     cursor: pointer;
   }
 
+  /* a soft underline draws itself once the panel arrives… */
+  :global(html.js) .cmail::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -7px;
+    height: 2px;
+    background: rgb(217 179 108 / 0.34);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.9s var(--ease-glide) 0.25s;
+  }
+
+  :global(html.js) .contact.is-in .cmail::before {
+    transform: scaleX(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .cmail::before {
+      transform: scaleX(1);
+      transition: none;
+    }
+  }
+
+  /* …and the full-strength hover underline sits on top of it */
   .cmail::after {
     content: '';
     position: absolute;

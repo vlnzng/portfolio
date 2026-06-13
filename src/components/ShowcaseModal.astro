@@ -50,16 +50,64 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     scroll-behavior: smooth;
-    opacity: 0;
-    transform: translateY(14px);
-    transition:
-      opacity 0.5s ease 0.06s,
-      transform 0.5s var(--ease-out) 0.06s;
   }
 
-  .cs-modal[aria-hidden="false"] .cs-scroll {
-    opacity: 1;
-    transform: none;
+  /* ---- open choreography: the hero image settles, then the head and the
+     body rise in, the close button turning in last. Keyframes (not
+     transitions) so the stagger re-plays on every open, even though the
+     content is injected fresh. Closing fades the modal as one piece. ---- */
+  @media (prefers-reduced-motion: no-preference) {
+    .cs-modal[aria-hidden='false'] .cs-hero {
+      animation: cs-hero-in 0.9s var(--ease-glide) backwards;
+    }
+
+    .cs-modal[aria-hidden='false'] .cs-head {
+      animation: cs-rise-in 0.7s var(--ease-glide) 0.18s backwards;
+    }
+
+    .cs-modal[aria-hidden='false'] .cs-body {
+      animation: cs-rise-in 0.8s var(--ease-glide) 0.3s backwards;
+    }
+
+    .cs-modal[aria-hidden='false'] .cs-close {
+      animation: cs-close-in 0.5s var(--ease-glide) 0.4s backwards;
+    }
+  }
+
+  @keyframes cs-hero-in {
+    from {
+      opacity: 0;
+      transform: scale(1.045);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes cs-rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes cs-close-in {
+    from {
+      opacity: 0;
+      transform: rotate(-90deg);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   .cs-close {

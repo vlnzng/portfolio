@@ -41,6 +41,8 @@
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.87, 0, 0.13, 1);
+  /* the handoff's signature glide — used by all entrance choreography */
+  --ease-glide: cubic-bezier(0.2, 0.7, 0.3, 1);
   --duration-fast: 200ms;
   --duration-base: 420ms;
   --duration-slow: 800ms;

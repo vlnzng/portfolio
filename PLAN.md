@@ -8,8 +8,10 @@ truth for look and behaviour.
 panels, the case-study modal, the legal pages, and the signature two-phase scroll engine are built
 faithfully to the handoff and verified in-browser. The portrait and contact photos are real assets
 now, the favicon (svg + ico), 404 page, sitemap, and per-page OG/Twitter meta are all in place.
-What's left: the V/L wordmark SVG, the `og:image` share card, per-showcase images/figures, a real
-copy pass, optional animation polish, the legal fill-in, and a launch QA pass.
+The animation polish (§4) has landed: load-in, per-panel arrival choreography, the statement swap,
+and all hover/idle details — verified in-browser, honouring reduced-motion and no-JS. What's left:
+the V/L wordmark SVG, the `og:image` share card, per-showcase images/figures, a real copy pass,
+and a launch QA pass.
 
 ## Done — the 1.0 rebuild
 
@@ -60,16 +62,24 @@ Each is its own job: pick + edit a key image, add case figures, and tighten the 
       modal microcopy, button labels, `alt` text, meta descriptions. One deliberate voice pass.
 - [ ] Final proofread of all real copy
 
-## 4. Animation polish — deferred (the base works without these; all honour reduced-motion)
+## 4. Animation polish — landed (verified in-browser; all honour reduced-motion + no-JS)
 
-- [ ] Page load-in: hero entrance (role → pitch → statement stagger) on first paint
-- [ ] Reveal / entrance choreography per panel — content rides in on arrival, staggered
-- [ ] Hero statement swap on scroll ("Learned the rules." → "Practising the exceptions.")
-- [ ] Wordmark hover sheen on the collapsed home button
-- [ ] Work-card "view case" cursor-follow on hover
-- [ ] Process double-diamond draw-in (static outline today)
-- [ ] Shared-portrait subtle parallax / breathing while it rests
-- [ ] Modal open/close transition polish (image reveal, content stagger)
+- [x] Page load-in: hero entrance (wordmark "write-in" → role → pitch stagger, portrait settle,
+      nav items drop in, cue fades in last) on first paint, gated behind `html.js` + `body.is-loaded`
+- [x] Reveal / entrance choreography per panel — `.reveal` primitive + `reveal.ts` (desktop: pan-driven,
+      re-plays on revisit; mobile: IntersectionObserver), staggered via `--i`
+- [x] Hero statement swap on scroll — fused with the scroll cue into one line at the bottom
+      centre ("Learned the rules. ↓" → "Practising the exceptions. →" at the down→sideways
+      hinge); statically stacked in the hero on mobile / reduced motion
+- [x] Wordmark hover sheen (hero lockup + collapsed home button) + gentle V breath at rest
+- [x] Work-card "view case" cursor-follow on hover (fine pointers only) + arrival light sweep
+- [x] Process double-diamond draw-in (stroke draw on arrival, second diamond delayed)
+- [x] Shared-portrait parallax (against the cursor while resting) + breathing halo (the photo
+      itself stays still — animating it read as a re-load); sits low at rest, sinks with the
+      down-scroll
+- [x] Wordmark rebuilt to the original lockup geometry (dominant V, L nested in its opening —
+      collapses to the true VL icon); bigger, more present, tails-only write-in
+- [x] Modal open polish (hero settles, head/body rise staggered, close button rotates in)
 - [ ] Wordmark morph fine-tuning (timing / dip / end position) once the SVG lands
 
 ## 5. SEO & legal

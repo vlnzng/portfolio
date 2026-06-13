@@ -47,6 +47,10 @@ const canonicalURL = new URL(initialModalSlug ? '/' : Astro.url.pathname, site);
     <meta name="twitter:image" content={new URL(ogImage, site)} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Entrance choreography is gated behind html.js so content is never
+         hidden when JavaScript doesn't run (progressive enhancement). -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
 
   <body>

@@ -1,19 +1,31 @@
 ---
-// Fixed scroll hint, bottom-centre. The arrow points down during the wordmark
-// morph, then rotates to "→" and reads "Explore" as the side-pan begins;
-// fades out once panning is underway. scroll.ts drives it.
+// The hero statement and the scroll hint, fused into one quiet line at the
+// bottom centre — the navigation made literal. At rest: "Learned the rules. ↓".
+// At the hinge where the down-scroll becomes the side-pan, scroll.ts breaks it
+// to "Practising the exceptions. →" (arrow rotated), then fades it out as the
+// pan gets underway. Clicking still advances (first the morph, then a panel),
+// but it deliberately doesn't look like a button.
+// Mobile / reduced motion: hidden — the statement lives in the hero flow there.
 ---
 
-<button class="scrollcue" type="button" aria-label="Scroll to explore" data-scrollcue>
-  <span class="scrollcue__label" data-scrollcue-label>Scroll</span>
-  <span class="scrollcue__track"><span class="scrollcue__arrow" data-scrollcue-arrow>&darr;</span></span>
+<button
+  class="scrollcue"
+  type="button"
+  aria-label="Learned the rules. Practising the exceptions. — scroll to explore"
+  data-scrollcue
+>
+  <span class="scrollcue__stack" aria-hidden="true">
+    <span class="scrollcue__phrase scrollcue__phrase--rules">Learned the rules.</span>
+    <span class="scrollcue__phrase scrollcue__phrase--exceptions">Practising the exceptions.</span>
+  </span>
+  <span class="scrollcue__arrow" aria-hidden="true" data-scrollcue-arrow>&darr;</span>
 </button>
 
 <style>
   .scrollcue {
     position: fixed;
     left: 50%;
-    bottom: 38px;
+    bottom: 46px;
     transform: translateX(-50%);
     z-index: 60;
     display: flex;
@@ -21,59 +33,93 @@
     gap: 14px;
     background: none;
     border: 0;
+    padding: 0;
     cursor: pointer;
-    color: var(--color-muted);
-    font-family: var(--font-body);
-    font-size: 12px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(19px, 1.55vw, 25px);
+    letter-spacing: 0.01em;
+    color: var(--color-text);
     transition: opacity 0.4s ease;
   }
 
-  .scrollcue__label {
-    transition: color 0.25s ease;
-  }
-
-  .scrollcue:hover {
-    color: var(--color-text);
-  }
-
-  .scrollcue__track {
-    position: relative;
-    width: 30px;
-    height: 30px;
+  /* both phrases share one cell so the line never shifts on the swap */
+  .scrollcue__stack {
     display: grid;
-    place-items: center;
-    border: 1px solid var(--color-border);
-    border-radius: 50%;
-    transition: border-color 0.3s ease;
+    text-align: left;
   }
 
+  .scrollcue__phrase {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+    transition: opacity 0.3s ease, transform 0.55s var(--ease-glide), color 0.25s ease;
+  }
+
+  .scrollcue__phrase--exceptions {
+    color: var(--color-accent);
+    opacity: 0;
+    transform: translateX(36px);
+  }
+
+  /* the break: rules cut up & out, exceptions rides in from the right —
+     echoing the leftward pan that is about to begin */
+  .scrollcue.is-broken .scrollcue__phrase--rules {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+
+  .scrollcue.is-broken .scrollcue__phrase--exceptions {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* the arrow stays the brand gold throughout — its idle pulse only dips to
+     0.82 so the gold never washes out to a grey/white read on the dark bg */
   .scrollcue__arrow {
-    font-size: 15px;
+    font-size: 20px;
+    line-height: 1;
     color: var(--color-accent);
     transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
     animation: cuebob 1.9s ease-in-out infinite;
   }
 
-  .scrollcue.is-moved .scrollcue__track {
-    border-color: var(--color-accent);
+  .scrollcue:hover .scrollcue__phrase--rules {
+    color: #fff;
   }
 
   @keyframes cuebob {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
+    0%,
+    100% {
+      opacity: 0.82;
+    }
 
-  @media (max-width: 820px), (prefers-reduced-motion: reduce) {
-    .scrollcue {
-      bottom: 26px;
+    50% {
+      opacity: 1;
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .scrollcue__arrow {
-      animation: none;
+  /* load-in: the line arrives last, once the name has been written
+     (on the children — scroll.ts drives the container's opacity) */
+  :global(html.js) .scrollcue__stack,
+  :global(html.js) .scrollcue__arrow {
+    opacity: 0;
+    transition: opacity 0.7s ease 1.4s;
+  }
+
+  :global(html.js body.is-loaded) .scrollcue__stack,
+  :global(html.js body.is-loaded) .scrollcue__arrow {
+    opacity: 1;
+  }
+
+  /* the arrow's idle pulse must not fight its load-in fade */
+  :global(html.js) .scrollcue__arrow {
+    animation-delay: 2.4s;
+  }
+
+  @media (max-width: 820px), (prefers-reduced-motion: reduce) {
+    /* no engine here — the statement lives statically in the hero text */
+    .scrollcue {
+      display: none;
     }
   }
 </style>

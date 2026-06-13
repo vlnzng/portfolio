@@ -1,6 +1,7 @@
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { revealOnPan } from './reveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -64,7 +65,6 @@ function initEngine(): void {
   const portrait = document.querySelector<HTMLElement>('[data-portrait]');
   const cue = document.querySelector<HTMLElement>('[data-scrollcue]');
   const cueArrow = document.querySelector<HTMLElement>('[data-scrollcue-arrow]');
-  const cueLabel = document.querySelector<HTMLElement>('[data-scrollcue-label]');
   const progress = document.querySelector<HTMLElement>('[data-progress]');
   const progressFill = document.querySelector<HTMLElement>('[data-progress-fill]');
   const SECTIONS = ['about', 'work', 'process', 'contact'];
@@ -90,50 +90,89 @@ function initEngine(): void {
       tail.style.transform = `translateX(${lerp(0, -0.16, ts)}em) scaleX(${lerp(1, 0.84, ts)})`;
     });
 
-    // travel: dip DOWN first (down-feel), then fly to the navbar corner, shrinking
+    // travel: a single, monotonic glide up to the navbar corner while
+    // shrinking — driven by the same easeInOut as the portrait so the
+    // wordmark, the hero text and the figure all settle on the same curve
+    // (no dip: the "down" read comes from the text + portrait, not a wobble).
+    // heroX/heroY mirror the wordmark's CSS resting transform (5.5vw / 20vh).
     const heroX = Math.max(64, window.innerWidth * 0.055);
-    const heroY = window.innerHeight * 0.18;
+    const heroY = window.innerHeight * 0.2;
     const navX = 54;
-    const navY = 34;
-    const endScale = 0.2;
+    const navY = 30;
+    const endScale = 0.22;
 
     const te = easeInOut(t);
     const x = lerp(heroX, navX, te);
-    const dip = heroY + 56;
-    const y = t < 0.4
-      ? lerp(heroY, dip, easeOut(t / 0.4))
-      : lerp(dip, navY, easeInOut((t - 0.4) / 0.6));
+    const y = lerp(heroY, navY, te);
     const s = lerp(1, endScale, te);
     wordmark.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
     wordmark.classList.toggle('is-collapsed', t > 0.45);
 
-    // hero content drifts down a touch (reinforces the "scrolling down" read)
-    if (heroText) heroText.style.transform = `translateY(${lerp(0, 56, t)}px)`;
+    // hero content scrolls UP and away, like a normal page being scrolled
+    // down (the portrait lifting at the same time completes that read).
+    // APPROVED settled look: rests at translateY 0 (its CSS top:54vh) and
+    // rises to -90. TEST: starts HERO_REST_Y lower and rises to the same end —
+    // set HERO_REST_Y back to 0 to restore the approved resting position.
+    const HERO_REST_Y = 64;
+    if (heroText) heroText.style.transform = `translateY(${lerp(HERO_REST_Y, -90, t)}px)`;
   }
 
   // ---- shared portrait: glide hero-right → about-left, then off to the left ----
   function positionPortrait(t: number, panX: number): void {
     if (!portrait) return;
     const vw = window.innerWidth;
+    const vh = window.innerHeight;
     const p = clamp(panX / vw, 0, 1); // 0 = hero (right), 1 = about (left)
     const extra = Math.max(0, panX - vw); // beyond About → scroll off-screen left
     portrait.style.left = `${lerp(0.5, -0.02, p) * vw - extra}px`;
     portrait.style.width = `${lerp(0.52, 0.46, p) * vw}px`;
-    portrait.style.transform = `translateY(${lerp(0, 24, t)}px)`;
+    // sits low at rest (less of the figure visible); scrolling down reveals
+    // more of it — like a normal page — and it simply stays once the pan
+    // takes over (one direction, no down-then-up wobble).
+    // APPROVED settled look: restY = vh * 0.075. TEST: start lower so less of
+    // the figure shows at first — restore 0.075 to revert.
+    const restY = vh * 0.15;
+    portrait.style.transform = `translateY(${lerp(restY, 0, easeInOut(t))}px)`;
   }
 
-  // ---- scroll cue ----
+  // ---- portrait parallax: a few px of depth against the cursor, only while
+  //      the figure rests on the hero (it recentres as the morph takes over) ----
+  const portraitPicture = portrait?.querySelector<HTMLElement>('picture');
+  let parallaxResting = true;
+  const parallaxX = portraitPicture
+    ? gsap.quickTo(portraitPicture, 'x', { duration: 1.2, ease: 'power2.out' })
+    : undefined;
+  const parallaxY = portraitPicture
+    ? gsap.quickTo(portraitPicture, 'y', { duration: 1.2, ease: 'power2.out' })
+    : undefined;
+
+  window.addEventListener('mousemove', (event) => {
+    if (!parallaxResting || !parallaxX || !parallaxY) return;
+    const nx = (event.clientX / window.innerWidth) * 2 - 1; // -1 … 1
+    const ny = (event.clientY / window.innerHeight) * 2 - 1;
+    parallaxX(nx * -9);
+    parallaxY(ny * -6);
+  });
+
+  function updateParallaxRest(t: number): void {
+    const resting = t < 0.25;
+    if (resting === parallaxResting) return;
+    parallaxResting = resting;
+    if (!resting) {
+      parallaxX?.(0);
+      parallaxY?.(0);
+    }
+  }
+
+  // ---- statement cue: the hero statement and the scroll hint are one
+  //      element. "Learned the rules. ↓" rides the down-scroll; at the hinge
+  //      where down turns into the side-pan it breaks to "Practising the
+  //      exceptions. →"; fades out once panning is underway. ----
   function updateCue(t: number, panX: number): void {
     if (!cue) return;
-    const spin = clamp((t - 0.55) / 0.4, 0, 1); // ↓ until morph almost done, then →
+    const spin = clamp((t - 0.5) / 0.25, 0, 1); // ↓ → → finishes with the phrase break
     if (cueArrow) cueArrow.style.transform = `rotate(${lerp(0, -90, spin)}deg)`;
-    if (spin > 0.5) {
-      cue.classList.add('is-moved');
-      if (cueLabel) cueLabel.textContent = 'Explore';
-    } else {
-      cue.classList.remove('is-moved');
-      if (cueLabel) cueLabel.textContent = 'Scroll';
-    }
+    cue.classList.toggle('is-broken', t > 0.6);
     const fade = panX > 0 ? clamp(1 - panX / (window.innerWidth * 0.35), 0, 1) : 1;
     cue.style.opacity = String(fade);
     cue.style.pointerEvents = fade < 0.2 ? 'none' : 'auto';
@@ -172,9 +211,11 @@ function initEngine(): void {
       gsap.set(track, { x: -panX });
       applyMorph(t);
       positionPortrait(t, panX);
+      updateParallaxRest(t);
       updateCue(t, panX);
       updateProgress(panX, t);
       updateNav(panX);
+      revealOnPan(panX, window.innerWidth);
     },
   });
 

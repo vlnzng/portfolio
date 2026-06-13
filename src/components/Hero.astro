@@ -8,11 +8,14 @@
   <div class="hero-text" data-hero-text>
     <p class="hero-role">Product Designer &middot; UX/UI</p>
     <p class="hero-pitch">
-      Building clear, trustworthy digital tools from user research to frontend implementation.
+      Building clear, trustworthy digital tools<br />from user research to implementation.
     </p>
-    <p class="hero-statement">
-      <span class="hs-line">Learned the rules.</span>
-      <span class="hs-line gold">Practising the exceptions.</span>
+    <!-- On the desktop engine the statement lives in the scroll cue (fused
+         with the scroll hint, bottom centre). Here it only renders for
+         mobile / reduced motion, where both phrases simply stack. -->
+    <p class="hero-statement" aria-label="Learned the rules. Practising the exceptions.">
+      <span class="hs-phrase">Learned the rules.</span>
+      <span class="hs-phrase gold">Practising the exceptions.</span>
     </p>
   </div>
 </section>
@@ -23,17 +26,19 @@
     background: var(--color-bg);
   }
 
+  /* sits right below the wordmark so the left half reads as one composed
+     column (wordmark → role → pitch) instead of two stranded islands */
   .hero-text {
     position: absolute;
     left: 5.5vw;
-    bottom: 12vh;
-    max-width: 540px;
+    top: 54vh;
+    max-width: 640px;
     z-index: 40;
     will-change: transform;
   }
 
   .hero-role {
-    margin: 0 0 22px;
+    margin: 0 0 24px;
     font-family: var(--font-body);
     font-weight: 600;
     font-size: 14px;
@@ -43,11 +48,11 @@
   }
 
   .hero-pitch {
-    margin: 0 0 26px;
+    margin: 0;
     max-width: none;
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(22px, 2vw, 28px);
+    font-size: clamp(22px, 2.1vw, 31px);
     line-height: 1.5;
     color: var(--color-text);
   }
@@ -55,7 +60,7 @@
   .hero-statement {
     display: grid;
     gap: 2px;
-    margin: 0;
+    margin: 26px 0 0;
     max-width: none;
     font-family: var(--font-body);
     font-weight: 400;
@@ -65,8 +70,51 @@
     color: var(--color-muted);
   }
 
+  .hs-phrase {
+    display: block;
+  }
+
   .hero-statement .gold {
     color: var(--color-accent);
+  }
+
+  /* On the desktop engine the statement lives in the scroll cue instead */
+  @media (min-width: 821px) and (prefers-reduced-motion: no-preference) {
+    .hero-statement {
+      display: none;
+    }
+  }
+
+  /* ---- load-in: role → pitch → statement rise on first paint ---- */
+  :global(html.js) .hero-text > * {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.8s var(--ease-glide), transform 0.9s var(--ease-glide);
+  }
+
+  :global(html.js body.is-loaded) .hero-role {
+    transition-delay: 0.35s;
+  }
+
+  :global(html.js body.is-loaded) .hero-pitch {
+    transition-delay: 0.5s;
+  }
+
+  :global(html.js body.is-loaded) .hero-statement {
+    transition-delay: 0.65s;
+  }
+
+  :global(html.js body.is-loaded) .hero-text > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .hero-text > * {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
   }
 
   @media (max-width: 820px), (prefers-reduced-motion: reduce) {
@@ -78,8 +126,18 @@
       position: absolute;
       left: 7vw;
       right: 7vw;
+      top: auto;
       bottom: 10vh;
       max-width: none;
+    }
+
+    /* the fixed two-line break is a desktop composition — let it reflow */
+    .hero-pitch br {
+      display: none;
+    }
+
+    .hero-pitch {
+      text-wrap: balance;
     }
   }
 </style>

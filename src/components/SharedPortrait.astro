@@ -36,9 +36,18 @@ import portrait from '../assets/images/portrait.png';
     will-change: left, width, transform;
   }
 
-  .portrait img {
+  /* picture is the parallax layer (scroll.ts nudges it a few px against the
+     cursor while the figure rests); the img inside carries load-in + breath */
+  .portrait picture {
     position: relative;
     z-index: 2;
+    display: block;
+    width: 100%;
+    height: 100%;
+    will-change: transform;
+  }
+
+  .portrait img {
     width: 100%;
     height: 100%;
     display: block;
@@ -46,13 +55,55 @@ import portrait from '../assets/images/portrait.png';
     object-position: 50% 14%;
   }
 
-  /* soft warm halo behind the cut-out (sits below the figure) */
+  /* ---- load-in: the figure settles into place (opacity and scale finish
+     together — a trailing transform kept "re-animating" the photo) ---- */
+  :global(html.js) .portrait img {
+    opacity: 0;
+    transform: scale(1.05);
+    transition: opacity 1.2s ease, transform 1.2s var(--ease-glide);
+  }
+
+  :global(html.js body.is-loaded) .portrait img {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ---- idle: only the halo breathes — animating the photo itself forced
+     layer re-rasterisation that read as the image "loading again" ---- */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js body.is-loaded) .portrait__glow {
+      animation: sp-glow-breath 9s ease-in-out 3s infinite;
+    }
+  }
+
+  @keyframes sp-glow-breath {
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.72;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .portrait img {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* soft warm light behind the whole figure (not a halo around the head).
+     The layer extends past the container so the gradient has fully faded
+     before any edge — no hard cut towards the navbar. */
   .portrait__glow {
     position: absolute;
-    inset: 0;
+    inset: -14%;
     z-index: 1;
     pointer-events: none;
-    background: radial-gradient(56% 52% at 50% 32%, rgb(217 179 108 / 0.13), transparent 70%);
+    background: radial-gradient(52% 46% at 50% 50%, rgb(217 179 108 / 0.11), transparent 70%);
   }
 
   /* lower edge dissolves into the page so the torso isn't hard-cut */

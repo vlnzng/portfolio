@@ -116,3 +116,49 @@ button:focus-visible,
     overflow: visible;
   }
 }
+
+/* ===== Entrance choreography ============================================
+   Generic reveal primitive (from the design handoff). Content is hidden
+   until its owning panel gets .is-in — on desktop driven by the pan
+   position (scroll.ts → reveal.ts), on mobile by an IntersectionObserver.
+   Side-panel content rides in from the +X direction so each arrival echoes
+   the leftward pan: the horizontal motion is the signature, so the
+   choreography leans into it. Gated behind html.js so nothing is ever
+   hidden without JavaScript. The `translate` transition keeps hover-lifts
+   (.wcard, .pr-col use the separate translate property) smooth without
+   fighting the reveal transform. */
+html.js .reveal {
+  --d: calc(var(--i, 0) * 70ms);
+  opacity: 0;
+  transform: translate3d(var(--rx, 0px), var(--ry, 24px), 0);
+  transition:
+    opacity 0.55s var(--ease-glide) var(--d),
+    transform 0.75s var(--ease-glide) var(--d),
+    translate 0.45s var(--ease-glide);
+  will-change: opacity, transform;
+}
+
+html.js .section.is-in .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+/* short offsets: the panel itself is already moving during the pan, so the
+   content only settles a little — large travel read as "loading late" */
+.reveal-x {
+  --rx: 30px;
+  --ry: 8px;
+} /* rides in from the right */
+
+.reveal-rise {
+  --rx: 0px;
+  --ry: 26px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

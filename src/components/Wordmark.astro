@@ -1,37 +1,45 @@
 ---
-// Fixed, morphing wordmark. At rest it is the large hero lockup (top-left);
-// scroll.ts drives it through the morph into the small VL home button in the
-// navbar corner (the tails "alentin"/"enzing" fade, V/L stay, it flies up).
+// Fixed, morphing wordmark — geometry matched to the original lockup
+// (design_handoff_portfolio/assets/LogoBlack.png): one dominant V spanning
+// both lines, "alentin" hanging off its top arm, and a half-size L nesting
+// with "enzing" inside the V's lower-right opening. Because the L already
+// sits in its monogram position, the morph only fades the tails and flies
+// the remaining V/L (= IconBlack.png) into the navbar corner — scroll.ts
+// drives that.
 ---
 
 <a class="wordmark" href="/#hero" aria-label="Valentin Lenzing — home" data-wordmark data-section-link="hero">
-  <span class="wordmark__line">
-    <span class="wordmark__initial wordmark__initial--v">V</span><span class="wordmark__tail" data-wm-tail>alentin</span>
-  </span>
-  <span class="wordmark__line">
-    <span class="wordmark__initial">L</span><span class="wordmark__tail" data-wm-tail>enzing</span>
+  <span class="wordmark__v" aria-hidden="true">V</span>
+  <span class="wordmark__rest" aria-hidden="true">
+    <span class="wordmark__line wordmark__line--1">
+      <span class="wordmark__tail" data-wm-tail>alentin</span>
+    </span>
+    <span class="wordmark__line wordmark__line--2">
+      <span class="wordmark__l">L</span><span class="wordmark__tail" data-wm-tail>enzing</span>
+    </span>
   </span>
 </a>
 
 <style>
   .wordmark {
-    /* tuning knobs — same geometry we dialled in on the hero */
-    --cap-size: clamp(3.5rem, 8.5vw, 9rem);
-    --cap-leading: 0.55;
-    --suffix-ratio: 0.484;
-    --l-shift-x: 0.4em;
+    /* tuning knobs — proportions measured off the original logo:
+       tails ≈ 0.35 × V, the nested L ≈ 1.62 × tails */
+    --wm-v: clamp(7rem, 14vw, 16rem);
+    --wm-t: calc(var(--wm-v) * 0.35);
+    --wm-l: calc(var(--wm-t) * 1.62);
 
     position: fixed;
     left: 0;
     top: 0;
     z-index: 65;
-    /* resting position ≈ hero top-left, until the engine takes over (also the
-       reduced-motion fallback) */
-    transform: translate(5.5vw, 18vh);
+    /* resting position ≈ hero left, vertically present (also the
+       reduced-motion fallback); the engine takes over from here */
+    transform: translate(5.5vw, 20vh);
     transform-origin: left top;
+    display: flex;
+    align-items: flex-start;
     width: max-content;
     font-family: var(--font-display);
-    font-size: var(--cap-size);
     font-weight: 700;
     color: var(--color-text);
     text-decoration: none;
@@ -39,41 +47,171 @@
     will-change: transform;
   }
 
+  /* the V carries the accent and spans both lines — like the monogram.
+     It must always paint ABOVE the nested L: without an explicit order the
+     breath animation's filter creates a stacking context mid-flight and the
+     V suddenly jumps in front — so we pin the order from the start. */
+  .wordmark__v {
+    position: relative;
+    z-index: 2;
+    display: block;
+    font-size: var(--wm-v);
+    line-height: 0.72;
+    letter-spacing: -0.02em;
+    color: var(--color-accent);
+  }
+
+  .wordmark__rest {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    /* tuck the text block against the V's right arm */
+    margin-left: calc(var(--wm-v) * -0.04);
+  }
+
   .wordmark__line {
     display: flex;
     align-items: flex-start;
+    font-size: var(--wm-t);
+    line-height: 0.78;
+    letter-spacing: -0.01em;
   }
 
-  .wordmark__line + .wordmark__line {
-    margin-left: var(--l-shift-x);
+  .wordmark__line--1 {
+    /* "alentin" drops to sit against the V's right arm, its baseline around
+       the V's vertical middle (as in the original lockup) */
+    margin-top: calc(var(--wm-v) * 0.07);
   }
 
-  .wordmark__initial {
+  .wordmark__line--2 {
+    /* "Lenzing" nests into the V's lower-right opening: line dropped so the
+       L's foot closes level with the V's baseline */
+    margin-top: calc(var(--wm-v) * 0.085);
+    margin-left: calc(var(--wm-v) * -0.2);
+    align-items: flex-end;
+  }
+
+  .wordmark__l {
     display: inline-block;
-    line-height: var(--cap-leading);
-    letter-spacing: -0.02em;
-  }
-
-  /* the V carries the accent — like the VL monogram */
-  .wordmark__initial--v {
-    color: var(--color-accent);
+    font-size: var(--wm-l);
+    line-height: 0.72;
   }
 
   .wordmark__tail {
     display: inline-block;
-    font-size: calc(1em * var(--suffix-ratio));
-    font-weight: 600;
-    line-height: 0.74;
-    letter-spacing: -0.01em;
-    margin-top: 0.16em;
-    margin-left: 0.04em;
+    font-weight: 700; /* the original lockup is bold throughout */
     white-space: nowrap;
     will-change: opacity, transform;
+  }
+
+  .wordmark__line--2 .wordmark__tail {
+    /* "enzing" starts inside the L (negative margin pulls it back over the
+       stem) and rides high on it — margin (not transform) does both, because
+       scroll.ts drives each tail's transform during the morph and would
+       otherwise clobber a transform back to the foot at rest */
+    margin-left: -0.32em;
+    margin-bottom: 0.52em;
   }
 
   /* once collapsed into the corner it behaves like a button */
   .wordmark.is-collapsed {
     cursor: pointer;
+  }
+
+  /* ---- load-in: V and L stand immediately; only the tails are
+     "written" out, line by line, like ink ---- */
+  :global(html.js) .wordmark {
+    opacity: 0;
+    transition: opacity 0.5s ease, scale 0.45s var(--ease-glide);
+  }
+
+  :global(html.js body.is-loaded) .wordmark {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .wordmark__tail {
+      clip-path: inset(-0.25em 100% -0.35em -0.05em);
+    }
+
+    :global(html.js body.is-loaded) .wordmark__line--1 .wordmark__tail {
+      animation: wm-write 1.5s cubic-bezier(0.3, 0.4, 0.2, 1) 0.35s both;
+    }
+
+    :global(html.js body.is-loaded) .wordmark__line--2 .wordmark__tail {
+      animation: wm-write 1.5s cubic-bezier(0.3, 0.4, 0.2, 1) 0.95s both;
+    }
+
+    /* the gold V breathes very gently once the name has settled (hero only) */
+    :global(html.js body.is-loaded) .wordmark:not(.is-collapsed) .wordmark__v {
+      animation: wm-breath 5s ease-in-out 2.6s infinite;
+    }
+  }
+
+  @keyframes wm-write {
+    to {
+      clip-path: inset(-0.25em -0.4em -0.35em -0.05em);
+    }
+  }
+
+  @keyframes wm-breath {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 0 rgb(217 179 108 / 0));
+    }
+
+    50% {
+      filter: drop-shadow(0 0 12px rgb(217 179 108 / 0.3));
+    }
+  }
+
+  /* ---- hover: lift + V glow + a single warm sheen across the letters ----
+     works on the hero lockup AND the collapsed home mark */
+  .wordmark:hover {
+    scale: 1.014;
+  }
+
+  .wordmark:hover .wordmark__v {
+    animation: none;
+    filter: drop-shadow(0 0 22px rgb(217 179 108 / 0.52));
+  }
+
+  .wordmark::after {
+    content: '';
+    position: absolute;
+    inset: -8% -5%;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(
+      105deg,
+      transparent 44%,
+      rgb(228 195 132 / 0.4) 50%,
+      transparent 56%
+    );
+    mix-blend-mode: screen;
+    opacity: 0;
+    transform: translateX(-55%);
+  }
+
+  .wordmark:hover::after {
+    animation: wm-sheen 0.85s ease-out forwards;
+  }
+
+  @keyframes wm-sheen {
+    0% {
+      opacity: 0;
+      transform: translateX(-55%);
+    }
+
+    25% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateX(55%);
+    }
   }
 
   @media (max-width: 820px), (prefers-reduced-motion: reduce) {
@@ -83,7 +221,7 @@
       left: 7vw;
       top: 8vh;
       transform: none !important;
-      --cap-size: clamp(3.25rem, 15vw, 5.5rem);
+      --wm-v: clamp(5.5rem, 24vw, 9rem);
     }
 
     .wordmark__tail {
@@ -93,8 +231,27 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .wordmark {
+    :global(html.js) .wordmark {
+      opacity: 1;
       transition: none;
+    }
+
+    .wordmark__tail {
+      clip-path: none !important;
+      animation: none !important;
+    }
+
+    .wordmark__v {
+      animation: none !important;
+      filter: none !important;
+    }
+
+    .wordmark::after {
+      display: none;
+    }
+
+    .wordmark:hover {
+      scale: none;
     }
   }
 </style>
