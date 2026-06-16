@@ -1,0 +1,76 @@
+<svg width="2400" height="600" viewBox="0 0 2400 600" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+  <defs>
+    <radialGradient id="hglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#D8CDEC" stop-opacity="1"/>
+      <stop offset="36%" stop-color="#9D8CC9" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#9D8CC9" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="hfield" cx="50%" cy="50%" r="58%">
+      <stop offset="0%" stop-color="#9D8CC9" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#9D8CC9" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lin" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#9D8CC9" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#9D8CC9" stop-opacity="0.65"/>
+    </linearGradient>
+    <linearGradient id="lout" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#9D8CC9" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#9D8CC9" stop-opacity="0.12"/>
+    </linearGradient>
+    <pattern id="hdiag" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="24" stroke="#EDE6D9" stroke-opacity="0.018" stroke-width="1.5"/>
+    </pattern>
+    <style>
+      .dot{fill:#252220;stroke:#9D8CC9;stroke-width:1.6;}
+      .dlbl{fill:#EDE6D9;font-weight:600;}
+      .kick{fill:#A39B8E;font-family:'DejaVu Sans Mono',monospace;font-weight:700;letter-spacing:.16em;}
+      .clbl{fill:#9E978B;font-weight:500;}
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="2400" height="600" fill="#1A1816"/>
+  <rect x="0" y="0" width="2400" height="600" fill="url(#hdiag)"/>
+  <rect x="650" y="-200" width="1100" height="1000" fill="url(#hfield)"/>
+
+  <!-- kickers -->
+  <text class="kick" x="300" y="120" font-size="17">FOUR RISK DOMAINS</text>
+  <text class="kick" x="1955" y="120" font-size="17">CONCERN LEVEL</text>
+
+  <!-- left: four domain labels + nodes (short labels, left of the dots) -->
+  <g font-size="25">
+    <text class="dlbl" x="400" y="187" text-anchor="end">Pricing</text>
+    <circle class="dot" cx="430" cy="180" r="8"/>
+    <text class="dlbl" x="400" y="287" text-anchor="end">Consent</text>
+    <circle class="dot" cx="430" cy="280" r="8"/>
+    <text class="dlbl" x="400" y="387" text-anchor="end">Pressure</text>
+    <circle class="dot" cx="430" cy="380" r="8"/>
+    <text class="dlbl" x="400" y="487" text-anchor="end">Minors</text>
+    <circle class="dot" cx="430" cy="480" r="8"/>
+  </g>
+
+  <!-- converging lines to centre -->
+  <g fill="none" stroke="url(#lin)" stroke-width="1.7">
+    <path d="M 438 180 C 760 180, 880 322, 1108 330"/>
+    <path d="M 438 280 C 760 280, 920 328, 1108 332"/>
+    <path d="M 438 380 C 760 380, 920 336, 1108 334"/>
+    <path d="M 438 480 C 760 480, 880 344, 1108 336"/>
+  </g>
+
+  <!-- centre node (assessment) -->
+  <circle cx="1200" cy="333" r="74" fill="url(#hglow)"/>
+  <circle cx="1200" cy="333" r="12" fill="#EDE6D9"/>
+  <text class="kick" x="1200" y="452" font-size="14" text-anchor="middle" opacity="0.85">ASSESSMENT</text>
+
+  <!-- line out to concern spectrum -->
+  <line x1="1212" y1="333" x2="1915" y2="333" stroke="url(#lout)" stroke-width="1.7"/>
+
+  <!-- right: concern spectrum (small muted dots, clearly graphic) -->
+  <g font-size="23">
+    <circle cx="1955" cy="273" r="9" fill="#7FA98B"/>
+    <text class="clbl" x="1987" y="281">Minimal</text>
+    <circle cx="1955" cy="333" r="9" fill="#C9A05C"/>
+    <text class="clbl" x="1987" y="341">Moderate</text>
+    <circle cx="1955" cy="393" r="9" fill="#C97B6B"/>
+    <text class="clbl" x="1987" y="401">Elevated</text>
+  </g>
+</svg>

@@ -1,0 +1,59 @@
+<svg width="1600" height="780" viewBox="0 0 1600 780" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+  <defs>
+    <style>
+      .bg{fill:#1A1816;}
+      .card{fill:#252220;stroke:#3A3631;stroke-width:1.5;}
+      .node{fill:#221F1D;stroke:#9D8CC9;stroke-width:1.75;}
+      .h{font-family:'Lora', Georgia, serif;fill:#EDE6D9;font-weight:600;}
+      .lbl{fill:#EDE6D9;font-weight:600;}
+      .sub{fill:#9E978B;font-weight:400;}
+      .kicker{fill:#9D8CC9;font-weight:600;letter-spacing:.16em;}
+      .num{fill:#9D8CC9;font-weight:700;font-family:'DejaVu Sans Mono',monospace;opacity:.85;}
+      .flow{stroke:#9D8CC9;stroke-width:1.4;fill:none;opacity:.5;}
+    </style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1600" height="780"/>
+
+  <!-- Kickers -->
+  <text class="kicker" x="92" y="92" font-size="14">FOUR PERSPECTIVES</text>
+  <text class="kicker" x="1508" y="92" font-size="14" text-anchor="end">SYNTHESISED INTO</text>
+
+  <!-- Convergence flow lines (drawn first, behind cards) -->
+  <path class="flow" d="M 462 196 C 700 196, 820 380, 1048 396"/>
+  <path class="flow" d="M 462 336 C 700 336, 840 392, 1048 404"/>
+  <path class="flow" d="M 462 476 C 700 476, 840 408, 1048 412"/>
+  <path class="flow" d="M 462 616 C 700 616, 820 420, 1048 420"/>
+
+  <!-- LEFT: four perspectives (titles only, low text) -->
+  <g>
+    <rect class="card" x="92" y="150" width="370" height="92" rx="12"/>
+    <text class="num" x="118" y="186" font-size="15">01</text>
+    <text class="lbl" x="118" y="208" font-size="22">Monetisation economics</text>
+  </g>
+  <g>
+    <rect class="card" x="92" y="290" width="370" height="92" rx="12"/>
+    <text class="num" x="118" y="326" font-size="15">02</text>
+    <text class="lbl" x="118" y="348" font-size="22">Player psychology</text>
+  </g>
+  <g>
+    <rect class="card" x="92" y="430" width="370" height="92" rx="12"/>
+    <text class="num" x="118" y="466" font-size="15">03</text>
+    <text class="lbl" x="118" y="488" font-size="22">Dark patterns &amp; UX</text>
+  </g>
+  <g>
+    <rect class="card" x="92" y="570" width="370" height="92" rx="12"/>
+    <text class="num" x="118" y="606" font-size="15">04</text>
+    <text class="lbl" x="118" y="628" font-size="22">EU consumer law</text>
+  </g>
+
+  <!-- RIGHT: the payoff node -->
+  <g>
+    <rect class="node" x="1048" y="336" width="360" height="148" rx="14"/>
+    <text class="h" x="1228" y="392" font-size="25" text-anchor="middle">Inspectable</text>
+    <text class="h" x="1228" y="424" font-size="25" text-anchor="middle">design indicators</text>
+    <text class="sub" x="1228" y="456" font-size="15" text-anchor="middle">Observable at the interface</text>
+  </g>
+
+  <!-- caption -->
+  <text class="sub" x="92" y="724" font-size="16">Four separate literatures condensed into one set of criteria a designer can check by looking at the screen.</text>
+</svg>

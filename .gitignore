@@ -27,3 +27,6 @@ CLAUDE.local.md
 
 # Design handoff — local reference material, keep out of the repo
 design_handoff_portfolio/
+
+# Asset inbox — raw drop zone before files are sorted/optimised into the repo
+_inbox/

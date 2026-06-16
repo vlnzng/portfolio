@@ -5,6 +5,8 @@ interface ShowcaseData {
   subtitle: string;
   summary?: string;
   heroCaption?: string;
+  heroImage?: string;
+  heroAlt?: string;
   year: number;
   role: string;
   type?: string;
@@ -45,30 +47,29 @@ function openModal(slug: string): void {
 
   history.pushState({ modal: slug }, '', `/work/${slug}`);
 
-  const num = String(data.order).padStart(2, '0');
-
   if (modalHero) {
-    const caption = data.heroCaption ?? `${data.title} — key image`;
-    modalHero.innerHTML =
-      `<div class="wstripe"></div><span class="wcard-cap">${escapeHtml(caption)}</span>`;
+    // Real key image when the case ships one; otherwise the deliberate
+    // placeholder stripe. The image carries alt text, so it is exposed to AT;
+    // the decorative stripe stays hidden.
+    if (data.heroImage) {
+      const alt = data.heroAlt ?? `${data.title} — overview`;
+      modalHero.innerHTML = `<img class="cs-hero-img" src="${escapeHtml(data.heroImage)}" alt="${escapeHtml(alt)}" />`;
+      modalHero.setAttribute('aria-hidden', 'false');
+    } else {
+      const caption = data.heroCaption ?? `${data.title} — key image`;
+      modalHero.innerHTML =
+        `<div class="wstripe"></div><span class="wcard-cap">${escapeHtml(caption)}</span>`;
+      modalHero.setAttribute('aria-hidden', 'true');
+    }
   }
 
-  const metaPairs: [string, string | undefined][] = [
-    ['Role', data.role],
-    ['Type', data.type],
-    ['Duration', data.duration],
-    ['Tools', data.tools.join(' · ')],
-    ['Year', String(data.year)],
-  ];
-
+  // Head: number, title, the one-line subtitle, then the wider "at a glance"
+  // lead (stored in `summary`). The old role/type/duration/year meta grid was
+  // dropped as weak; tools moved onto the card.
   modalMeta.innerHTML = `
-    <span class="cs-num">${escapeHtml(num)}</span>
     <h2 id="modal-title" class="cs-title">${escapeHtml(data.title)}</h2>
-    <p class="cs-sub">${escapeHtml(data.summary ?? data.subtitle)}</p>
-    <ul class="cs-meta">${metaPairs
-      .filter(([, value]) => Boolean(value))
-      .map(([key, value]) => `<li><span class="cs-meta-k">${escapeHtml(key)}</span><span class="cs-meta-v">${escapeHtml(value)}</span></li>`)
-      .join('')}</ul>
+    <p class="cs-sub">${escapeHtml(data.subtitle)}</p>
+    ${data.summary ? `<p class="cs-glance-label">At a glance</p><p class="cs-glance">${escapeHtml(data.summary)}</p>` : ''}
   `;
 
   modalBody.replaceChildren(template.content.cloneNode(true));
