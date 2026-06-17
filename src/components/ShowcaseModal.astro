@@ -167,9 +167,11 @@
   .cs-hero {
     position: relative;
     width: 100%;
-    /* a calm banner band — the case hero is a clean vector graphic that shares
-       the page background, so it sits contained and blends edge-to-edge */
-    height: clamp(200px, 30vh, 360px);
+    /* full-bleed banner — wider than the text column below; matches the SVG
+       ratio so it fills the width edge-to-edge with no crop, capped on tall
+       viewports so it never dominates */
+    aspect-ratio: 2400 / 620;
+    max-height: 56vh;
     overflow: hidden;
     background: var(--color-bg);
   }
@@ -244,15 +246,20 @@
     font-size: clamp(17px, 1.7vw, 22px);
     line-height: 1.5;
     text-wrap: pretty;
+    hyphens: auto;
     color: #c9c2b6;
   }
 
-  /* at-a-glance — gold eyebrow + faint gold divider, then the paragraph fills
-     the column (role/year/duration meta dropped as weak, per direction) */
+  /* at-a-glance — full-width gold divider on the wrapper, gold eyebrow, then
+     one or more lead paragraphs (role/year/duration meta dropped as weak) */
+  .cs-head :global(.cs-glance) {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid rgb(217 179 108 / 0.35);
+  }
+
   .cs-head :global(.cs-glance-label) {
-    margin: 32px 0 14px;
-    padding: 28px 0 0;
-    border-top: 1px solid rgb(217 179 108 / 0.3);
+    margin: 0 0 14px;
     font-family: var(--font-body);
     font-weight: 600;
     font-size: 12px;
@@ -261,13 +268,18 @@
     color: var(--color-accent);
   }
 
-  .cs-head :global(.cs-glance) {
-    margin: 0;
+  .cs-head :global(.cs-glance-p) {
+    margin: 0 0 16px;
     font-family: var(--font-body);
     font-size: clamp(16px, 1.5vw, 19px);
     line-height: 1.7;
     text-wrap: pretty;
+    hyphens: auto;
     color: #dad3c7;
+  }
+
+  .cs-head :global(.cs-glance-p:last-child) {
+    margin-bottom: 0;
   }
 
   /* body — MDX-rendered case, styled as gold-headed sections */
@@ -306,6 +318,8 @@
     font-weight: 400;
     font-size: clamp(17px, 1.45vw, 19px);
     line-height: 1.72;
+    text-wrap: pretty;
+    hyphens: auto;
     color: #dad3c7;
   }
 
@@ -331,19 +345,32 @@
     font-weight: 600;
   }
 
-  /* in-body visuals break out wider than the reading column for legibility
+  /* in-body figures break out wider than the reading column for legibility
      (centred on the viewport via the 50% + translateX trick). The shot_*
-     screenshots already bake in the rounded "product window" + shadow, so no
-     CSS radius here; diagrams are flat, site-native data viz. */
-  .cs-body :global(.case-shot),
-  .cs-body :global(.case-diagram) {
-    display: block;
+     screenshots bake in the rounded "product window" + shadow; diagrams are
+     flat, site-native data viz. Captions sit centred beneath. */
+  .cs-body :global(.case-figure) {
     width: min(1080px, 92vw);
-    height: auto;
-    margin-top: 4.5vh;
-    margin-bottom: 4.5vh;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
     margin-left: 50%;
     transform: translateX(-50%);
+  }
+
+  .cs-body :global(.case-figure img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .cs-body :global(.case-figure figcaption) {
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+    color: var(--color-muted);
+    text-align: center;
   }
 
   /* pull quote — gold rule + display serif, keeps the single site accent */

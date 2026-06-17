@@ -1,7 +1,10 @@
 ---
 title: "Fair Monetisation Risk Assessment Tool"
-subtitle: "A web application that helps teams screen video game monetisation for fairness risks before launch."
-summary: "Video game monetisation is increasingly shaped by ethical expectations and EU consumer-protection requirements, but product teams often lack a practical way to check a specific monetisation flow before legal review. I designed and built a live web tool that turns legal, psychological and UX research into one context flag, 12 inspectable questions across four risk domains, and a conservative concern result."
+subtitle: "A web application that helps teams screen video game monetisation flows for fairness risks before launch."
+summary: |
+  Video game monetisation is increasingly shaped by ethical expectations and EU consumer-protection requirements, but product teams often lack a practical way to review specific monetisation flows before legal review.
+
+  I designed and built a live web application that turns regulatory, behavioural and UX research into one context flag, 12 inspectable questions across four risk domains, and a conservative concern orientation.
 result: "Solo master's thesis · live web tool"
 cardMeta: ["Master's thesis", "Solo project"]
 year: 2026
@@ -11,7 +14,7 @@ duration: "6 months"
 tools: ["Figma", "HTML", "CSS", "JavaScript"]
 tags: ["Research", "Strategy", "Code"]
 heroImage: "/assets/showcases/case1/hero.svg"
-heroAlt: "Four risk domains — pricing, consent, pressure and minors — converging into one assessment, which outputs a concern level from minimal to elevated."
+heroAlt: "Four risk domains — transparency, consent, pressure and safeguards — converging into one assessment, which maps to a concern level from minimal to elevated."
 cardImage: "/assets/showcases/case1/card.webp"
 cardAlt: "The live tool: a risk-assessment summary panel and a guided-question step."
 order: 1
@@ -20,54 +23,69 @@ externalLink: "https://informatik.th-brandenburg.de/~lenzing/"
 
 ## 01 · Context
 
-This project was my master's thesis at TH Brandenburg. It addressed a practical design-stage question: how can UX designers support fair monetisation in video games while balancing ethical standards, regulatory requirements and commercial viability?
+This project was developed as my master's thesis at TH Brandenburg. It addressed a practical design-stage question: how can UX designers support fair monetisation in video games while balancing ethical standards, regulatory requirements and commercial viability?
 
-The timing is relevant. Monetisation has become part of the player experience, while EU consumer-protection enforcement increasingly targets unclear pricing, frictionless spending, pressure cues and weak safeguards for minors. Teams need ways to spot risk-sensitive design properties early, before a flow becomes expensive to change.
+The timing is critical: monetisation is now a core layer of the player experience, while EU consumer-protection enforcement increasingly targets issues such as unclear pricing, frictionless spending, pressure cues and weak safeguards for minors. Teams need ways to identify risk-sensitive design properties early, before a flow becomes expensive to change.
 
 ## 02 · Problem
 
-Monetisation decisions are made through interface design: how prices are shown, how offers are framed, how easy it is to accept or decline, and how much pressure a player feels at the point of decision.
+Monetisation decisions are often made through interface design: how prices are shown, how offers are framed, how easy it is to accept or decline, and how much pressure a player feels at the point of decision.
 
-Legal review usually happens late, while design teams work in different terms: clarity, friction, urgency, consent, player control. This creates a gap. Fairness risks can stay invisible until a flow is already built, even though many of them are visible directly in the interface.
+The issue is not only that monetisation can be legally sensitive. The practical problem is ownership: design teams shape many of the relevant decision points, but they often lack a shared structure for recognising fairness risks before implementation.
+
+Legal review usually happens late, while design teams work in different terms: clarity, friction, urgency, consent and player control. This creates a gap. Fairness risks can stay invisible until a flow is already built, even though many of them are visible directly in the interface.
 
 ## 03 · Process
 
-I synthesised four perspectives that are usually discussed separately: monetisation economics, player spending psychology, UX research on dark patterns, and EU consumer-protection expectations.
+I started with literature and desk research across four areas: monetisation economics, player spending psychology, UX research on dark patterns, and EU consumer-protection expectations. This gave me the basis for identifying where fairness risks emerge in video game monetisation: price presentation, consent, friction, pressure cues and safeguards for minors.
 
-The core challenge was translation. I turned abstract legal and ethical expectations into inspectable indicators, answerable by looking at the user journey itself, with no backend access, no analytics, and no assumptions about developer intent.
+The core challenge was translation. I had to turn abstract ethical and regulatory expectations into practical indicators that can be answered by inspecting the user journey itself, without backend access, analytics data or assumptions about developer intent.
 
-<img class="case-diagram" src="/assets/showcases/case1/synthesis.svg" alt="Four research perspectives (monetisation economics, player psychology, dark patterns and UX, EU consumer law) converging into one set of inspectable design indicators." width="1600" height="780" loading="lazy" />
+<figure class="case-figure">
+  <img class="case-diagram" src="/assets/showcases/case1/synthesis.svg" alt="Four research perspectives (monetisation economics, player psychology, dark patterns and UX, EU consumer law) converging into one set of inspectable design indicators." width="1600" height="780" loading="lazy" />
+  <figcaption>From research perspectives to inspectable design indicators.</figcaption>
+</figure>
 
-Three examples:
+To ensure day-to-day utility, every design indicator had to be strictly observable in the interface, consumer-protection relevant, and actionable during early design reviews. The structure was refined through iterative review and feedback, especially around where the assessment needed to stay conservative: it could flag risk signals, but it should not make legal claims or imply measured harm.
 
-- **Real-money price visibility:** Can players see a real-money price, or a clear equivalent, at the point of decision?
-- **Friction symmetry:** Is it no harder to decline or cancel than to accept or start?
-- **Protection of minors:** Does the design avoid directly urging minors to buy, or pressuring adults into it?
+This process led to four risk domains and 12 guided questions. **Three examples:**
+
+<p class="case-q"><strong>Real-money price visibility</strong><br />Can players see a real-money price, or a clear equivalent, at the point of decision?</p>
+
+<p class="case-q"><strong>Friction symmetry</strong><br />Is it no harder to decline or cancel than to accept or start?</p>
+
+<p class="case-q"><strong>Protection of minors</strong><br />Does the design avoid directly urging minors to buy, or pressuring adults into it?</p>
 
 ## 04 · Solution
 
-A live, web-based assessment tool. A team runs one monetisation flow through three steps: context, 12 guided questions, result.
+The result is a live, web-based assessment workflow. A team runs one monetisation flow through three steps: context, 12 guided questions and result.
 
-<img class="case-shot" src="/assets/showcases/case1/questions.webp" alt="Guided questions in the tool, each answered Yes, No or Unsure, for the price and currency clarity domain." width="1600" height="684" loading="lazy" />
+<figure class="case-figure">
+  <img class="case-shot" src="/assets/showcases/case1/questions.webp" alt="Guided questions in the tool, each answered Yes, No or Unsure, for the price and currency clarity domain." width="1600" height="684" loading="lazy" />
+  <figcaption>The guided-questions UI, using a non-neutral “Unsure” state.</figcaption>
+</figure>
 
-The tool returns an overall concern level, from minimal to moderate to elevated, plus the domain-specific areas worth reviewing. Its logic is deliberately conservative: it flags patterns that merit further review, but it does not declare a design lawful or unlawful.
+“Unsure” is not treated as neutral. It becomes a weak signal, because uncertainty at the decision point is itself relevant for review. Co-occurring indicators raise the concern level, because risk mechanisms in monetisation tend to compound rather than act in isolation.
 
-"Unsure" is treated as a weak signal, so uncertainty becomes visible instead of disappearing. Co-occurring indicators raise the concern level, because risk mechanisms in monetisation tend to compound rather than act in isolation.
+The assessment returns an overall concern level, from minimal to moderate to elevated, plus domain-specific areas worth reviewing. Its logic is deliberately conservative: it flags patterns that merit further review, but it does not declare a design lawful or unlawful.
 
-<img class="case-shot" src="/assets/showcases/case1/result.webp" alt="Tool result: an overall concern level with per-domain concern levels." width="1400" height="924" loading="lazy" />
+<figure class="case-figure">
+  <img class="case-shot" src="/assets/showcases/case1/result.webp" alt="Tool result: an overall concern level with per-domain concern levels." width="1400" height="924" loading="lazy" />
+  <figcaption>Concern orientation with domain-specific review areas.</figcaption>
+</figure>
 
-I built the prototype by hand in HTML, CSS and vanilla JavaScript. The question set is kept separate from the interface logic, so the criteria can be updated as regulation, guidance and case law evolve.
+The functional prototype was built from scratch using vanilla HTML, CSS and JavaScript. I deliberately avoided heavy frameworks to keep the tool lightweight, transparent and easy to deploy. The question set is kept separate from the interface logic, making the assessment easier to maintain and allowing the criteria to evolve as regulation, guidance and case law change.
 
 ## 05 · Impact
 
-The project shows how a complex ethical and regulatory issue can become a repeatable, pre-launch screening step. Instead of relying on intuition or late legal review, teams get a shared structure to discuss monetisation risk, document design reasoning, and see where deeper review is needed.
+The project shows how a complex ethical and regulatory issue can become a repeatable pre-launch screening step. Instead of relying on intuition or late-stage legal review, teams get a shared structure to discuss monetisation risk, document design reasoning and identify where deeper review is needed.
 
-The contribution is not a legal compliance tool, but a practical bridge between UX design, product decisions and consumer-protection expectations.
+The output creates a lightweight documentation trail: which flow was assessed, which indicators were triggered, where uncertainty remained and which areas should be reviewed before release. The contribution is not a legal compliance tool, but a practical bridge between UX design, product decisions and consumer-protection expectations.
 
 <blockquote class="case-quote">Built so a designer, a product owner and a legal reviewer can discuss the same flow with the same structure.</blockquote>
 
 ## 06 · Reflection
 
-I prioritised research substance and assessment logic over interface polish. The tool works, but its visual hierarchy and result communication are the first things I would redesign in a next iteration.
+I prioritised research substance and assessment logic over visual refinement. The tool works, but in a next iteration I would improve its visual hierarchy, result communication and guidance for first-time users.
 
-The 12 questions are also a first version. As EU regulation and enforcement practice develop, the indicators and thresholds should be revisited. The honest limit matters: the tool can surface fairness risks and support better decisions, but it cannot replace legal judgement or resolve every ethical trade-off.
+The 12 questions are also a first version. As EU regulation and enforcement practice develop, the indicators and thresholds should be revisited. The honest limit matters: the assessment can surface fairness risks and support better decisions, but it cannot replace legal judgement or resolve every ethical trade-off.

@@ -66,10 +66,20 @@ function openModal(slug: string): void {
   // Head: number, title, the one-line subtitle, then the wider "at a glance"
   // lead (stored in `summary`). The old role/type/duration/year meta grid was
   // dropped as weak; tools moved onto the card.
+  // At a glance: the summary may hold several paragraphs (split on blank lines)
+  const glance = data.summary
+    ? `<div class="cs-glance"><p class="cs-glance-label">At a glance</p>${data.summary
+        .split(/\n\s*\n/)
+        .map((p) => p.trim())
+        .filter(Boolean)
+        .map((p) => `<p class="cs-glance-p">${escapeHtml(p)}</p>`)
+        .join('')}</div>`
+    : '';
+
   modalMeta.innerHTML = `
     <h2 id="modal-title" class="cs-title">${escapeHtml(data.title)}</h2>
     <p class="cs-sub">${escapeHtml(data.subtitle)}</p>
-    ${data.summary ? `<p class="cs-glance-label">At a glance</p><p class="cs-glance">${escapeHtml(data.summary)}</p>` : ''}
+    ${glance}
   `;
 
   modalBody.replaceChildren(template.content.cloneNode(true));
@@ -79,7 +89,7 @@ function openModal(slug: string): void {
       ? `<a class="cs-btn cs-btn--primary" href="${data.externalLink}" target="_blank" rel="noopener noreferrer">Open live tool <span class="cs-btn-arrow">&#8599;</span></a>`
       : '',
     data.githubLink
-      ? `<a class="cs-btn cs-btn--ghost" href="${data.githubLink}" target="_blank" rel="noopener noreferrer">View source <span class="cs-btn-arrow">&#8599;</span></a>`
+      ? `<a class="cs-btn cs-btn--ghost" href="${data.githubLink}" target="_blank" rel="noopener noreferrer">View on GitHub <span class="cs-btn-arrow">&#8599;</span></a>`
       : '',
   ].filter(Boolean);
 
