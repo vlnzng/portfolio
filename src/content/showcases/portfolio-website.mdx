@@ -1,44 +1,103 @@
 ---
 title: "Portfolio Website"
-subtitle: "A redesign of my own site — from a 2024 student project to this 2026 version."
-summary: "The site you are on, hand-built from concept to deployment."
-result: "Hand-built · Lighthouse 95+"
+subtitle: "The site you are on, designed, written, and built by hand from concept to deployment."
+summary: |
+  The first version of my portfolio shipped in early 2024 as a university project. It met the course requirements, but it reflected a generic idea of what a portfolio should look like rather than how I actually work: a dark template-like layout, red accents, arbitrary skill bars, and copy that felt more styled than specific.
+
+  For a Product Designer who also builds, the portfolio cannot be only a container for the work. It has to demonstrate the same judgement it describes.
+
+  The result is this site: a dark editorial portfolio with a horizontal reading flow on desktop, a vertical fallback on mobile, a token-based design foundation, self-hosted fonts, and custom interaction logic. No site builder, no template, one person across concept, writing, design, and development.
+result: "Designed, written and coded by hand"
 heroCaption: "before / after — 2024 vs 2026"
 cardMeta: ["Personal project", "Solo"]
 year: 2026
-role: "Designer, Writer, Developer"
+role: "Concept, Writing, Design & Front-end"
 type: "Personal project · Solo"
 duration: "6 weeks"
 tools: ["Figma", "Astro", "GSAP", "Lenis", "HTML/CSS/TS"]
-tags: ["UX", "Brand", "Code"]
+tags: ["UX", "Code", "Writing"]
 order: 4
 githubLink: "https://github.com/vlnzng/portfolio"
 ---
 
-## Context
+## 01 · Context
 
-This is the second version of my portfolio. The first one shipped in early 2024 as part of an Interface Design course at TH Brandenburg — a dark site with red accents, percent-bars for skills, and a slogan I no longer recognise as mine. It served its purpose for the course. It did not serve me as a working designer.
+This is the second version of my portfolio. The first went live in early 2024 for an Interface Design seminar. It used a dark theme with red accents, percentage-based skill bars, and a headline, "Rethinking Boundaries", that no longer matched my own voice.
 
-## Problem
+It worked as a student project, but not as a professional portfolio. So I treated the redesign as a product problem: clarify the positioning, structure the content, define the interaction model, design the visual system, and build it by hand.
 
-The 2024 site reflected what I thought a portfolio should look like — generic dark theme, listed skills with arbitrary percentages, a tagline lifted from design-school stock phrases. It did not show how I actually work or think. By late 2025, every time I sent the link to a recruiter, I winced.
+## 02 · Problem
 
-## Process
+The deeper issue was not the visual style. It was the gap between what the site suggested and what it proved.
 
-I started with an audit of the old version. What I kept: the V/L wordmark concept, set in Lora Bold, and the underlying idea that the site should feel personal. What I removed: the dark-red theme, the percent bars, the generic copy, and the assumption that scrolling has to be vertical.
+A portfolio for a Product Designer is read as evidence. The writing, hierarchy, interaction design, technical execution, and case structure all become part of the evaluation. In my case, the site also had to show that I can connect design decisions with front-end implementation.
 
-The concept work was the longest part — maybe four weeks of iteration on copy, structure, and tone before any code happened. I worked on positioning first, then on the hero statement, then on each section's individual job.
+The brief I set myself was therefore simple:
 
-The build itself took two weeks. Astro for the framework, Lenis for smooth scroll, GSAP with ScrollTrigger for the horizontal sidescroll on desktop. Fonts are self-hosted to stay compliant with EU privacy law.
+<blockquote class="case-quote">Make the portfolio itself demonstrate the way I work.</blockquote>
 
-## Solution
+<figure class="case-figure">
+  <div class="case-ph"><span class="case-ph-cap">the 2024 site, annotated</span></div>
+  <figcaption>The 2024 version: a generic dark theme, red accents and arbitrary skill bars.</figcaption>
+</figure>
 
-This site. Horizontal scrolling on desktop, vertical fallback on mobile, dark editorial type system, and copy written with the same attention I would give to a client product. Built entirely by hand without a no-code builder.
+## 03 · Process
 
-## Impact
+I began with an audit of the old version. One idea survived: the nested V/L wordmark, which I rebuilt in Lora to make it feel more intentional and typographic. Everything else was reconsidered.
 
-From a generic 2024 student site to a hand-built editorial showcase with custom interaction logic. The Lighthouse scores are above 95 across all four categories. The site loads in under 200ms.
+Instead of starting in code, I worked through positioning and structure first. I researched editorial portfolio formats, reviewed how strong product design portfolios frame case studies, and defined the role I wanted the site to communicate: a Product Designer working at the intersection of interaction design, information architecture, and code.
 
-## Reflection
+That decision shaped the whole direction. The hero statement, navigation, case structure, visual rhythm, and technical choices all had to support the same idea. The concept phase took longer than the build, which was deliberate. The thinking defined the code, not the other way around.
 
-The horizontal scroll is a calculated risk. It works for me as a way to make the unusual feel intentional, and it gives me something to talk about in interviews. I am watching whether it stays useful or starts to be a stylistic crutch — if six months from now I can't defend it on user-experience grounds, it goes.
+<figure class="case-figure">
+  <div class="case-ph"><span class="case-ph-cap">concept before code</span></div>
+  <figcaption>Positioning and structure first — the concept phase outlasted the build.</figcaption>
+</figure>
+
+The implementation followed that direction. I used Astro as the framework, vanilla CSS with custom properties as the design-token layer, GSAP and Lenis for the two-phase scrolling behaviour, and self-hosted fonts for EU privacy compliance. The site is deployed on Vercel.
+
+I also used AI selectively as an implementation partner. It helped accelerate repetitive development work, but the architecture, interaction logic, type system, content structure, and final decisions remained mine.
+
+## 04 · Solution
+
+The final result is a portfolio built as a coherent digital product.
+
+**The visual foundation.** The visual direction is dark, editorial, and restrained. Lora and Inter create a contrast between expressive headlines and clear interface text. Colours, spacing, typography, and layout decisions are handled through reusable tokens, so the interface stays consistent and maintainable.
+
+Each case study has its own accent world, while the surrounding site interface stays neutral. This lets the projects carry their own atmosphere without breaking the overall portfolio.
+
+<figure class="case-figure">
+  <div class="case-ph"><span class="case-ph-cap">the design system</span></div>
+  <figcaption>A token-based foundation: colour, spacing and type as reusable tokens.</figcaption>
+</figure>
+
+**The interaction model.** On desktop, the site uses a horizontal reading flow supported by custom two-phase scroll logic. The goal is to make the portfolio feel more like a curated sequence than a standard vertical page. On mobile, the layout falls back to a conventional vertical flow.
+
+The experience includes keyboard navigation, visible focus states, reduced-motion handling, and self-hosted assets. These were part of the initial build, not fixes added afterwards.
+
+<figure class="case-figure">
+  <div class="case-ph"><span class="case-ph-cap">the scroll engine</span></div>
+  <figcaption>The desktop two-phase horizontal scroll, with a vertical fallback on mobile.</figcaption>
+</figure>
+
+**The writing framework.** The writing was treated as a core design layer. Every case follows the same structure, but each one keeps its own focus: context, problem, process, solution, impact, and reflection.
+
+The goal was not to make the cases sound impressive through volume, but to make them easier to evaluate. The copy had to be specific, readable, and honest about the limits of each project.
+
+## 05 · Impact
+
+The redesign turned a generic student portfolio into a hand-built showcase for my current design practice.
+
+As a personal project, it does not rely on external launch metrics. Its value lies in the artefact itself: the site demonstrates positioning, information architecture, visual system design, interaction design, writing, and front-end implementation in one place.
+
+<blockquote class="case-quote">The site is the case study: one person, from positioning and writing to visual system and front-end implementation, with no template between the idea and the screen.</blockquote>
+
+For recruiters and product teams, the portfolio now shows how I structure decisions, build systems, and connect design intent with technical execution.
+
+## 06 · Reflection
+
+The horizontal scroll is the most deliberate risk in the project. It makes the site more distinctive and supports the editorial concept, but unconventional navigation always has a usability cost.
+
+For now, the interaction is intentional, responsive, and supported by fallbacks. Still, I do not want to defend it only as a stylistic choice. The next step is to observe how real recruiters, designers, and hiring managers move through the site. If the navigation creates more friction than value, I will simplify it.
+
+The second limitation is the sample size. The site is designed for the teams and recruiters I want to reach, but it has not yet been tested with enough of them. The next iteration should be based on actual behaviour: where people enter, what they read, where they hesitate, and whether the case structure helps them understand my work quickly.

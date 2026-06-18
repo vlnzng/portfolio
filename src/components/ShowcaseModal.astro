@@ -363,6 +363,29 @@
     height: auto;
   }
 
+  /* deliberate figure placeholder — same diagonal-stripe surface as the card and
+     hero slots, holding the layout until the real asset lands */
+  .cs-body :global(.case-ph) {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background-color: var(--color-surface);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent 0 16px,
+      rgb(155 149 144 / 0.06) 16px 32px
+    );
+  }
+
+  .cs-body :global(.case-ph-cap) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--color-muted);
+  }
+
   .cs-body :global(.case-figure figcaption) {
     margin-top: 14px;
     font-family: var(--font-mono);
