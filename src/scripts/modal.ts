@@ -147,6 +147,34 @@ document.querySelectorAll<HTMLElement>('.showcase-card').forEach((card) => {
   });
 });
 
+// Case figures live inside inert <template>s, so the browser never fetches them
+// until a modal opens — which made the first open feel slow. Warm the cache on
+// idle: collect every hero image plus every <img> inside the case templates and
+// kick off the requests ahead of time.
+function preloadCaseAssets(): void {
+  const urls = new Set<string>();
+  showcases.forEach((item) => {
+    if (item.heroImage) urls.add(item.heroImage);
+  });
+  document
+    .querySelectorAll<HTMLTemplateElement>('template[id^="case-template-"]')
+    .forEach((template) => {
+      template.content.querySelectorAll('img').forEach((img) => {
+        const src = img.getAttribute('src');
+        if (src) urls.add(src);
+      });
+    });
+  urls.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+  });
+}
+
+const requestIdle =
+  (window as Window & { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback ??
+  ((cb: () => void) => window.setTimeout(cb, 200));
+requestIdle(preloadCaseAssets);
+
 const pathMatch = window.location.pathname.match(/^\/work\/([^/]+)\/?$/);
 const initialSlug = (window as any).__initialModalSlug ?? pathMatch?.[1];
 if (initialSlug) {

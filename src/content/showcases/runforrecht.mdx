@@ -1,41 +1,86 @@
 ---
 title: "RunForRecht"
-subtitle: "A mobile step counter and team-challenge app, designed for the Brandenburg State Justice Authority."
-summary: "From an Excel sheet on a server to a mobile app the whole team uses."
-result: "1st place — semester jury award"
-heroCaption: "app home — live team standings"
-cardMeta: ["University team project", "Sole designer"]
+subtitle: "A mobile step-counter and team-challenge app for the Brandenburg justice authority."
+summary: |
+  The Brandenburg justice authority ran its annual step challenge on Excel sheets sent by email, so standings were outdated on arrival and participation kept dropping. I led research and design for a mobile app that captures steps automatically, ranks offices in real time, and gives each office a coordinator mode for the corrections the old process handled by hand.
+
+  The project took first place of six teams in the end-of-semester jury, with the client on the panel.
+result: "First place of six teams — semester jury award"
+cardMeta: ["University project", "Sole designer"]
 year: 2024
-role: "Sole designer (in a team of 4)"
-type: "University project · external stakeholder"
+role: "UX Research & Design — sole designer in a team of four"
+type: "University team project · external client"
 duration: "One semester"
-tools: ["Figma", "FigJam", "Stakeholder interviews"]
+tools: ["Figma", "FigJam"]
 tags: ["Research", "UX", "UI"]
+heroImage: "/assets/showcases/case2/hero.webp"
+heroAlt: "An emailed Excel sheet of office standings on the left, transformed into a live office ranking on a phone on the right."
+cardImage: "/assets/showcases/case2/card.webp"
+cardAlt: "Concept app screens arranged around a running emblem: a live office leaderboard, a home progress ring and personal statistics."
 order: 2
 ---
 
-## Context
+## 01 · Context
 
-This was a second-semester master's project at TH Brandenburg with an external stakeholder: the Brandenburg State Justice Authority (Brandenburger Justiz). They organised an annual step-counting team challenge across departments — courthouses, prosecution offices, prison administration. The challenge had been running for years. I was the only designer in a team of four; the others handled backend, project coordination, and stakeholder communication.
+RunForRecht grew out of a second-semester master's project at TH Brandenburg with a real client: the Brandenburg justice authority, which runs an annual step-counting challenge across its courts and offices.
 
-## Problem
+I was the only designer in a team of four and owned user research and design, while my teammates built the app as a functional prototype — an Ionic Angular frontend on a Spring backend.
 
-Coordination happened via Excel sheets shared by email. Standings were always out of date by the time they reached participants. Team dynamics — the actual point of the challenge — fell flat because nobody knew where they stood until weeks later. Participation was declining year over year. The stakeholder wanted a way to keep the spirit of the challenge but solve the logistics.
+## 02 · Problem
 
-## Process
+Coordination ran on Excel sheets sent by email. Each office collected steps by hand, sent them to the health-management team, and waited for updated rankings. By the time results reached participants, they were already out of date.
 
-I led the research: a stakeholder interview with the challenge coordinator, then three user interviews with previous participants. From those conversations, a clear set of insights — people wanted real-time standings, they wanted small team dynamics rather than one big leaderboard, and they wanted the data to leave their phone as little as possible (a federal employee privacy concern).
+This created three connected problems: high coordination effort for organisers, weak feedback loops for participants, and motivation that dropped year over year. The challenge had a strong social idea, but the process made it feel slow and administrative.
 
-From the insights, I drafted personas, mapped the core user flow, and built two rounds of wireframes. The stakeholder reviewed the second round. I then moved into visual design and built a clickable Figma prototype.
+One constraint sat on top of all of it: these were justice employees, so the visibility of individual names and step counts had to be handled carefully from the very first research phase.
 
-## Solution
+## 03 · Process
 
-A mobile app for iOS and Android. Step tracking via phone sensors, no external data sharing. Users form small teams of 4 to 8, see live standings within their team, and weekly challenges layer on top of the main competition. A simple commentary feed keeps the social side alive.
+I led the research through an interview with the challenge coordinator and input from past participants. A few findings shaped the product direction: people wanted a more professional and transparent challenge, faster feedback, clearer communication, and a lower barrier for entering steps.
 
-## Impact
+Data protection was a recurring concern, especially around participant names. Smaller offices were already the most engaged, and email reminders were not landing. These findings pointed toward office-level rankings, in-app notifications, and a visibility model that kept individual data inside each user's own office context.
 
-From an Excel-based workflow passed around by email to a real-time mobile app with proper team dynamics. The project received first place in the jury award at the end of the semester. The stakeholder expressed interest in moving toward production, though that was outside the scope of the course.
+Two roles guided the concept: a participating employee who wants motivation and progress feedback, and a coordinator who manages an office's participation. That is why the app became more than a step counter — it needed a participant experience and a lightweight coordinator mode inside the same app.
 
-## Reflection
+<figure class="case-figure">
+  <img class="case-diagram" src="/assets/showcases/case2/process.webp" alt="Six-phase process from problem to product: understand, define, structure, design, build, and test and iterate, with a privacy-by-design constraint running underneath." width="1600" height="405" loading="lazy" />
+  <figcaption>From user research to a built prototype across six phases, with privacy by design as a constraint throughout.</figcaption>
+</figure>
 
-The visual design was conservative. I'd push for stronger contrast and more confident type choices today. The bigger lesson was about scope discipline — we considered adding social features, in-app messaging, and an event calendar, but stripped them out to keep the core experience tight. That decision held up well in the stakeholder review.
+## 04 · Solution
+
+The result is a mobile app built around the real workflow of the challenge.
+
+**For participants.** Steps are captured automatically, with manual entry as a fallback for missed days. The home screen tracks daily progress and the total distance covered so far. Rankings show how offices perform week by week and overall, while personal statistics show each participant's progress inside their own office.
+
+<figure class="case-figure">
+  <img class="case-shot" src="/assets/showcases/case2/participants.webp" alt="Participant app screens side by side: home progress, the office ranking, personal statistics and profile." width="1198" height="896" loading="lazy" />
+  <figcaption>Participant screens: daily progress, office ranking and personal performance.</figcaption>
+</figure>
+
+The privacy concern became a product rule: across offices, the app focuses on office totals rather than individual names. Individual comparison stays within a user's own office, where it is more relevant and less exposed.
+
+**For coordinators.** The same app includes a manager mode. It shows the office's total progress, its participant roster, and its position in the wider competition. Coordinators can also correct individual step entries, replacing one of the most time-consuming parts of the old Excel workflow.
+
+<figure class="case-figure">
+  <img class="case-shot" src="/assets/showcases/case2/manager.webp" alt="Manager-mode screens: office overview, participant roster, an editable step-entry dialog and office statistics." width="1195" height="896" loading="lazy" />
+  <figcaption>Manager mode: office overview and editable participant entries.</figcaption>
+</figure>
+
+The feature scope followed a must-have and nice-to-have structure. We prioritised automatic capture, office rankings, personal comparison, notifications, manual step entry and manager tools before secondary features such as weekly rankings, individual statistics and settings.
+
+## 05 · Impact
+
+RunForRecht turned a delayed, email-bound reporting process into a live mobile workflow shaped around participant motivation and coordinator work.
+
+The project took first place of six teams in the end-of-semester jury, with the client on the panel. After the semester, the authority approached the team about putting the app into real use.
+
+<blockquote class="case-quote">First place of six teams in the end-of-semester jury — with the client on the panel.</blockquote>
+
+## 06 · Reflection
+
+The strongest part of the project was the translation from organisational workflow to product structure. The app did not simply digitise the Excel sheet. It separated participant needs from coordinator needs, preserved the team logic of the challenge, and turned a privacy concern into concrete visibility rules.
+
+The visual design was functional, but safer than it needed to be. Today I would push hierarchy, contrast and typography further, especially in the ranking and statistics screens, and refine the onboarding so first-time users immediately grasp the relationship between personal progress, office ranking and coordinator corrections.
+
+What held up well was scope discipline. We sorted features into must-have and nice-to-have early and built around the core workflow first — step capture, rankings, notifications and manager corrections. That kept the project focused even as the app grew into a working prototype.
