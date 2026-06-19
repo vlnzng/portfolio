@@ -10,10 +10,12 @@ export async function getStaticPaths() {
   const showcases = await getCollection('showcases');
   return showcases.map((showcase) => ({
     params: { slug: showcase.id.replace(/\.mdx$/, '').split('/').pop() ?? showcase.id },
+    props: { title: `${showcase.data.title} — Valentin Lenzing` },
   }));
 }
 
 const { slug } = Astro.params;
+const { title } = Astro.props;
 ---
 
-<HomePage initialModalSlug={slug} />
+<HomePage initialModalSlug={slug} title={title} />

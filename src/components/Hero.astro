@@ -7,9 +7,9 @@
 <section class="section hero" id="hero" aria-label="Hero">
   <div class="hero-text" data-hero-text>
     <p class="hero-role">Product Designer &middot; UX/UI</p>
-    <p class="hero-pitch">
-      Building clear, trustworthy digital tools<br />from user research to implementation.
-    </p>
+    <h1 class="hero-pitch">
+      Building clear, trustworthy digital tools <br />from user research to implementation.
+    </h1>
     <!-- On the desktop engine the statement lives in the scroll cue (fused
          with the scroll hint, bottom centre). Here it only renders for
          mobile / reduced motion, where both phrases simply stack. -->
@@ -122,12 +122,14 @@
       min-height: 100svh;
     }
 
+    /* mobile composition: the text block sits at the top, just under the
+       wordmark; the portrait drops to the lower half (see SharedPortrait) */
     .hero-text {
       position: absolute;
       left: 7vw;
       right: 7vw;
-      top: auto;
-      bottom: 10vh;
+      top: 25vh;
+      bottom: auto;
       max-width: none;
     }
 

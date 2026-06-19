@@ -77,20 +77,22 @@ function startIO(): void {
   io = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0.2) {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
           entry.target.classList.add('is-in');
-        } else if (entry.intersectionRatio < 0.06) {
+        } else if (entry.intersectionRatio < 0.04) {
           entry.target.classList.remove('is-in');
         }
 
-        if (entry.isIntersecting && entry.intersectionRatio > 0.55) {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.42) {
           entry.target.classList.add('is-centred');
-        } else if (entry.intersectionRatio < 0.2) {
+        } else if (entry.intersectionRatio < 0.15) {
           entry.target.classList.remove('is-centred');
         }
       });
     },
-    { threshold: [0, 0.06, 0.2, 0.55] },
+    // a little bottom margin so a panel begins revealing just before it scrolls
+    // fully into view
+    { threshold: [0, 0.04, 0.1, 0.15, 0.42], rootMargin: '0px 0px 8% 0px' },
   );
   panels.forEach((panel, i) => {
     if (i > 0) io?.observe(panel);

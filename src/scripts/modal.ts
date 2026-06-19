@@ -23,6 +23,11 @@ const showcases: ShowcaseData[] = dataNode?.textContent ? JSON.parse(dataNode.te
 let currentSlug: string | null = null;
 let scrollPositionBeforeOpen = 0;
 let prevUrl: string | null = null;
+let openerEl: HTMLElement | null = null;
+
+// Mirrors the homepage <title> in BaseLayout.astro — restored when a modal
+// closes so the tab title tracks whether a case study is open.
+const HOME_TITLE = 'Valentin Lenzing | Product Designer (UX/UI)';
 
 const modal = document.getElementById('showcase-modal');
 const modalScroll = document.getElementById('modal-scroll');
@@ -39,6 +44,9 @@ function openModal(slug: string): void {
   if (!modal || !modalBody || !modalMeta || !modalFooter || !data || !template) return;
 
   currentSlug = slug;
+  // Remember what opened the modal so focus can return there on close (keyboard
+  // users land back on the card they activated, not at the top of the page).
+  openerEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   scrollPositionBeforeOpen = window.scrollY;
   // Remember where to return on close so we land exactly where we opened from.
   prevUrl = location.pathname.startsWith('/work/')
@@ -95,10 +103,32 @@ function openModal(slug: string): void {
 
   modalFooter.innerHTML = ctas.join('');
 
+  document.title = `${data.title} — Valentin Lenzing`;
+  setBackgroundInert(true);
+
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
   if (modalScroll) modalScroll.scrollTop = 0;
   modalClose?.focus();
+}
+
+// Make everything behind the modal inert while it is open: removes the
+// background from the tab order AND hides it from assistive tech, so the
+// dialog is a genuine modal context (no focus escaping behind it).
+const inertedEls: HTMLElement[] = [];
+function setBackgroundInert(on: boolean): void {
+  const main = document.getElementById('main-content');
+  if (!main) return;
+  if (on) {
+    Array.from(main.children).forEach((child) => {
+      if (child === modal || !(child instanceof HTMLElement)) return;
+      if (child.inert) return;
+      child.inert = true;
+      inertedEls.push(child);
+    });
+  } else {
+    while (inertedEls.length) inertedEls.pop()!.inert = false;
+  }
 }
 
 function closeModal(updateUrl = true): void {
@@ -107,10 +137,16 @@ function closeModal(updateUrl = true): void {
   modal.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
   currentSlug = null;
+  document.title = HOME_TITLE;
+  setBackgroundInert(false);
 
   if (updateUrl) history.pushState(null, '', prevUrl ?? '/');
   prevUrl = null;
   window.scrollTo({ top: scrollPositionBeforeOpen });
+
+  // Return focus to the card that opened the modal (inert must be lifted first).
+  if (openerEl && document.contains(openerEl)) openerEl.focus();
+  openerEl = null;
 }
 
 function escapeHtml(value: unknown): string {
@@ -127,6 +163,27 @@ modalClose?.addEventListener('click', closeModal);
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && modal?.getAttribute('aria-hidden') === 'false') {
     closeModal();
+  }
+});
+
+// Focus trap: keep Tab cycling inside the dialog while it is open.
+modal?.addEventListener('keydown', (event) => {
+  if (event.key !== 'Tab' || modal.getAttribute('aria-hidden') !== 'false') return;
+  const focusables = Array.from(
+    modal.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ),
+  );
+  if (!focusables.length) return;
+  const first = focusables[0];
+  const last = focusables[focusables.length - 1];
+  const active = document.activeElement;
+  if (event.shiftKey && (active === first || active === modal)) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && active === last) {
+    event.preventDefault();
+    first.focus();
   }
 });
 

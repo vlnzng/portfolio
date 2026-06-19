@@ -12,8 +12,8 @@ interface Props {
 }
 
 const {
-  title = 'Valentin Lenzing | UX & Product Designer',
-  description = 'Portfolio of Valentin Lenzing, UX & Product Designer working across research, interaction design, and front-end implementation.',
+  title = 'Valentin Lenzing | Product Designer (UX/UI)',
+  description = 'Portfolio of Valentin Lenzing, Product Designer (UX/UI) working across research, interaction design, and front-end implementation.',
   ogImage = '/og-image.jpg',
   initialModalSlug,
 } = Astro.props;
@@ -28,7 +28,8 @@ const canonicalURL = new URL(initialModalSlug ? '/' : Astro.url.pathname, site);
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#1A1816" />
     <meta name="generator" content={Astro.generator} />
 
     <title>{title}</title>

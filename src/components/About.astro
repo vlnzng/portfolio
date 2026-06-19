@@ -4,6 +4,7 @@
 ---
 
 <section class="section about" id="about" aria-label="About">
+  <h2 class="sr-only">About</h2>
   <div class="about-content">
     <div class="ab-body">
       <p class="ab-hook reveal reveal-x" style="--i:0">Shaped by business, technology, and media.</p>
@@ -23,9 +24,8 @@
         something people remember.
       </p>
     </div>
-  </div>
 
-  <div class="about-foot">
+    <div class="about-foot">
     <div class="ab-footer">
       <div class="ab-foot-col reveal" style="--i:3">
         <p class="ab-foot-label">Education</p>
@@ -44,6 +44,7 @@
       </div>
     </div>
   </div>
+  </div>
 </section>
 
 <style>
@@ -53,12 +54,22 @@
     background: var(--color-bg);
   }
 
+  /* the whole right column (intro + footer) is one vertically-centred flex
+     stack, so the footer always sits below the body with a real gap — it can
+     never overlap the paragraphs on short or narrow desktop viewports */
   .about-content {
     position: absolute;
     left: 50vw;
     right: 6vw;
-    top: 50%;
-    transform: translateY(-58%);
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(26px, 4vh, 56px);
+    /* headroom so the vertically-centred column never rises under the fixed
+       navbar (top-right) on short viewports, plus matching bottom breathing room */
+    padding: clamp(92px, 13vh, 150px) 0 clamp(56px, 8vh, 104px);
     z-index: 20;
   }
 
@@ -91,15 +102,10 @@
     margin-bottom: 0;
   }
 
-  /* footer strip pinned along the bottom, divided by thin rules */
+  /* footer strip, divided by thin rules — sits in the flow below the intro */
   .about-foot {
-    position: absolute;
-    left: 50vw;
-    right: 6vw;
-    bottom: 8.5vh;
     padding-top: 26px;
     border-top: 1px solid var(--color-border);
-    z-index: 20;
   }
 
   .ab-footer {
@@ -153,8 +159,9 @@
       position: static;
       left: auto;
       right: auto;
-      transform: none;
-      padding: 22vh 7vw 0;
+      display: block;
+      gap: 0;
+      padding: 12vh 7vw 10vh;
     }
 
     .ab-body {
@@ -162,11 +169,7 @@
     }
 
     .about-foot {
-      position: static;
-      left: auto;
-      right: auto;
-      bottom: auto;
-      margin: 40px 7vw 12vh;
+      margin-top: 40px;
     }
 
     .ab-footer {

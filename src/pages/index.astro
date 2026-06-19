@@ -15,9 +15,10 @@ import { getCollection, render } from 'astro:content';
 
 interface Props {
   initialModalSlug?: string;
+  title?: string;
 }
 
-const { initialModalSlug } = Astro.props;
+const { initialModalSlug, title } = Astro.props;
 
 const showcases = (await getCollection('showcases')).sort((a, b) => a.data.order - b.data.order);
 const getSlug = (id: string) => id.replace(/\.mdx$/, '').split('/').pop() ?? id;
@@ -48,7 +49,7 @@ const showcaseData = showcases.map((showcase) => ({
 }));
 ---
 
-<BaseLayout initialModalSlug={initialModalSlug}>
+<BaseLayout initialModalSlug={initialModalSlug} title={title}>
   <Navigation />
   <Wordmark />
   <SharedPortrait />
@@ -125,7 +126,7 @@ const showcaseData = showcases.map((showcase) => ({
     .work-inner {
       position: static;
       display: block;
-      padding: 16vh 7vw 12vh;
+      padding: 10vh 7vw 10vh;
     }
 
     .work-row {

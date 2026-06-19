@@ -9,6 +9,13 @@ html {
   font-size: 16px;
   background: var(--color-bg);
   color: var(--color-text);
+  /* dark UA controls (scrollbars, form widgets) — no white flashes */
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* NOTE: do NOT set overflow here — overflow on <html> breaks position:fixed
+     (the navbar/wordmark stop sticking). The wide track is clipped on
+     .scroll-container instead. */
 }
 
 body {
@@ -80,6 +87,10 @@ button:focus-visible,
 
 .scroll-container {
   position: relative;
+  /* the horizontal track is many viewports wide; clip it here (the pinned
+     container is viewport-sized) so it never leaks a horizontal scrollbar —
+     done on this element, not <html>, so position:fixed keeps working */
+  overflow-x: hidden;
 }
 
 .horizontal-track {
@@ -110,7 +121,10 @@ button:focus-visible,
   }
 
   .section {
-    width: 100vw !important;
+    /* 100% (the content box), NOT 100vw — 100vw includes the vertical
+       scrollbar's width, which overflowed by ~15px and produced a horizontal
+       scrollbar (and made the fixed navbar look pushed off the right edge) */
+    width: 100% !important;
     height: auto;
     min-height: 100svh;
     overflow: visible;
