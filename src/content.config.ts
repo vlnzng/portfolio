@@ -23,6 +23,18 @@ const showcases = defineCollection({
     order: z.number(),
     externalLink: z.string().url().optional(),
     githubLink: z.string().url().optional(),
+    // Custom modal CTAs (label + url). When present, these replace the default
+    // "Open live tool" / "View on GitHub" buttons built from the links above —
+    // e.g. ToolSynergy's "View final styleguide" / "View case presentation".
+    ctas: z
+      .array(
+        z.object({
+          label: z.string(),
+          url: z.string().url(),
+          variant: z.enum(['primary', 'ghost']).optional(),
+        }),
+      )
+      .optional(),
   }),
 });
 

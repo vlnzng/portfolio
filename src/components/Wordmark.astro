@@ -1,32 +1,26 @@
 ---
-// Fixed, morphing wordmark — geometry matched to the original lockup
-// (design_handoff_portfolio/assets/LogoBlack.png): one dominant V spanning
-// both lines, "alentin" hanging off its top arm, and a half-size L nesting
-// with "enzing" inside the V's lower-right opening. Because the L already
-// sits in its monogram position, the morph only fades the tails and flies
-// the remaining V/L (= IconBlack.png) into the navbar corner — scroll.ts
-// drives that.
+// Fixed, morphing wordmark — the real Figma lockup, inlined from
+// src/assets/brand/wordmark.svg: a V/L monogram with "alentin"/"enzing" tails in a
+// calligraphic italic. The tails carry data-wm-tail so the morph can fade them,
+// leaving the V (.mark-v, gold) + L — exactly the collapsed monogram (same paths as
+// logo.svg / the favicon). scroll.ts drives the fly-to-navbar.
+import wordmark from '../assets/brand/wordmark.svg?raw';
 ---
 
-<a class="wordmark" href="/#hero" aria-label="Valentin Lenzing — home" data-wordmark data-section-link="hero">
-  <span class="wordmark__v" aria-hidden="true">V</span>
-  <span class="wordmark__rest" aria-hidden="true">
-    <span class="wordmark__line wordmark__line--1">
-      <span class="wordmark__tail" data-wm-tail>alentin</span>
-    </span>
-    <span class="wordmark__line wordmark__line--2">
-      <span class="wordmark__l">L</span><span class="wordmark__tail" data-wm-tail>enzing</span>
-    </span>
-  </span>
+<a
+  class="wordmark"
+  href="/#hero"
+  aria-label="Valentin Lenzing — home"
+  data-wordmark
+  data-section-link="hero"
+>
+  <Fragment set:html={wordmark} />
 </a>
 
 <style>
   .wordmark {
-    /* tuning knobs — proportions measured off the original logo:
-       tails ≈ 0.35 × V, the nested L ≈ 1.62 × tails */
-    --wm-v: clamp(7rem, 14vw, 16rem);
-    --wm-t: calc(var(--wm-v) * 0.35);
-    --wm-l: calc(var(--wm-t) * 1.62);
+    /* the sole size knob — the rendered height of the lockup (≈ the V) */
+    --wm-h: clamp(6.75rem, 13.5vw, 15rem);
 
     position: fixed;
     left: 0;
@@ -36,82 +30,32 @@
        reduced-motion fallback); the engine takes over from here */
     transform: translate(5.5vw, 20vh);
     transform-origin: left top;
-    display: flex;
-    align-items: flex-start;
+    display: block;
     width: max-content;
-    font-family: var(--font-display);
-    font-weight: 700;
     color: var(--color-text);
     text-decoration: none;
     user-select: none;
     will-change: transform;
   }
 
-  /* the V carries the accent and spans both lines — like the monogram.
-     It must always paint ABOVE the nested L: without an explicit order the
-     breath animation's filter creates a stacking context mid-flight and the
-     V suddenly jumps in front — so we pin the order from the start. */
-  .wordmark__v {
-    position: relative;
-    z-index: 2;
+  .wordmark :global(svg) {
     display: block;
-    font-size: var(--wm-v);
-    line-height: 0.72;
-    letter-spacing: -0.02em;
+    height: var(--wm-h);
+    width: auto;
+    overflow: visible; /* let the V's breath/hover glow spill past the box */
+  }
+
+  /* the V carries the accent; the L + tails stay cream (currentColor = text) */
+  .wordmark :global(.mark-v) {
     color: var(--color-accent);
   }
 
-  .wordmark__rest {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    /* tuck the text block against the V's right arm */
-    margin-left: calc(var(--wm-v) * -0.04);
-  }
-
-  .wordmark__line {
-    display: flex;
-    align-items: flex-start;
-    font-size: var(--wm-t);
-    line-height: 0.78;
-    letter-spacing: -0.01em;
-  }
-
-  .wordmark__line--1 {
-    /* "alentin" drops to sit against the V's right arm, its baseline around
-       the V's vertical middle (as in the original lockup) */
-    margin-top: calc(var(--wm-v) * 0.07);
-  }
-
-  .wordmark__line--2 {
-    /* "Lenzing" nests into the V's lower-right opening: line dropped so the
-       L's foot closes level with the V's baseline */
-    margin-top: calc(var(--wm-v) * 0.085);
-    margin-left: calc(var(--wm-v) * -0.2);
-    align-items: flex-end;
-  }
-
-  .wordmark__l {
-    display: inline-block;
-    font-size: var(--wm-l);
-    line-height: 0.72;
-  }
-
-  .wordmark__tail {
-    display: inline-block;
-    font-weight: 700; /* the original lockup is bold throughout */
-    white-space: nowrap;
+  /* the tails fade + retract during the morph — scroll.ts sets opacity/transform
+     per frame; fill-box + left origin makes its % translate / scale behave */
+  .wordmark :global([data-wm-tail]) {
+    transform-box: fill-box;
+    transform-origin: left center;
     will-change: opacity, transform;
-  }
-
-  .wordmark__line--2 .wordmark__tail {
-    /* "enzing" starts inside the L (negative margin pulls it back over the
-       stem) and rides high on it — margin (not transform) does both, because
-       scroll.ts drives each tail's transform during the morph and would
-       otherwise clobber a transform back to the foot at rest */
-    margin-left: -0.32em;
-    margin-bottom: 0.52em;
   }
 
   /* once collapsed into the corner it behaves like a button */
@@ -119,11 +63,12 @@
     cursor: pointer;
   }
 
-  /* ---- load-in: V and L stand immediately; only the tails are
-     "written" out, line by line, like ink ---- */
+  /* ---- load-in: the V/L monogram is there from the first frame (it fades up
+     with the block); only "alentin" then "enzing" are written in — each clipped
+     open left → right on a slight slant that follows the italic (a pen angle) ---- */
   :global(html.js) .wordmark {
     opacity: 0;
-    transition: opacity 0.5s ease, scale 0.45s var(--ease-glide);
+    transition: opacity 0.45s ease;
   }
 
   :global(html.js body.is-loaded) .wordmark {
@@ -131,27 +76,30 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    :global(html.js) .wordmark__tail {
-      clip-path: inset(-0.25em 100% -0.35em -0.05em);
+    /* each word starts hidden behind a slanted reveal edge parked at its left */
+    :global(html.js) .wordmark :global([data-wm-tail]) {
+      clip-path: polygon(-50% -50%, -12% -50%, -26% 150%, -50% 150%) fill-box;
     }
 
-    :global(html.js body.is-loaded) .wordmark__line--1 .wordmark__tail {
-      animation: wm-write 1.5s cubic-bezier(0.3, 0.4, 0.2, 1) 0.35s both;
-    }
-
-    :global(html.js body.is-loaded) .wordmark__line--2 .wordmark__tail {
-      animation: wm-write 1.5s cubic-bezier(0.3, 0.4, 0.2, 1) 0.95s both;
+    /* both words are written in one continuous, flowing sweep on identical timing,
+       so "alentin" and "enzing" glide out together and finish at the same moment */
+    :global(html.js body.is-loaded) .wordmark :global([data-wm-tail]) {
+      animation: wm-write 2.4s cubic-bezier(0.4, 0.05, 0.35, 1) 0.5s both;
     }
 
     /* the gold V breathes very gently once the name has settled (hero only) */
-    :global(html.js body.is-loaded) .wordmark:not(.is-collapsed) .wordmark__v {
-      animation: wm-breath 5s ease-in-out 2.6s infinite;
+    :global(html.js body.is-loaded) .wordmark:not(.is-collapsed) :global(.mark-v) {
+      animation: wm-breath 5s ease-in-out 3.3s infinite;
     }
   }
 
+  /* the slanted reveal edge sweeps across, top leading bottom (the italic angle) */
   @keyframes wm-write {
+    from {
+      clip-path: polygon(-50% -50%, -12% -50%, -26% 150%, -50% 150%) fill-box;
+    }
     to {
-      clip-path: inset(-0.25em -0.4em -0.35em -0.05em);
+      clip-path: polygon(-50% -50%, 140% -50%, 126% 150%, -50% 150%) fill-box;
     }
   }
 
@@ -172,7 +120,7 @@
     scale: 1.014;
   }
 
-  .wordmark:hover .wordmark__v {
+  .wordmark:hover :global(.mark-v) {
     animation: none;
     filter: drop-shadow(0 0 22px rgb(217 179 108 / 0.52));
   }
@@ -221,10 +169,10 @@
       left: 7vw;
       top: 8vh;
       transform: none !important;
-      --wm-v: clamp(5.5rem, 24vw, 9rem);
+      --wm-h: clamp(5.5rem, 26vw, 9.5rem);
     }
 
-    .wordmark__tail {
+    .wordmark :global([data-wm-tail]) {
       opacity: 1 !important;
       transform: none !important;
     }
@@ -236,12 +184,12 @@
       transition: none;
     }
 
-    .wordmark__tail {
+    .wordmark :global([data-wm-tail]) {
       clip-path: none !important;
       animation: none !important;
     }
 
-    .wordmark__v {
+    .wordmark :global(.mark-v) {
       animation: none !important;
       filter: none !important;
     }

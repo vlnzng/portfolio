@@ -15,6 +15,7 @@ interface ShowcaseData {
   tags: string[];
   externalLink?: string;
   githubLink?: string;
+  ctas?: { label: string; url: string; variant?: 'primary' | 'ghost' }[];
 }
 
 const dataNode = document.getElementById('showcase-data');
@@ -27,7 +28,7 @@ let openerEl: HTMLElement | null = null;
 
 // Mirrors the homepage <title> in BaseLayout.astro — restored when a modal
 // closes so the tab title tracks whether a case study is open.
-const HOME_TITLE = 'Valentin Lenzing | Product Designer (UX/UI)';
+const HOME_TITLE = 'Valentin Lenzing | Product Designer · UX/UI';
 
 const modal = document.getElementById('showcase-modal');
 const modalScroll = document.getElementById('modal-scroll');
@@ -92,16 +93,26 @@ function openModal(slug: string): void {
 
   modalBody.replaceChildren(template.content.cloneNode(true));
 
-  const ctas = [
-    data.externalLink
-      ? `<a class="cs-btn cs-btn--primary" href="${data.externalLink}" target="_blank" rel="noopener noreferrer">Open live tool <span class="cs-btn-arrow">&#8599;</span></a>`
-      : '',
-    data.githubLink
-      ? `<a class="cs-btn cs-btn--ghost" href="${data.githubLink}" target="_blank" rel="noopener noreferrer">View on GitHub <span class="cs-btn-arrow">&#8599;</span></a>`
-      : '',
-  ].filter(Boolean);
+  // Custom CTAs from frontmatter take over when present; otherwise fall back to
+  // the default buttons built from externalLink / githubLink.
+  const ctaList =
+    data.ctas && data.ctas.length
+      ? data.ctas
+      : [
+          ...(data.externalLink
+            ? [{ label: 'Open live tool', url: data.externalLink, variant: 'primary' as const }]
+            : []),
+          ...(data.githubLink
+            ? [{ label: 'View on GitHub', url: data.githubLink, variant: 'ghost' as const }]
+            : []),
+        ];
 
-  modalFooter.innerHTML = ctas.join('');
+  modalFooter.innerHTML = ctaList
+    .map(
+      (cta) =>
+        `<a class="cs-btn cs-btn--${cta.variant ?? 'ghost'}" href="${escapeHtml(cta.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(cta.label)} <span class="cs-btn-arrow">&#8599;</span></a>`,
+    )
+    .join('');
 
   document.title = `${data.title} — Valentin Lenzing`;
   setBackgroundInert(true);

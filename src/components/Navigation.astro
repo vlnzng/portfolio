@@ -1,4 +1,6 @@
 ---
+import logo from '../assets/brand/logo.svg?raw';
+
 const links = [
   { id: 'about', label: 'About' },
   { id: 'work', label: 'Work' },
@@ -14,7 +16,7 @@ const links = [
   data-nav-home
   aria-label="Valentin Lenzing — back to top"
 >
-  <span aria-hidden="true">V<span class="nav-home__l">L</span></span>
+  <span aria-hidden="true" set:html={logo}></span>
 </a>
 
 <nav class="navbar" aria-label="Main navigation">
@@ -59,13 +61,7 @@ const links = [
     left: calc(16px + env(safe-area-inset-left, 0px));
     z-index: 62;
     display: none;
-    align-items: baseline;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 22px;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    color: var(--color-accent);
+    color: var(--color-text);
     text-decoration: none;
     opacity: 0;
     pointer-events: none;
@@ -73,9 +69,15 @@ const links = [
     transition: opacity 0.3s ease, transform 0.3s var(--ease-glide);
   }
 
-  .nav-home__l {
-    font-size: 0.62em;
-    color: var(--color-text);
+  .nav-home :global(svg) {
+    display: block;
+    height: 26px;
+    width: auto;
+  }
+
+  /* two-tone monogram: gold V, cream L (matches the hero wordmark) */
+  .nav-home :global(.mark-v) {
+    color: var(--color-accent);
   }
 
   .nav-home.is-visible {

@@ -117,11 +117,13 @@ function initEngine(): void {
   function applyMorph(t: number): void {
     if (!wordmark) return;
 
-    // tails fade + slide away (gone by ~55% of the morph) → leaves the VL
+    // tails fade + retract up into the V (gone by ~55% of the morph) → leaves the
+    // VL. They're SVG <g> groups (transform-box: fill-box, left origin), so the
+    // translate is a % of each group's own box: mostly up, a little in, shrinking.
     const ts = easeOut(clamp(t / 0.55, 0, 1));
     tails.forEach((tail) => {
       tail.style.opacity = String(1 - ts);
-      tail.style.transform = `translateX(${lerp(0, -0.16, ts)}em) scaleX(${lerp(1, 0.84, ts)})`;
+      tail.style.transform = `translate(${lerp(0, -6, ts)}%, ${lerp(0, -18, ts)}%) scale(${lerp(1, 0.9, ts)})`;
     });
 
     // travel: a single, monotonic glide up to the navbar corner while

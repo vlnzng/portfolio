@@ -18,7 +18,7 @@ per-page meta are built faithfully to the handoff. Beyond that, two big passes a
   navigation is now exact and refresh-stable, the modal is a proper accessible dialog, the
   tab title tracks state, and mobile has been reworked end-to-end.
 
-What's left is mostly **real assets** (wordmark SVG, og:image, case 3–4 images), a **final
+What's left is mostly **real assets** (wordmark SVG, case 3–4 images), a **final
 copy/proofread pass**, and a **launch QA** sweep.
 
 ---
@@ -33,8 +33,16 @@ copy/proofread pass**, and a **launch QA** sweep.
 - [x] Flat `#1A1816` palette, single gold accent, square shapes, diamond bullets
 - [x] Legal pages (Impressum + Datenschutz) — DE authoritative + EN; real address, Vercel
       retention, "Stand" date; crawler-safe email
-- [x] Favicon (svg + ico), 404 page, `sitemap.xml` (`/work/` deep links filtered)
+- [x] 404 page, `sitemap.xml` (`/work/` deep links filtered)
 - [x] Per-page OG + Twitter meta in `BaseLayout`; `/work/<slug>` deep links carry per-case `<title>`
+- [x] **Brand icons + share card from the real V/L marks** — `scripts/generate-assets.mjs`
+      (`npm run gen:assets`) reads the committed Figma vectors (`src/assets/brand/{logo,wordmark}.svg`)
+      into `favicon.svg` + `favicon.ico` + `apple-touch-icon.png`, and renders a hero-style `og:image`
+      (real wordmark vector + portrait, resvg-js). Replaces the leftover **Astro-default favicon** that
+      was still shipping. apple-touch-icon link wired in `BaseLayout`.
+- [x] Role label unified to **"Product Designer · UX/UI"** across hero / `<title>` / meta / og:image
+- [x] Modal CTA builder takes custom-label CTAs (frontmatter `ctas`), falling back to the
+      default "Open live tool" / "View on GitHub" buttons
 
 ### Motion & interaction polish
 - [x] Two-phase engine (GSAP/Lenis): wordmark morph → VL home, horizontal pan, shared-portrait
@@ -73,17 +81,21 @@ copy/proofread pass**, and a **launch QA** sweep.
 ## Open — toward launch
 
 ### A. Real assets (blockers)
-- [ ] **V/L wordmark as a clean SVG** — hero lockup + collapsed monogram (still text spans today)
-- [ ] **`og:image`** — 1200×630 dark share card (wordmark + name/role) → `public/og-image.jpg`
-      (BaseLayout already points at it, so it 404s until it lands)
-- [ ] **apple-touch-icon** (180×180) → `public/` + `<link rel="apple-touch-icon">`
+- [x] **V/L wordmark + logo as clean SVGs** — the real Figma vectors (`src/assets/brand/`) now
+      drive everything: `Wordmark.astro` inlines the wordmark (gold V, calligraphic tails) and it
+      morphs → collapsed V/L in the navbar; `Navigation.astro`'s mobile `.nav-home` inlines the
+      logo. Replaces the old text-span lockup. *Live-browser fine-tune of morph timing / end
+      position / `--wm-h` size still pending — see D.*
+- [x] **favicon / apple-touch-icon / `og:image`** — generated from the real marks; see Done.
+      (Swap for hand-designed art later if wanted.)
 
 ### B. Case studies 3 & 4 — finish the imagery & CTAs
 - [ ] **ToolSynergy** images: market-positioning matrix, archetypes, content system, visual
       identity → drop in `_inbox/`, replace the four placeholders (normalise bg to `#1A1816`)
 - [ ] **Portfolio Website** images: 2024-vs-now, design system, scroll engine → replace placeholders
-- [ ] **ToolSynergy CTAs** — "View final styleguide" / "View case presentation": need URLs/PDFs,
-      and the modal CTA builder needs custom labels (today only "Open live tool" / "View on GitHub")
+- [ ] **ToolSynergy CTAs** — "View final styleguide" / "View case presentation": the modal CTA
+      builder now supports custom labels (frontmatter `ctas`, example stubbed in `toolsynergy.mdx`);
+      only the real URLs/PDFs are still needed
 - [ ] Confirm small frontmatter details: ToolSynergy tools (`Adobe CC · Figma`), Portfolio tags
       (`UX · Code · Writing`)
 

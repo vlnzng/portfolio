@@ -12,8 +12,8 @@ interface Props {
 }
 
 const {
-  title = 'Valentin Lenzing | Product Designer (UX/UI)',
-  description = 'Portfolio of Valentin Lenzing, Product Designer (UX/UI) working across research, interaction design, and front-end implementation.',
+  title = 'Valentin Lenzing | Product Designer · UX/UI',
+  description = 'Portfolio of Valentin Lenzing, Product Designer · UX/UI, working across research, interaction design, and front-end implementation.',
   ogImage = '/og-image.jpg',
   initialModalSlug,
 } = Astro.props;
@@ -48,6 +48,7 @@ const canonicalURL = new URL(initialModalSlug ? '/' : Astro.url.pathname, site);
     <meta name="twitter:image" content={new URL(ogImage, site)} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <!-- Entrance choreography is gated behind html.js so content is never
          hidden when JavaScript doesn't run (progressive enhancement). -->
