@@ -1,12 +1,12 @@
 ---
 title: "Portfolio Website"
-subtitle: "The site you are on, designed, written, and built by hand from concept to deployment."
+subtitle: "The site you are on, designed, written and built from concept to deployment."
 summary: |
-  The first version of my portfolio shipped in early 2024 as a university project. It met the course requirements, but it reflected a generic idea of what a portfolio should look like rather than how I actually work: a dark template-like layout, red accents, arbitrary skill bars, and copy that felt more styled than specific.
+  The first version of my portfolio shipped in early 2024 as a university project. It met the course requirements, but it reflected a generic idea of what a portfolio should look like rather than how I actually work: a dark template-like layout, red accents, arbitrary skill bars and copy that felt more styled than specific.
 
   For a Product Designer who also builds, the portfolio cannot be only a container for the work. It has to demonstrate the same judgement it describes.
 
-  The result is this site: a dark editorial portfolio with a horizontal reading flow on desktop, a vertical fallback on mobile, a token-based design foundation, self-hosted fonts, and custom interaction logic. No site builder, no template, one person across concept, writing, design, and development.
+  The result is this site: a dark editorial portfolio with a horizontal reading flow on desktop, a vertical fallback on mobile, a token-based design foundation, self-hosted fonts and custom interaction logic. No site builder, no template, one person across concept, writing, design and development.
 result: "Designed, written and coded by hand"
 heroCaption: "before / after — 2024 vs 2026"
 cardMeta: ["Personal project", "Solo"]
@@ -22,15 +22,15 @@ githubLink: "https://github.com/vlnzng/portfolio"
 
 ## 01 · Context
 
-This is the second version of my portfolio. The first went live in early 2024 for an Interface Design seminar. It used a dark theme with red accents, percentage-based skill bars, and a headline, "Rethinking Boundaries", that no longer matched my own voice.
+This is the second version of my portfolio. The first went live in early 2024 for an Interface Design seminar and carried a headline, “Rethinking Boundaries”, that no longer matched my own voice.
 
-It worked as a student project, but not as a professional portfolio. So I treated the redesign as a product problem: clarify the positioning, structure the content, define the interaction model, design the visual system, and build it by hand.
+It worked as a student project, but not as a professional portfolio. So I treated the redesign as a product problem: clarify the positioning, structure the content, define the interaction model, design the visual system and build it by hand.
 
 ## 02 · Problem
 
-The deeper issue was not the visual style. It was the gap between what the site suggested and what it proved.
+The visual style was the smaller issue. The real gap sat between what the site suggested and what it proved.
 
-A portfolio for a Product Designer is read as evidence. The writing, hierarchy, interaction design, technical execution, and case structure all become part of the evaluation. In my case, the site also had to show that I can connect design decisions with front-end implementation.
+A portfolio for a Product Designer is read as evidence. The writing, hierarchy, interaction design, technical execution and case structure all become part of the evaluation. In my case, the site also had to show that I can connect design decisions with front-end implementation.
 
 The brief I set myself was therefore simple:
 
@@ -43,26 +43,26 @@ The brief I set myself was therefore simple:
 
 ## 03 · Process
 
-I began with an audit of the old version. One idea survived: the nested V/L wordmark, which I rebuilt in Lora to make it feel more intentional and typographic. Everything else was reconsidered.
+I began with an audit of the old version. One idea survived: the nested V/L wordmark, which I rebuilt from Lora's letterforms to make it feel more intentional and typographic. Everything else was reconsidered.
 
-Instead of starting in code, I worked through positioning and structure first. I researched editorial portfolio formats, reviewed how strong product design portfolios frame case studies, and defined the role I wanted the site to communicate: a Product Designer working at the intersection of interaction design, information architecture, and code.
+Instead of starting in code, I worked through positioning and structure first. I researched editorial portfolio formats, reviewed how strong product design portfolios frame case studies and defined the role I wanted the site to communicate: a Product Designer working at the intersection of interaction design, information architecture and code.
 
-That decision shaped the whole direction. The hero statement, navigation, case structure, visual rhythm, and technical choices all had to support the same idea. The concept phase took longer than the build, which was deliberate. The thinking defined the code, not the other way around.
+That decision shaped the whole direction. The hero statement, navigation, case structure, visual rhythm and technical choices all had to support the same idea. The concept phase took longer than the build, which was deliberate. The thinking defined the code, not the other way around.
 
 <figure class="case-figure">
   <div class="case-ph"><span class="case-ph-cap">concept before code</span></div>
   <figcaption>Positioning and structure first — the concept phase outlasted the build.</figcaption>
 </figure>
 
-The implementation followed that direction. I used Astro as the framework, vanilla CSS with custom properties as the design-token layer, GSAP and Lenis for the two-phase scrolling behaviour, and self-hosted fonts for EU privacy compliance. The site is deployed on Vercel.
+The implementation followed that direction. Astro provides the framework, and vanilla CSS with custom properties acts as the design-token layer. GSAP and Lenis drive the two-phase scrolling, the fonts are self-hosted for EU privacy compliance, and the site is deployed on Vercel.
 
-I also used AI selectively as an implementation partner. It helped accelerate repetitive development work, but the architecture, interaction logic, type system, content structure, and final decisions remained mine.
+I also used AI selectively as an implementation partner. It helped accelerate repetitive development work, but the architecture, interaction logic, type system, content structure and final decisions remained mine.
 
 ## 04 · Solution
 
 The final result is a portfolio built as a coherent digital product.
 
-**The visual foundation.** The visual direction is dark, editorial, and restrained. Lora and Inter create a contrast between expressive headlines and clear interface text. Colours, spacing, typography, and layout decisions are handled through reusable tokens, so the interface stays consistent and maintainable.
+**The visual foundation.** The visual direction is dark, editorial and restrained. Lora and Inter create a contrast between expressive headlines and clear interface text. Colours, spacing, typography and layout decisions are handled through reusable tokens, so the interface stays consistent and maintainable.
 
 Each case study has its own accent world, while the surrounding site interface stays neutral. This lets the projects carry their own atmosphere without breaking the overall portfolio.
 
@@ -73,31 +73,31 @@ Each case study has its own accent world, while the surrounding site interface s
 
 **The interaction model.** On desktop, the site uses a horizontal reading flow supported by custom two-phase scroll logic. The goal is to make the portfolio feel more like a curated sequence than a standard vertical page. On mobile, the layout falls back to a conventional vertical flow.
 
-The experience includes keyboard navigation, visible focus states, reduced-motion handling, and self-hosted assets. These were part of the initial build, not fixes added afterwards.
+The experience includes keyboard navigation, visible focus states, reduced-motion handling and self-hosted assets. These were part of the initial build, not fixes added afterwards.
 
 <figure class="case-figure">
   <div class="case-ph"><span class="case-ph-cap">the scroll engine</span></div>
   <figcaption>The desktop two-phase horizontal scroll, with a vertical fallback on mobile.</figcaption>
 </figure>
 
-**The writing framework.** The writing was treated as a core design layer. Every case follows the same structure, but each one keeps its own focus: context, problem, process, solution, impact, and reflection.
+**The writing framework.** The writing was treated as a core design layer. Every case follows the same structure, but each one keeps its own focus: context, problem, process, solution, impact and reflection.
 
-The goal was not to make the cases sound impressive through volume, but to make them easier to evaluate. The copy had to be specific, readable, and honest about the limits of each project.
+The goal was to make each case easier to evaluate rather than more impressive through volume. The copy had to be specific, readable and honest about the limits of each project.
 
 ## 05 · Impact
 
 The redesign turned a generic student portfolio into a hand-built showcase for my current design practice.
 
-As a personal project, it does not rely on external launch metrics. Its value lies in the artefact itself: the site demonstrates positioning, information architecture, visual system design, interaction design, writing, and front-end implementation in one place.
+A personal project has no launch metrics to point to. The evidence is the artefact itself: the site demonstrates positioning, information architecture, visual system design, interaction design, writing and front-end implementation in one place.
 
 <blockquote class="case-quote">The site is the case study: one person, from positioning and writing to visual system and front-end implementation, with no template between the idea and the screen.</blockquote>
 
-For recruiters and product teams, the portfolio now shows how I structure decisions, build systems, and connect design intent with technical execution.
+For recruiters and product teams, the portfolio now shows how I structure decisions, build systems and connect design intent with technical execution.
 
 ## 06 · Reflection
 
 The horizontal scroll is the most deliberate risk in the project. It makes the site more distinctive and supports the editorial concept, but unconventional navigation always has a usability cost.
 
-For now, the interaction is intentional, responsive, and supported by fallbacks. Still, I do not want to defend it only as a stylistic choice. The next step is to observe how real recruiters, designers, and hiring managers move through the site. If the navigation creates more friction than value, I will simplify it.
+For now, the interaction is intentional, responsive and supported by fallbacks. Still, I do not want to defend it only as a stylistic choice. The next step is to observe how real recruiters, designers and hiring managers move through the site. If the navigation creates more friction than value, I will simplify it.
 
-The second limitation is the sample size. The site is designed for the teams and recruiters I want to reach, but it has not yet been tested with enough of them. The next iteration should be based on actual behaviour: where people enter, what they read, where they hesitate, and whether the case structure helps them understand my work quickly.
+The second limitation is the sample size. The site is designed for the teams and recruiters I want to reach, but it has not yet been tested with enough of them. The next iteration should be based on actual behaviour: where people enter, what they read, where they hesitate and whether the case structure helps them understand my work quickly.

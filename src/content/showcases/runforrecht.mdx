@@ -2,7 +2,7 @@
 title: "RunForRecht"
 subtitle: "A mobile step-counter and team-challenge app for the Brandenburg justice authority."
 summary: |
-  The Brandenburg justice authority ran its annual step challenge on Excel sheets sent by email, so standings were outdated on arrival and participation kept dropping. I led research and design for a mobile app that captures steps automatically, ranks offices in real time, and gives each office a coordinator mode for the corrections the old process handled by hand.
+  The Brandenburg justice authority ran its annual step challenge on Excel sheets sent by email, so standings were outdated on arrival and participation kept dropping. I led research and design for a mobile app that captures steps automatically, ranks offices in real time and gives each office a coordinator mode for the corrections the old process handled by hand.
 
   The project took first place of six teams in the end-of-semester jury, with the client on the panel.
 result: "First place of six teams — semester jury award"
@@ -24,23 +24,23 @@ order: 2
 
 RunForRecht grew out of a second-semester master's project at TH Brandenburg with a real client: the Brandenburg justice authority, which runs an annual step-counting challenge across its courts and offices.
 
-I was the only designer in a team of four and owned user research and design, while my teammates built the app as a functional prototype — an Ionic Angular frontend on a Spring backend.
+I was the only designer in a team of four and owned user research and design, while my teammates built the app as a functional prototype with an Ionic Angular frontend on a Spring backend.
 
 ## 02 · Problem
 
-Coordination ran on Excel sheets sent by email. Each office collected steps by hand, sent them to the health-management team, and waited for updated rankings. By the time results reached participants, they were already out of date.
+Coordination ran on Excel sheets sent by email. Each person collected steps by hand, sent them to the health manager of the office and waited for updated rankings. By the time results reached participants, they were already out of date.
 
-This created three connected problems: high coordination effort for organisers, weak feedback loops for participants, and motivation that dropped year over year. The challenge had a strong social idea, but the process made it feel slow and administrative.
+This created three connected problems: high coordination effort for organisers, weak feedback loops for participants and motivation that dropped year over year. The challenge had a strong social idea, but the process made it feel slow and administrative.
 
-One constraint sat on top of all of it: these were justice employees, so the visibility of individual names and step counts had to be handled carefully from the very first research phase.
+One constraint sat on top of all of it. These were justice employees, so the visibility of individual names and step counts had to be handled carefully from the very first research phase.
 
 ## 03 · Process
 
-I led the research through an interview with the challenge coordinator and input from past participants. A few findings shaped the product direction: people wanted a more professional and transparent challenge, faster feedback, clearer communication, and a lower barrier for entering steps.
+I led the research through several rounds of interviews and feedback with the challenge coordinator and past participants. A few findings shaped the product direction: people wanted a more professional and transparent challenge, faster feedback, clearer communication and a lower barrier for entering steps.
 
-Data protection was a recurring concern, especially around participant names. Smaller offices were already the most engaged, and email reminders were not landing. These findings pointed toward office-level rankings, in-app notifications, and a visibility model that kept individual data inside each user's own office context.
+Data protection was a recurring concern, especially around participant names. Smaller offices were already the most engaged, and email reminders were not landing. These findings pointed toward office-level rankings, in-app notifications and a visibility model that kept individual data inside each user's own office context.
 
-Two roles guided the concept: a participating employee who wants motivation and progress feedback, and a coordinator who manages an office's participation. That is why the app became more than a step counter — it needed a participant experience and a lightweight coordinator mode inside the same app.
+Two roles guided the concept: a participating employee who wants motivation and progress feedback, and a coordinator who manages an office's participation. That is why the app became more than a step counter. It needed a participant experience and a lightweight coordinator mode inside the same app.
 
 <figure class="case-figure">
   <img class="case-diagram" src="/assets/showcases/case2/process.webp" alt="Six-phase process from problem to product: understand, define, structure, design, build, and test and iterate, with a privacy-by-design constraint running underneath." width="1600" height="405" loading="lazy" />
@@ -60,7 +60,7 @@ The result is a mobile app built around the real workflow of the challenge.
 
 The privacy concern became a product rule: across offices, the app focuses on office totals rather than individual names. Individual comparison stays within a user's own office, where it is more relevant and less exposed.
 
-**For coordinators.** The same app includes a manager mode. It shows the office's total progress, its participant roster, and its position in the wider competition. Coordinators can also correct individual step entries, replacing one of the most time-consuming parts of the old Excel workflow.
+**For coordinators.** The same app includes a manager mode. It shows the office's total progress, its participant roster and its position in the wider competition. Coordinators can also correct individual step entries, replacing one of the most time-consuming parts of the old Excel workflow.
 
 <figure class="case-figure">
   <img class="case-shot" src="/assets/showcases/case2/manager.webp" alt="Manager-mode screens: office overview, participant roster, an editable step-entry dialog and office statistics." width="1195" height="896" loading="lazy" />
@@ -73,14 +73,14 @@ The feature scope followed a must-have and nice-to-have structure. We prioritise
 
 RunForRecht turned a delayed, email-bound reporting process into a live mobile workflow shaped around participant motivation and coordinator work.
 
-The project took first place of six teams in the end-of-semester jury, with the client on the panel. After the semester, the authority approached the team about putting the app into real use.
+The project took first place of six teams in the end-of-semester jury, with the client on the panel.
 
-<blockquote class="case-quote">First place of six teams in the end-of-semester jury — with the client on the panel.</blockquote>
+<blockquote class="case-quote">After the semester, the authority approached the team about putting the app into real use.</blockquote>
 
 ## 06 · Reflection
 
-The strongest part of the project was the translation from organisational workflow to product structure. The app did not simply digitise the Excel sheet. It separated participant needs from coordinator needs, preserved the team logic of the challenge, and turned a privacy concern into concrete visibility rules.
+The strongest part of the project was the translation from organisational workflow to product structure. The app did not simply digitise the Excel sheet. It separated participant needs from coordinator needs, preserved the team logic of the challenge and turned a privacy concern into concrete visibility rules.
 
 The visual design was functional, but safer than it needed to be. Today I would push hierarchy, contrast and typography further, especially in the ranking and statistics screens, and refine the onboarding so first-time users immediately grasp the relationship between personal progress, office ranking and coordinator corrections.
 
-What held up well was scope discipline. We sorted features into must-have and nice-to-have early and built around the core workflow first — step capture, rankings, notifications and manager corrections. That kept the project focused even as the app grew into a working prototype.
+What held up well was scope discipline. We sorted features into must-have and nice-to-have early and built the core workflow first: step capture, rankings, notifications and manager corrections. That kept the project focused even as the app grew into a working prototype.

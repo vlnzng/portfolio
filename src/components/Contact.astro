@@ -24,8 +24,9 @@ const mailDomain = 'gmail.com';
         />
       </figure>
       <p class="cquote reveal" style="--i:2">
-        &ldquo;Ever since I was young, I wanted to optimize cross-functional
-        communication frameworks and streamline end-to-end user journeys.&rdquo;
+        &ldquo;Ever since I was young, I dreamed of optimising
+        cross-functional communication frameworks, streamlining
+        end-to-end user journeys.&rdquo;
       </p>
     </div>
 
@@ -117,7 +118,7 @@ const mailDomain = 'gmail.com';
     z-index: 3;
     padding: 0 5.5vw;
     display: grid;
-    grid-template-columns: clamp(290px, 30vw, 380px) 1fr;
+    grid-template-columns: clamp(348px, 29vw, 384px) 1fr;
     align-items: center;
     gap: clamp(56px, 7vw, 120px);
   }
@@ -230,10 +231,13 @@ const mailDomain = 'gmail.com';
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(14.5px, 1.05vw, 17px);
+    font-size: clamp(14.5px, 1.1vw, 16px);
     line-height: 1.5;
     color: var(--color-muted);
-    max-width: 40ch;
+    /* let the quote fill the (photo-width) left column; that column width is
+       tuned so the line wraps cleanly — "…dreamed of optimising" stays whole
+       on line 1 at every desktop width instead of orphaning "optimising" */
+    max-width: none;
     transition: color 0.9s ease, text-shadow 0.9s ease;
   }
 
@@ -439,10 +443,6 @@ const mailDomain = 'gmail.com';
 
     .cphoto {
       max-width: 340px;
-    }
-
-    .cquote {
-      max-width: none;
     }
 
     .c-right {

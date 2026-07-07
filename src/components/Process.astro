@@ -3,26 +3,50 @@ const phases = [
   {
     title: 'Discover',
     subtitle: 'research',
-    items: ['User interviews', 'Heuristic evaluation', 'Stakeholder workshops', 'Desk research'],
-    tools: ['Notion', 'Maze'],
+    items: [
+      'Desk research',
+      'Competitive analysis',
+      'Stakeholder workshops',
+      'User interviews',
+      'Heuristic evaluation',
+    ],
+    tools: ['Notion', 'Dovetail', 'Google Forms'],
   },
   {
     title: 'Define',
     subtitle: 'synthesis',
-    items: ['Personas', 'Problem framing', 'User flows', 'Information architecture'],
-    tools: ['Miro', 'Trello', 'Whimsical', 'FigJam'],
+    items: [
+      'Problem framing',
+      'Personas',
+      'User journeys & flows',
+      'Information architecture',
+      'Feature prioritisation',
+    ],
+    tools: ['FigJam', 'Miro', 'Jira', 'Confluence'],
   },
   {
     title: 'Develop',
     subtitle: 'design',
-    items: ['Wireframes', 'Visual design', 'Prototyping', 'Component systems'],
-    tools: ['Figma', 'Adobe CC', 'Affinity Suite', 'Unity'],
+    items: [
+      'Wireframes',
+      'Visual design',
+      'Interactive prototyping',
+      'Usability testing',
+      'Component & token systems',
+    ],
+    tools: ['Figma', 'Affinity', 'Adobe CC', 'Maze'],
   },
   {
     title: 'Deliver',
     subtitle: 'code',
-    items: ['Frontend development', 'Prototypes', 'Documentation', 'Design system handoff'],
-    tools: ['HTML', 'CSS', 'JS', 'TS', 'Astro', 'Git'],
+    items: [
+      'Frontend development',
+      'Accessibility implementation',
+      'Performance optimisation',
+      'Design-to-code handoff',
+      'Documentation',
+    ],
+    tools: ['HTML/CSS', 'TypeScript', 'React', 'Astro', 'Git'],
   },
 ];
 ---
@@ -61,7 +85,10 @@ const phases = [
                   <li class="pr-act">{item}</li>
                 ))}
               </ul>
-              <p class="pr-tools">{phase.tools.join(' · ')}</p>
+              {/* non-breaking space before each "·" keeps the separator with
+                  the preceding tool, so a wrapped toolkit breaks after a "·"
+                  (trailing) rather than starting a line with a stray "·" */}
+              <p class="pr-tools">{phase.tools.join(' · ')}</p>
             </div>
           ))
         }
@@ -70,7 +97,8 @@ const phases = [
 
     <p class="pr-statement reveal reveal-rise" style="--i:4">
       The framework above is the foundation; the reality is iterative.<br />
-      I use these phases to turn user insights into clean, buildable interfaces.
+      I use these phases to turn user insights into clean, buildable interfaces.<br />
+      AI tooling accelerates the routine work; the decisions stay mine.
     </p>
   </div>
 </section>
@@ -123,7 +151,7 @@ const phases = [
   .pr-dia path {
     fill: none;
     stroke: var(--color-accent);
-    stroke-width: 1.1;
+    stroke-width: 2.2;
     vector-effect: non-scaling-stroke;
     opacity: 0.24;
   }
@@ -187,7 +215,7 @@ const phases = [
     margin: 0 0 16px;
     font-family: var(--font-body);
     font-weight: 500;
-    font-size: 12px;
+    font-size: 13.5px;
     letter-spacing: 0.18em;
     color: var(--color-accent);
     transition: color 0.3s ease;
@@ -216,6 +244,9 @@ const phases = [
     font-size: 14.5px;
     line-height: 1.45;
     color: #d7d0c4;
+    /* on narrow desktop the longer labels can wrap; balance splits them into
+       two even lines instead of leaving a single orphaned word */
+    text-wrap: balance;
     transition: color 0.3s ease;
   }
 
@@ -235,13 +266,16 @@ const phases = [
     letter-spacing: 0.02em;
     line-height: 1.6;
     color: var(--color-accent);
+    /* balance the toolkit across two even lines when it wraps at narrow
+       desktop widths, rather than orphaning a lone tool (e.g. "· Git") */
+    text-wrap: balance;
   }
 
   .pr-statement {
     position: relative;
     z-index: 1;
     max-width: 64ch;
-    margin: 9vh auto 0;
+    margin: 10.5vh auto 0;
     font-family: var(--font-display);
     font-weight: 400;
     font-style: italic;
