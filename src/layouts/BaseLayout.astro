@@ -37,10 +37,14 @@ const canonicalURL = new URL(initialModalSlug ? '/' : Astro.url.pathname, site);
     <link rel="canonical" href={canonicalURL} />
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Valentin Lenzing" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(ogImage, site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Valentin Lenzing — Product Designer · UX/UI" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
@@ -48,7 +52,25 @@ const canonicalURL = new URL(initialModalSlug ? '/' : Astro.url.pathname, site);
     <meta name="twitter:image" content={new URL(ogImage, site)} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: 'Valentin Lenzing',
+        jobTitle: 'Product Designer (UX/UI)',
+        url: site.href,
+        // keep in sync with the links in Contact.astro
+        sameAs: [
+          'https://www.linkedin.com/in/valentinlenzing',
+          'https://github.com/vlnzng',
+        ],
+      })}
+    />
 
     <!-- Entrance choreography is gated behind html.js so content is never
          hidden when JavaScript doesn't run (progressive enhancement). -->
@@ -63,7 +85,7 @@ const canonicalURL = new URL(initialModalSlug ? '/' : Astro.url.pathname, site);
     </main>
 
     {initialModalSlug && (
-      <script define:vars={{ initialModalSlug }}>
+      <script is:inline define:vars={{ initialModalSlug }}>
         window.__initialModalSlug = initialModalSlug;
       </script>
     )}

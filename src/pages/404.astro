@@ -1,9 +1,7 @@
 ---
-// src/pages/404.astro
-// Custom not-found page. Astro builds this statically; Vercel serves it for any
-// unmatched route (including a mistyped /work/<slug>). Same editorial dark
-// language as the rest of the site — a wrong turn should still feel on-brand.
+// Custom not-found page — Vercel serves it for any unmatched route.
 import BaseLayout from '../layouts/BaseLayout.astro';
+import logo from '../assets/brand/logo.svg?raw';
 ---
 
 <BaseLayout
@@ -11,7 +9,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   description="That page doesn't exist. Head back to Valentin Lenzing's portfolio."
 >
   <header class="nf-head">
-    <a class="nf-mark" href="/" aria-label="Valentin Lenzing — home"><span class="v">V</span>L</a>
+    <a class="nf-mark" href="/" aria-label="Valentin Lenzing — home"><Fragment set:html={logo} /></a>
   </header>
 
   <section class="nf">
@@ -37,20 +35,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     padding: 26px clamp(24px, 6vw, 80px);
   }
 
+  /* the real V/L monogram — gold V, cream L (same source as the navbar mark) */
   .nf-mark {
     display: inline-flex;
-    align-items: baseline;
-    gap: 1px;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 22px;
-    letter-spacing: -0.01em;
     color: var(--color-text);
     text-decoration: none;
     transition: opacity 0.2s ease;
   }
 
-  .nf-mark .v {
+  .nf-mark :global(svg) {
+    display: block;
+    height: 28px;
+    width: auto;
+  }
+
+  .nf-mark :global(.mark-v) {
     color: var(--color-accent);
   }
 
@@ -67,6 +66,32 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     min-height: 100vh;
     padding: clamp(80px, 12vh, 140px) clamp(24px, 6vw, 40px);
     text-align: center;
+  }
+
+  /* load-in: code → title → lede → CTA rise in, same beat as the main page */
+  @media (prefers-reduced-motion: no-preference) {
+    .nf > * {
+      animation: nf-rise 0.8s var(--ease-glide) backwards;
+    }
+
+    .nf-title {
+      animation-delay: 0.12s;
+    }
+
+    .nf-lede {
+      animation-delay: 0.24s;
+    }
+
+    .nf-cta {
+      animation-delay: 0.36s;
+    }
+  }
+
+  @keyframes nf-rise {
+    from {
+      opacity: 0;
+      transform: translateY(22px);
+    }
   }
 
   .nf-code {
@@ -96,7 +121,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     font-weight: 400;
     font-size: clamp(15px, 1.4vw, 17px);
     line-height: 1.7;
-    color: #c4bcae; /* muted cream — between --color-text and --color-muted */
+    color: var(--color-text-dim);
   }
 
   .nf-cta {

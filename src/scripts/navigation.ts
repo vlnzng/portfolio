@@ -1,8 +1,9 @@
+import { desktopQuery, prefersReducedMotion } from './media';
+
 declare global {
   interface Window {
     __portfolioScrollTo?: (id: string) => void;
     __portfolioSetActive?: (id: string) => void;
-    __allowUrlSync?: boolean;
   }
 }
 
@@ -16,9 +17,10 @@ const modal = document.getElementById('showcase-modal');
 // shareable. While a case modal is open the URL belongs to it (/work/<slug>),
 // so section syncing stands down. Enabled one tick after load so it can't
 // clobber an initial deep link (#about) before the scroll engine restores it.
+let allowUrlSync = false;
 let lastSyncedPath = location.pathname + location.hash;
 function syncUrl(id: string): void {
-  if (!window.__allowUrlSync) return;
+  if (!allowUrlSync) return;
   if (modal?.getAttribute('aria-hidden') === 'false') return;
   const path = id && id !== 'hero' ? `/#${id}` : '/';
   if (path === lastSyncedPath) return;
@@ -40,7 +42,7 @@ window.__portfolioSetActive = (id: string) => {
 };
 
 requestAnimationFrame(() => requestAnimationFrame(() => {
-  window.__allowUrlSync = true;
+  allowUrlSync = true;
 }));
 
 links.forEach((link) => {
@@ -69,9 +71,7 @@ if (navHome) {
 // whichever section crosses it. This works no matter how tall a section is — a
 // plain ratio threshold (e.g. 0.55) never fires for sections taller than the
 // viewport, which is exactly why #work (four stacked cards) was never detected.
-const desktopEngine =
-  window.matchMedia('(min-width: 821px)').matches &&
-  !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const desktopEngine = desktopQuery.matches && !prefersReducedMotion;
 
 if (!desktopEngine) {
   const observer = new IntersectionObserver(

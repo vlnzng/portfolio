@@ -1,15 +1,13 @@
 ---
-// src/pages/work/[slug].astro
-// Dynamic route for direct modal URLs: /work/fair-monetisation
-// Renders the home page with the modal open on load.
-
+// Direct modal URLs (/work/fair-monetisation): renders the home page with the
+// modal open on load.
 import { getCollection } from 'astro:content';
 import HomePage from '../index.astro';
 
 export async function getStaticPaths() {
   const showcases = await getCollection('showcases');
   return showcases.map((showcase) => ({
-    params: { slug: showcase.id.replace(/\.mdx$/, '').split('/').pop() ?? showcase.id },
+    params: { slug: showcase.id },
     props: { title: `${showcase.data.title} — Valentin Lenzing` },
   }));
 }

@@ -1,7 +1,8 @@
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { revealOnPan } from './reveal';
+import { clamp, revealOnPan } from './reveal';
+import { desktopQuery, prefersReducedMotion, reducedMotionQuery } from './media';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,11 +13,16 @@ declare global {
   }
 }
 
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const desktopQuery = window.matchMedia('(min-width: 821px)');
-
-const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+// One-shot scroll position stored when leaving for a legal page (Contact.astro)
+const takeReturnY = (): number | null => {
+  const raw = sessionStorage.getItem('vl:returnY');
+  if (raw == null) return null;
+  sessionStorage.removeItem('vl:returnY');
+  const y = Number.parseInt(raw, 10);
+  return Number.isNaN(y) ? null : y;
+};
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
@@ -46,9 +52,7 @@ const reinitOnBoundaryChange = (): void => {
   location.reload();
 };
 desktopQuery.addEventListener('change', reinitOnBoundaryChange);
-window
-  .matchMedia('(prefers-reduced-motion: reduce)')
-  .addEventListener('change', reinitOnBoundaryChange);
+reducedMotionQuery.addEventListener('change', reinitOnBoundaryChange);
 
 function initLenis(): Lenis {
   const instance = new Lenis({
@@ -85,7 +89,6 @@ function initEngine(): void {
   const cueArrow = document.querySelector<HTMLElement>('[data-scrollcue-arrow]');
   const progress = document.querySelector<HTMLElement>('[data-progress]');
   const progressFill = document.querySelector<HTMLElement>('[data-progress-fill]');
-  const SECTIONS = ['about', 'work', 'process', 'contact'];
   // The actual panel elements in track order (hero, about, work, process,
   // contact). Their measured offsetLeft is the single source of truth for both
   // jumping to a panel and reporting which one is in view — so the nav label
@@ -144,11 +147,8 @@ function initEngine(): void {
     wordmark.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
     wordmark.classList.toggle('is-collapsed', t > 0.45);
 
-    // hero content scrolls UP and away, like a normal page being scrolled
-    // down (the portrait lifting at the same time completes that read).
-    // APPROVED settled look: rests at translateY 0 (its CSS top:54vh) and
-    // rises to -90. TEST: starts HERO_REST_Y lower and rises to the same end —
-    // set HERO_REST_Y back to 0 to restore the approved resting position.
+    // hero content rests slightly low, then scrolls up and away like a normal
+    // page (the portrait lifting at the same time completes that read)
     const HERO_REST_Y = 64;
     if (heroText) heroText.style.transform = `translateY(${lerp(HERO_REST_Y, -90, t)}px)`;
   }
@@ -162,11 +162,8 @@ function initEngine(): void {
     const extra = Math.max(0, panX - vw); // beyond About → scroll off-screen left
     portrait.style.left = `${lerp(0.5, -0.02, p) * vw - extra}px`;
     portrait.style.width = `${lerp(0.52, 0.46, p) * vw}px`;
-    // sits low at rest (less of the figure visible); scrolling down reveals
-    // more of it — like a normal page — and it simply stays once the pan
-    // takes over (one direction, no down-then-up wobble).
-    // APPROVED settled look: restY = vh * 0.075. TEST: start lower so less of
-    // the figure shows at first — restore 0.075 to revert.
+    // sits low at rest; scrolling down reveals more of the figure, and it
+    // stays up once the pan takes over (one direction, no wobble)
     const restY = vh * 0.15;
     portrait.style.transform = `translateY(${lerp(restY, 0, easeInOut(t))}px)`;
   }
@@ -235,8 +232,7 @@ function initEngine(): void {
         nearest = i;
       }
     }
-    const active = nearest === 0 ? 'hero' : SECTIONS[Math.min(nearest - 1, SECTIONS.length - 1)];
-    window.__portfolioSetActive?.(active);
+    window.__portfolioSetActive?.(panelEls[nearest].id);
   }
 
   const st = ScrollTrigger.create({
@@ -301,17 +297,13 @@ function initEngine(): void {
   });
 
   // returning from a legal page → restore exact position (priority over hash)
-  const returnY = sessionStorage.getItem('vl:returnY');
+  const returnY = takeReturnY();
   if (returnY != null) {
-    sessionStorage.removeItem('vl:returnY');
-    const y = Number.parseInt(returnY, 10);
-    if (!Number.isNaN(y)) {
-      requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-        if (lenis) lenis.scrollTo(y, { immediate: true });
-        else window.scrollTo(0, y);
-      });
-    }
+    requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+      if (lenis) lenis.scrollTo(returnY, { immediate: true });
+      else window.scrollTo(0, returnY);
+    });
   } else {
     const initialHash = window.location.hash.replace('#', '');
     if (initialHash) {
@@ -329,10 +321,6 @@ function initStandardNavigation(): void {
   };
 
   // Returning from a legal page → restore the exact scroll position.
-  const returnY = sessionStorage.getItem('vl:returnY');
-  if (returnY != null) {
-    sessionStorage.removeItem('vl:returnY');
-    const y = Number.parseInt(returnY, 10);
-    if (!Number.isNaN(y)) requestAnimationFrame(() => window.scrollTo(0, y));
-  }
+  const returnY = takeReturnY();
+  if (returnY != null) requestAnimationFrame(() => window.scrollTo(0, returnY));
 }

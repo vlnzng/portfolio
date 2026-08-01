@@ -7,14 +7,13 @@ interface Props {
 
 const { showcase } = Astro.props;
 const { title, subtitle, result, tags, order, cardImage, cardAlt, tools } = showcase.data;
-const slug = showcase.id.replace(/\.mdx$/, '').split('/').pop() ?? showcase.id;
 const num = String(order).padStart(2, '0');
 ---
 
 <button
   class="showcase-card wcard reveal reveal-x"
   style={`--i:${order - 1}`}
-  data-slug={slug}
+  data-slug={showcase.id}
   type="button"
   aria-haspopup="dialog"
   aria-label={`Open case study: ${title}`}
@@ -38,7 +37,8 @@ const num = String(order).padStart(2, '0');
   {result && <p class="wcard-result">{result}</p>}
 
   <div class="wcard-foot">
-    <p class="wcard-meta">{tools.join(' · ')}</p>
+    {/* NBSP before "·" so a wrapping list breaks after a separator, not before one */}
+    <p class="wcard-meta">{tools.join(' · ')}</p>
     <ul class="wcard-tags">
       {tags.map((tag) => <li class="wcard-tag">{tag}</li>)}
     </ul>
@@ -48,14 +48,13 @@ const num = String(order).padStart(2, '0');
 </button>
 
 <script>
+  import { desktopQuery, prefersReducedMotion } from '../scripts/media';
+
   // Custom "view case" cursor — the gold pill trails the pointer inside a
   // card. Only wired where a fine hover pointer drives the desktop layout.
-  const finePointer = window.matchMedia(
-    '(hover: hover) and (pointer: fine) and (min-width: 821px)',
-  );
-  const fullMotion = window.matchMedia('(prefers-reduced-motion: no-preference)');
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
 
-  if (finePointer.matches && fullMotion.matches) {
+  if (finePointer.matches && desktopQuery.matches && !prefersReducedMotion) {
     document.querySelectorAll<HTMLElement>('.wcard').forEach((card) => {
       const cursor = card.querySelector<HTMLElement>('.wcard-cursor');
       if (!cursor) return;
@@ -69,10 +68,8 @@ const num = String(order).padStart(2, '0');
 </script>
 
 <style>
-  /* Work card — faithful port of the design handoff .wcard: image-top,
-     enumerated, with a gold-diamond outcome line. Hover lifts + zooms.
-     The lift uses the separate `translate` property (transitioned by the
-     .reveal primitive) so it composes with the reveal's transform. */
+  /* The hover lift uses the separate `translate` property (transitioned by
+     the .reveal primitive) so it composes with the reveal's transform. */
   .wcard {
     position: relative;
     display: flex;
@@ -86,6 +83,18 @@ const num = String(order).padStart(2, '0');
     font: inherit;
     cursor: pointer;
     will-change: transform;
+  }
+
+  /* Desktop: the six card zones (media, number, title, hook, result, foot)
+     each share one row track across all four cards via subgrid, so results
+     and footers align even when titles/hooks differ in length. Browsers
+     without subgrid keep the plain column stack. */
+  @media (min-width: 821px) {
+    .wcard {
+      display: grid;
+      grid-template-rows: subgrid;
+      grid-row: span 6;
+    }
   }
 
   .wcard:hover {
@@ -126,11 +135,7 @@ const num = String(order).padStart(2, '0');
   .wstripe {
     position: absolute;
     inset: 0;
-    background-image: repeating-linear-gradient(
-      -45deg,
-      transparent 0 16px,
-      rgb(155 149 144 / 0.06) 16px 32px
-    );
+    background-image: var(--stripe-surface);
   }
 
   .wcard-cap {
@@ -173,7 +178,7 @@ const num = String(order).padStart(2, '0');
   }
 
   .wcard:hover .wcard-title {
-    color: #fff;
+    color: var(--color-white);
   }
 
   .wcard-hook {
@@ -352,12 +357,6 @@ const num = String(order).padStart(2, '0');
       transform: none;
     }
 
-    .wcard-media-inner::after {
-      display: none;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
     .wcard-media-inner::after {
       display: none;
     }

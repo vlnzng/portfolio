@@ -76,6 +76,24 @@ copy/proofread pass**, and a **launch QA** sweep.
       soft scrim so content fades under the nav; tightened section spacing; About is a centred
       flex stack (footer never overlaps); earlier reveal timing
 
+### Code-quality pass (July 2026)
+- [x] **Token consolidation** — 8 drifted hex values unified into `--color-text-soft/-dim`,
+      `--color-faint`, `--color-accent-bright`, `--color-white`; shared `--stripe-surface`
+      placeholder gradient; unused scale tokens pruned
+- [x] **Dead code removed** — `cardMeta` (schema + frontmatter), unused half of the
+      `showcase-data` JSON payload, no-op slug derivation (Astro ids are already clean),
+      duplicate CSS blocks, four orphaned placeholder SVGs in `public/`
+- [x] **Simplifications** — shared `media.ts` for the 820/821 query trio; `takeReturnY`
+      helper; nav active state from real panel ids; module-local `allowUrlSync`;
+      stale A/B-test comments resolved (current values kept as final)
+- [x] **Head upgrades** — og:image dimensions/alt + og:site_name, favicon.ico fallback link,
+      JSON-LD Person
+- [x] **Work-card system rework** — subgrid row alignment (number/title/hook/result/foot
+      share tracks across all four cards, so uneven copy lengths read as one system);
+      result lines rebuilt (strongest proof per case, `·` separator); exactly-twice pill
+      system; toolkits aligned with the Process page
+- [x] **404 load-in** — code → title → lede → CTA rise, same beat as the main page
+
 ---
 
 ## Open — toward launch
@@ -96,26 +114,34 @@ copy/proofread pass**, and a **launch QA** sweep.
 - [ ] **ToolSynergy CTAs** — "View final styleguide" / "View case presentation": the modal CTA
       builder now supports custom labels (frontmatter `ctas`, example stubbed in `toolsynergy.mdx`);
       only the real URLs/PDFs are still needed
-- [ ] Confirm small frontmatter details: ToolSynergy tools (`Adobe CC · Figma`), Portfolio tags
-      (`UX · Code · Writing`)
+- [x] Card tools/tags settled — `Adobe CC` (matches Process), toolkits now cover 10 of 15
+      Process tools (Maze→C1, Jira→C2, Miro→C3, Git→C4, Figma off C3/C4); pill system:
+      six competences, each on exactly two cards, every project pair shares exactly one
 
 ### C. Copy & content polish
-- [ ] Final **proofread / one voice pass** across the whole site — hero, About, Process lists,
-      Contact, nav/labels, modal microcopy, `alt` text, meta descriptions
-- [ ] Sanity-check every `alt` text and meta description once images/copy are final
+- [x] Proofread / one-voice pass (2026-07-20) — result lines rebuilt around each case's
+      strongest proof (unified `·` separator), duplicate award sentence in RunForRecht
+      reworded, stale "accent world" claim in the Portfolio case corrected to the real
+      one-accent system; BE spelling consistent throughout
+- [ ] Owner skim at content freeze; sanity-check `alt` text once case 3–4 images land
 
 ### D. Open decisions
-- [ ] **820px breakpoint** — portrait tablets (834–1024px) currently get the horizontal engine;
-      decide whether to lift the threshold so they fall back to vertical
-- [ ] Optional: extract the inline Work section into `Work.astro` for component consistency
+- [x] **820px breakpoint — decided: keep 821** — half-screen desktop windows (960–1280px)
+      are the common in-between case and should keep the signature horizontal experience;
+      portrait tablets are rare for this audience and get a dense but functional engine
+      (content fits — clamp()-based type, sections have vertical headroom). Revisit only
+      if real-device QA (E) shows actual breakage
 - [ ] Wordmark morph fine-tuning (timing / end position) once the SVG lands
+- ~~Extract the inline Work section into `Work.astro`~~ — dropped as over-engineering; the
+  section is a thin wrapper around `ShowcaseCard` and has no reuse case
 
 ### E. Launch QA
 - [ ] Lighthouse 95+ across the board; check LCP / bundle size (note: several case images are
       lossless and chunky — revisit sizes)
 - [ ] Keyboard / focus / screen-reader review (modal, nav, skip-link, scroll cue, VL home)
 - [ ] Cross-browser + **real-device** check — the scroll engine and mobile hero especially
-- [ ] Legal: confirm the analytics wording in Datenschutz; optional lawyer review (not a blocker)
+- [x] Legal: analytics wording in Datenschutz confirmed (§3 covers Vercel Web Analytics +
+      Speed Insights, DE + EN); optional lawyer review still open (not a blocker)
 
 ### F. Ship
 - [ ] Content freeze + final proofread

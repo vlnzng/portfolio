@@ -1,23 +1,12 @@
-/* Arrival choreography (ported from the design handoff's reveal.js).
-   Content stays hidden until its panel is "in view", then rides in (CSS does
-   the motion; this module only toggles classes). Two drivers:
-     - Desktop: the pan position — scroll.ts calls revealOnPan() from the
-       engine's onUpdate. Two thresholds per panel:
-         .is-in      at >15% panned-in — early enough that content is already
-                     settling while the panel slides in (it must never read
-                     as "loaded late and slid into empty space"),
-         .is-centred at >75% — for set pieces that should only play once the
-                     visitor has actually arrived (the process diamonds).
-       Both reset when panning back, so revisits re-play the choreography.
-     - Mobile (≤820px): an IntersectionObserver, same two thresholds.
-   The hero runs a one-time load-in via body.is-loaded (waits for fonts so
-   the wordmark "write-in" never paints with a fallback font).
-   Reduced motion: everything is shown immediately, nothing animates. */
+/* Arrival choreography: CSS does the motion, this module only toggles
+   .is-in (early, while the panel slides in) and .is-centred (once the visitor
+   has arrived — e.g. the process diamond draw). Desktop is driven by the pan
+   (scroll.ts calls revealOnPan), mobile by an IntersectionObserver; both reset
+   on the way out so revisits re-play. The hero load-in waits for fonts so the
+   wordmark write-in never paints with a fallback font. */
+import { desktopQuery, prefersReducedMotion } from './media';
 
-const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
-
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const mobileQuery = window.matchMedia('(max-width: 820px)');
+export const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
 // panels: 0 hero · 1 about · 2 work · 3 process · 4 contact
 const panels = Array.from(document.querySelectorAll<HTMLElement>('.horizontal-track .section'));
@@ -46,7 +35,7 @@ const revealed: boolean[] = [];
 const centred: boolean[] = [];
 
 export function revealOnPan(panX: number, vw: number): void {
-  if (prefersReducedMotion || mobileQuery.matches) return;
+  if (prefersReducedMotion || !desktopQuery.matches) return;
   for (let i = 1; i < panels.length; i++) {
     // progress of the pan that brings panel i to centre (0 → 1)
     const p = clamp((panX - (i - 1) * vw) / vw, 0, 1);
@@ -105,7 +94,7 @@ function stopIO(): void {
 }
 
 function syncMode(): void {
-  if (mobileQuery.matches) {
+  if (!desktopQuery.matches) {
     revealed.length = 0;
     centred.length = 0;
     startIO();
@@ -116,7 +105,7 @@ function syncMode(): void {
 
 if (!prefersReducedMotion) {
   syncMode();
-  mobileQuery.addEventListener('change', () => {
+  desktopQuery.addEventListener('change', () => {
     panels.forEach((panel, i) => {
       if (i > 0) panel.classList.remove('is-in', 'is-centred');
     });

@@ -1,18 +1,17 @@
+declare global {
+  interface Window {
+    __initialModalSlug?: string;
+  }
+}
+
 interface ShowcaseData {
   slug: string;
-  order: number;
   title: string;
   subtitle: string;
   summary?: string;
   heroCaption?: string;
   heroImage?: string;
   heroAlt?: string;
-  year: number;
-  role: string;
-  type?: string;
-  duration?: string;
-  tools: string[];
-  tags: string[];
   externalLink?: string;
   githubLink?: string;
   ctas?: { label: string; url: string; variant?: 'primary' | 'ghost' }[];
@@ -72,10 +71,8 @@ function openModal(slug: string): void {
     }
   }
 
-  // Head: number, title, the one-line subtitle, then the wider "at a glance"
-  // lead (stored in `summary`). The old role/type/duration/year meta grid was
-  // dropped as weak; tools moved onto the card.
-  // At a glance: the summary may hold several paragraphs (split on blank lines)
+  // Head: title, one-line subtitle, then the "at a glance" lead (`summary`,
+  // which may hold several paragraphs — split on blank lines).
   const glance = data.summary
     ? `<div class="cs-glance"><p class="cs-glance-label">At a glance</p>${data.summary
         .split(/\n\s*\n/)
@@ -169,7 +166,7 @@ function escapeHtml(value: unknown): string {
     .replaceAll("'", '&#039;');
 }
 
-modalClose?.addEventListener('click', closeModal);
+modalClose?.addEventListener('click', () => closeModal());
 
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && modal?.getAttribute('aria-hidden') === 'false') {
@@ -244,7 +241,7 @@ const requestIdle =
 requestIdle(preloadCaseAssets);
 
 const pathMatch = window.location.pathname.match(/^\/work\/([^/]+)\/?$/);
-const initialSlug = (window as any).__initialModalSlug ?? pathMatch?.[1];
+const initialSlug = window.__initialModalSlug ?? pathMatch?.[1];
 if (initialSlug) {
   requestAnimationFrame(() => openModal(initialSlug));
 }

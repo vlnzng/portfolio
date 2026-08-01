@@ -21,7 +21,6 @@ interface Props {
 const { initialModalSlug, title } = Astro.props;
 
 const showcases = (await getCollection('showcases')).sort((a, b) => a.data.order - b.data.order);
-const getSlug = (id: string) => id.replace(/\.mdx$/, '').split('/').pop() ?? id;
 const renderedShowcases = await Promise.all(
   showcases.map(async (showcase) => {
     const { Content } = await render(showcase);
@@ -29,21 +28,15 @@ const renderedShowcases = await Promise.all(
   }),
 );
 
+// Only what modal.ts actually renders — cards are built server-side.
 const showcaseData = showcases.map((showcase) => ({
-  slug: getSlug(showcase.id),
-  order: showcase.data.order,
+  slug: showcase.id,
   title: showcase.data.title,
   subtitle: showcase.data.subtitle,
   summary: showcase.data.summary,
   heroCaption: showcase.data.heroCaption,
   heroImage: showcase.data.heroImage,
   heroAlt: showcase.data.heroAlt,
-  year: showcase.data.year,
-  role: showcase.data.role,
-  type: showcase.data.type,
-  duration: showcase.data.duration,
-  tools: showcase.data.tools,
-  tags: showcase.data.tags,
   externalLink: showcase.data.externalLink,
   githubLink: showcase.data.githubLink,
   ctas: showcase.data.ctas,
@@ -78,7 +71,7 @@ const showcaseData = showcases.map((showcase) => ({
 
   <div class="case-templates" hidden>
     {renderedShowcases.map(({ showcase, Content }) => (
-      <template id={`case-template-${getSlug(showcase.id)}`}>
+      <template id={`case-template-${showcase.id}`}>
         <div class="case-content">
           <Content />
         </div>
@@ -86,7 +79,7 @@ const showcaseData = showcases.map((showcase) => ({
     ))}
   </div>
 
-  <script type="application/json" id="showcase-data" set:html={JSON.stringify(showcaseData)}></script>
+  <script is:inline type="application/json" id="showcase-data" set:html={JSON.stringify(showcaseData)}></script>
 
   <ShowcaseModal />
 </BaseLayout>
@@ -114,11 +107,13 @@ const showcaseData = showcases.map((showcase) => ({
     padding: 0 5.5vw;
   }
 
-  /* enumeration row — four uniform image-top cards on one level */
+  /* enumeration row — four image-top cards whose zones row-align via the
+     cards' subgrid. column-gap only: a row-gap would reappear INSIDE every
+     card, between its subgridded tracks. */
   .work-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: clamp(22px, 2.3vw, 50px);
+    column-gap: clamp(22px, 2.3vw, 50px);
     width: 100%;
     align-items: start;
   }

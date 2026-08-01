@@ -2,19 +2,19 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 const showcases = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/showcases' }),
+  // Flat only — nested paths would put a "/" in the id, which the /work/<slug>
+  // route and modal deep links don't support.
+  loader: glob({ pattern: '*.mdx', base: './src/content/showcases' }),
   schema: z.object({
     title: z.string(),
     subtitle: z.string(),
     summary: z.string().optional(),
-    result: z.string().optional(),
+    // Gold outcome line on the card — part of the card design, so required.
+    result: z.string(),
     heroCaption: z.string().optional(),
-    cardMeta: z.array(z.string()),
-    year: z.number(),
-    role: z.string(),
-    type: z.string().optional(),
-    duration: z.string().optional(),
     tools: z.array(z.string()),
+    // Card pills. System: six competences, each on exactly two cards — every
+    // pair of projects shares exactly one. Keep the invariant when editing.
     tags: z.array(z.string()),
     heroImage: z.string().optional(),
     heroAlt: z.string().optional(),
@@ -23,9 +23,8 @@ const showcases = defineCollection({
     order: z.number(),
     externalLink: z.string().url().optional(),
     githubLink: z.string().url().optional(),
-    // Custom modal CTAs (label + url). When present, these replace the default
-    // "Open live tool" / "View on GitHub" buttons built from the links above —
-    // e.g. ToolSynergy's "View final styleguide" / "View case presentation".
+    // Custom modal CTAs — when present they replace the default buttons
+    // built from externalLink / githubLink.
     ctas: z
       .array(
         z.object({

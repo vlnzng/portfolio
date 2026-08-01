@@ -85,9 +85,7 @@ const phases = [
                   <li class="pr-act">{item}</li>
                 ))}
               </ul>
-              {/* non-breaking space before each "·" keeps the separator with
-                  the preceding tool, so a wrapped toolkit breaks after a "·"
-                  (trailing) rather than starting a line with a stray "·" */}
+              {/* NBSP before "·" so a wrapping list breaks after a separator, not before one */}
               <p class="pr-tools">{phase.tools.join(' · ')}</p>
             </div>
           ))
@@ -243,7 +241,7 @@ const phases = [
     font-family: var(--font-body);
     font-size: 14.5px;
     line-height: 1.45;
-    color: #d7d0c4;
+    color: var(--color-text-soft);
     /* on narrow desktop the longer labels can wrap; balance splits them into
        two even lines instead of leaving a single orphaned word */
     text-wrap: balance;
@@ -254,11 +252,8 @@ const phases = [
     padding-top: 0;
   }
 
-  /* tools sit in the brand gold permanently — they read as the phase's
-     toolkit, and the gold ties the four columns together under the diamond.
-     No separator rule: it crossed the drawn diamond line and added clutter.
-     The columns carry no hover state — they are a static reference, not a
-     control (the work cards own the clickable affordance). */
+  /* toolkit line in permanent gold — ties the four columns together. No hover
+     states on the columns: they are a reference, not a control. */
   .pr-tools {
     margin: 32px 0 0;
     font-family: var(--font-body);
@@ -281,7 +276,7 @@ const phases = [
     font-style: italic;
     font-size: clamp(16px, 1.5vw, 19px);
     line-height: 1.6;
-    color: #c2bbb0;
+    color: var(--color-text-dim);
     text-align: center;
   }
 

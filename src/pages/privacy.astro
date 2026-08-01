@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/legal.css';
+import logo from '../assets/brand/logo.svg?raw';
 
 const mailUser = 'valentin.lenzing';
 const mailDomain = 'gmail.com';
@@ -8,7 +9,7 @@ const mailDomain = 'gmail.com';
 
 <BaseLayout title="Privacy Policy — Datenschutz | Valentin Lenzing">
   <header class="lg-bar">
-    <a class="lg-mark" href="/" aria-label="Valentin Lenzing — home"><span class="v">V</span>L</a>
+    <a class="lg-mark" href="/" aria-label="Valentin Lenzing — home"><Fragment set:html={logo} /></a>
     <a class="lg-back" href="/#contact">
       <span class="arr" aria-hidden="true">&larr;</span><span class="lbl-full">Back to portfolio</span>
     </a>

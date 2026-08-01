@@ -1,11 +1,8 @@
 ---
-// The hero statement and the scroll hint, fused into one quiet line at the
-// bottom centre — the navigation made literal. At rest: "Learned the rules. ↓".
-// At the hinge where the down-scroll becomes the side-pan, scroll.ts breaks it
-// to "Practising the exceptions. →" (arrow rotated), then fades it out as the
-// pan gets underway. Clicking still advances (first the morph, then a panel),
-// but it deliberately doesn't look like a button.
-// Mobile / reduced motion: hidden — the statement lives in the hero flow there.
+// Hero statement + scroll hint fused into one line, bottom centre. scroll.ts
+// toggles .is-broken at the down-to-pan hinge, rotates the arrow and drives the
+// container's opacity per frame. Clicking advances (morph first, then a panel).
+// Hidden on mobile / reduced motion — the statement lives in the hero there.
 ---
 
 <button
@@ -40,7 +37,6 @@
     font-size: clamp(19px, 1.55vw, 25px);
     letter-spacing: 0.01em;
     color: var(--color-text);
-    transition: opacity 0.4s ease;
   }
 
   /* both phrases share one cell so the line never shifts on the swap */
@@ -84,7 +80,7 @@
   }
 
   .scrollcue:hover .scrollcue__phrase--rules {
-    color: #fff;
+    color: var(--color-white);
   }
 
   @keyframes cuebob {
