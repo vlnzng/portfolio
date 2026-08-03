@@ -81,6 +81,19 @@ function initEngine(): void {
   const container = document.querySelector<HTMLElement>('.scroll-container');
   if (!track || !container) return;
 
+  // `.scroll-container` clips the wide track with `overflow-x: hidden`, which
+  // still makes it a scroll container: a native anchor jump (arriving at
+  // /#contact from a legal page) or focus moving into an off-screen panel sets
+  // its scrollLeft behind our back. That offset stacks on top of the engine's
+  // own `x: -panX`, so the track slides out of view and only the fixed hero
+  // furniture (wordmark, portrait, cue) is left on screen. Keep it at zero —
+  // the engine is the only thing allowed to move the track sideways.
+  const pinTrack = (): void => {
+    if (container.scrollLeft !== 0) container.scrollLeft = 0;
+  };
+  container.addEventListener('scroll', pinTrack);
+  pinTrack();
+
   const wordmark = document.querySelector<HTMLElement>('[data-wordmark]');
   const tails = Array.from(document.querySelectorAll<HTMLElement>('[data-wm-tail]'));
   const heroText = document.querySelector<HTMLElement>('[data-hero-text]');
@@ -303,11 +316,16 @@ function initEngine(): void {
       ScrollTrigger.refresh();
       if (lenis) lenis.scrollTo(returnY, { immediate: true });
       else window.scrollTo(0, returnY);
+      // the browser's own jump to /#contact happened before the engine existed
+      requestAnimationFrame(pinTrack);
     });
   } else {
     const initialHash = window.location.hash.replace('#', '');
     if (initialHash) {
-      requestAnimationFrame(() => window.__portfolioScrollTo?.(initialHash));
+      requestAnimationFrame(() => {
+        window.__portfolioScrollTo?.(initialHash);
+        requestAnimationFrame(pinTrack);
+      });
     }
   }
 }

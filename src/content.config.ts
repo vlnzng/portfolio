@@ -24,13 +24,15 @@ const showcases = defineCollection({
     externalLink: z.string().url().optional(),
     githubLink: z.string().url().optional(),
     // Custom modal CTAs — when present they replace the default buttons
-    // built from externalLink / githubLink.
+    // built from externalLink / githubLink. `url` is a plain string, not
+    // z.string().url(): site-relative targets (the hosted case PDFs under
+    // /assets/showcases/…) are valid here too. All CTAs share one button
+    // style, so there is no variant to pick.
     ctas: z
       .array(
         z.object({
           label: z.string(),
-          url: z.string().url(),
-          variant: z.enum(['primary', 'ghost']).optional(),
+          url: z.string(),
         }),
       )
       .optional(),

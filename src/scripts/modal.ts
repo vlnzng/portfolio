@@ -14,7 +14,7 @@ interface ShowcaseData {
   heroAlt?: string;
   externalLink?: string;
   githubLink?: string;
-  ctas?: { label: string; url: string; variant?: 'primary' | 'ghost' }[];
+  ctas?: { label: string; url: string }[];
 }
 
 const dataNode = document.getElementById('showcase-data');
@@ -96,18 +96,14 @@ function openModal(slug: string): void {
     data.ctas && data.ctas.length
       ? data.ctas
       : [
-          ...(data.externalLink
-            ? [{ label: 'Open live tool', url: data.externalLink, variant: 'primary' as const }]
-            : []),
-          ...(data.githubLink
-            ? [{ label: 'View on GitHub', url: data.githubLink, variant: 'ghost' as const }]
-            : []),
+          ...(data.externalLink ? [{ label: 'Open live tool', url: data.externalLink }] : []),
+          ...(data.githubLink ? [{ label: 'View on GitHub', url: data.githubLink }] : []),
         ];
 
   modalFooter.innerHTML = ctaList
     .map(
       (cta) =>
-        `<a class="cs-btn cs-btn--${cta.variant ?? 'ghost'}" href="${escapeHtml(cta.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(cta.label)} <span class="cs-btn-arrow">&#8599;</span></a>`,
+        `<a class="cs-btn" href="${escapeHtml(cta.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(cta.label)} <span class="cs-btn-arrow" aria-hidden="true">&#8599;</span></a>`,
     )
     .join('');
 
