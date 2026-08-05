@@ -12,6 +12,7 @@ interface ShowcaseData {
   heroCaption?: string;
   heroImage?: string;
   heroAlt?: string;
+  heroRatio?: string;
   externalLink?: string;
   githubLink?: string;
   ctas?: { label: string; url: string }[];
@@ -61,10 +62,14 @@ function openModal(slug: string): void {
     // the decorative stripe stays hidden.
     if (data.heroImage) {
       const alt = data.heroAlt ?? `${data.title} — overview`;
+      // Band takes the image's own ratio, so it fills the width instead of
+      // being pillarboxed inside the default 2400/620 frame.
+      modalHero.style.setProperty('--cs-hero-ar', data.heroRatio ?? '2400 / 620');
       modalHero.innerHTML = `<img class="cs-hero-img" src="${escapeHtml(data.heroImage)}" alt="${escapeHtml(alt)}" />`;
       modalHero.setAttribute('aria-hidden', 'false');
     } else {
       const caption = data.heroCaption ?? `${data.title} — key image`;
+      modalHero.style.removeProperty('--cs-hero-ar');
       modalHero.innerHTML =
         `<div class="wstripe"></div><span class="wcard-cap">${escapeHtml(caption)}</span>`;
       modalHero.setAttribute('aria-hidden', 'true');

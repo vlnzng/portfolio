@@ -8,9 +8,11 @@ summary: |
 
   The result is this site: a dark editorial portfolio with a horizontal reading flow on desktop, a vertical fallback on mobile, a token-based design foundation, self-hosted fonts and custom interaction logic. No site builder, no template, one person across concept, writing, design and development.
 result: "No template, no builder · hand-coded"
-heroCaption: "before / after — 2024 vs 2026"
 tools: ["Astro", "GSAP", "Lenis", "HTML/CSS/TS"]
 tags: ["UX", "Code", "Writing"]
+heroImage: "/assets/showcases/case4/hero.webp"
+heroRatio: "2400 / 1187"
+heroAlt: "The 2024 portfolio beside the 2026 rebuild: on the left the old hero with its red “Rethinking Boundaries” headline, on the right the current one with the gold wordmark and “Product Designer · UX/UI”."
 cardImage: "/assets/showcases/case4/card.webp"
 cardAlt: "The portfolio on a desktop screen — gold wordmark, “Product Designer · UX/UI” and the portrait — next to a laptop showing the code behind it."
 order: 4
@@ -34,7 +36,7 @@ The brief I set myself was therefore simple:
 <blockquote class="case-quote">Make the portfolio itself demonstrate the way I work.</blockquote>
 
 <figure class="case-figure">
-  <div class="case-ph"><span class="case-ph-cap">the 2024 site, annotated</span></div>
+  <img class="case-shot" src="/assets/showcases/case4/annotated.webp" alt="Two browser windows showing the 2024 portfolio, annotated with its weak points: outdated headline, generic dark theme, arbitrary skill bars, vertical text that is hard to read, an unclear icon and claims made without evidence." width="2000" height="1125" loading="lazy" />
   <figcaption>The 2024 version: a generic dark theme, red accents and arbitrary skill bars.</figcaption>
 </figure>
 
@@ -47,7 +49,7 @@ Instead of starting in code, I worked through positioning and structure first. I
 That decision shaped the whole direction. The hero statement, navigation, case structure, visual rhythm and technical choices all had to support the same idea. The concept phase took longer than the build, which was deliberate. The thinking defined the code, not the other way around.
 
 <figure class="case-figure">
-  <div class="case-ph"><span class="case-ph-cap">concept before code</span></div>
+  <img class="case-diagram" src="/assets/showcases/case4/concept.webp" alt="Wireframes of the scroll concept: three frames on top show the hero wordmark morphing into the header as the page scrolls down; below, the five sections — hero, about, work, process and contact — run side by side as one horizontal track." width="2000" height="690" loading="lazy" />
   <figcaption>Positioning and structure first — the concept phase outlasted the build.</figcaption>
 </figure>
 
@@ -63,19 +65,9 @@ The final result is a portfolio built as a coherent digital product.
 
 The case studies bring their own colour through real imagery, while the surrounding interface stays neutral with a single gold accent. This lets the projects carry their own atmosphere without breaking the overall portfolio.
 
-<figure class="case-figure">
-  <div class="case-ph"><span class="case-ph-cap">the design system</span></div>
-  <figcaption>A token-based foundation: colour, spacing and type as reusable tokens.</figcaption>
-</figure>
-
 **The interaction model.** On desktop, the site uses a horizontal reading flow supported by custom two-phase scroll logic. The goal is to make the portfolio feel more like a curated sequence than a standard vertical page. On mobile, the layout falls back to a conventional vertical flow.
 
 The experience includes keyboard navigation, visible focus states, reduced-motion handling and self-hosted assets. These were part of the initial build, not fixes added afterwards.
-
-<figure class="case-figure">
-  <div class="case-ph"><span class="case-ph-cap">the scroll engine</span></div>
-  <figcaption>The desktop two-phase horizontal scroll, with a vertical fallback on mobile.</figcaption>
-</figure>
 
 **The writing framework.** The writing was treated as a core design layer. Every case follows the same structure, but each one keeps its own focus: context, problem, process, solution, impact and reflection.
 

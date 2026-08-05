@@ -18,6 +18,11 @@ const showcases = defineCollection({
     tags: z.array(z.string()),
     heroImage: z.string().optional(),
     heroAlt: z.string().optional(),
+    // Aspect ratio of heroImage as a CSS ratio ("2400 / 620"). The hero band
+    // adopts it, so the image fills the band edge to edge instead of sitting
+    // pillarboxed inside a fixed 2400/620 frame. Case 1's diagram is authored
+    // at the band's native ratio; the photographic heroes are all ~2:1.
+    heroRatio: z.string().optional(),
     cardImage: z.string().optional(),
     cardAlt: z.string().optional(),
     order: z.number(),

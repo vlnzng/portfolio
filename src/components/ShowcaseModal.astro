@@ -186,11 +186,14 @@
   .cs-hero {
     position: relative;
     width: 100%;
-    /* full-bleed banner — wider than the text column below; matches the SVG
-       ratio so it fills the width edge-to-edge with no crop, capped on tall
-       viewports so it never dominates */
-    aspect-ratio: 2400 / 620;
-    max-height: 56vh;
+    /* full-bleed banner. modal.ts sets --cs-hero-ar per case from the image's
+       own ratio so it fills the width edge-to-edge with no crop; the fallback
+       is the band's native 2400/620, which case 1's diagram is drawn at and
+       which the placeholder stripe uses. Capped so a ~2:1 hero can't swallow
+       the viewport before any copy — when the cap bites, `contain` leaves
+       narrow --color-bg bars rather than cropping into the artwork. */
+    aspect-ratio: var(--cs-hero-ar, 2400 / 620);
+    max-height: 68vh;
     overflow: hidden;
     background: var(--color-bg);
   }
@@ -510,7 +513,11 @@
     }
 
     .cs-hero {
-      height: clamp(190px, 30vh, 280px);
+      /* let the per-case ratio set the height here too — a fixed height
+         letterboxed every hero on phones. The floor keeps the band reading as
+         a banner for the widest artwork (case 1's 3.87:1 diagram). */
+      min-height: 160px;
+      max-height: 42vh;
     }
 
     .cs-head {

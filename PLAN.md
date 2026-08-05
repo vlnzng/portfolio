@@ -108,12 +108,13 @@ copy/proofread pass**, and a **launch QA** sweep.
       (Swap for hand-designed art later if wanted.)
 
 ### B. Case studies 3 & 4 — finish the imagery & CTAs
-- [ ] **ToolSynergy** images: market-positioning matrix, archetypes, content system, visual
-      identity → drop in `_inbox/`, replace the four placeholders (normalise bg to `#1A1816`)
-- [ ] **Portfolio Website** images: 2024-vs-now, design system, scroll engine → replace placeholders
-- [ ] **ToolSynergy CTAs** — "View final styleguide" / "View case presentation": the modal CTA
-      builder now supports custom labels (frontmatter `ctas`, example stubbed in `toolsynergy.mdx`);
-      only the real URLs/PDFs are still needed
+- [x] **ToolSynergy** images — hero, positioning matrix, content system and visual identity are
+      all in; the archetypes figure was dropped on purpose (the two `case-q` callouts carry it).
+      No placeholders left anywhere on the site
+- [x] **Portfolio Website** images — hero (2024 vs 2026), the annotated 2024 site and the
+      concept wireframes are in; the "design system" and "scroll engine" figures were dropped
+      on purpose, so section 04 now runs on copy alone
+- [x] **ToolSynergy CTA** — decided: stays at the one styleguide PDF, no case-presentation CTA
 - [x] Card tools/tags settled — `Adobe CC` (matches Process), toolkits now cover 10 of 15
       Process tools (Maze→C1, Jira→C2, Miro→C3, Git→C4, Figma off C3/C4); pill system:
       six competences, each on exactly two cards, every project pair shares exactly one
@@ -123,7 +124,11 @@ copy/proofread pass**, and a **launch QA** sweep.
       strongest proof (unified `·` separator), duplicate award sentence in RunForRecht
       reworded, stale "accent world" claim in the Portfolio case corrected to the real
       one-accent system; BE spelling consistent throughout
-- [ ] Owner skim at content freeze; sanity-check `alt` text once case 3–4 images land
+- [x] `alt` sweep across the whole site (2026-08-05) — every case figure, card, hero and the
+      contact photo checked against the actual image; the childhood-phone portrait, the case 1
+      result screen, its card and the guided-questions shot were rewritten from thin labels
+      into real descriptions
+- [ ] Owner skim at content freeze
 
 ### D. Open decisions
 - [x] **820px breakpoint — decided: keep 821** — half-screen desktop windows (960–1280px)
@@ -136,8 +141,15 @@ copy/proofread pass**, and a **launch QA** sweep.
   section is a thin wrapper around `ShowcaseCard` and has no reuse case
 
 ### E. Launch QA
-- [ ] Lighthouse 95+ across the board; check LCP / bundle size (note: several case images are
-      lossless and chunky — revisit sizes)
+- [x] Case-image pass (2026-08-05) — one recipe for all of them: figures at 2000px for the
+      `min(1080px, 92vw)` slot, heroes at 2400px, cards at 1200px, WebP with 4:4:4 chroma so
+      coloured label text stops smearing. Case 2's three near-lossless exports (2.8–3.8 bpp,
+      1.3 MB together) came down to 212 KB; total case payload 2.2 MB → 1.4 MB while most
+      figures gained resolution. Measured decode error against the sources: MAE ≤ 1.7,
+      p99.9 ≤ 13, so nothing is compression-damaged.
+      *Source-limited: `case3/positioning.webp` is only 1157px wide — soft on retina until
+      a larger export lands.*
+- [ ] Lighthouse 95+ across the board; check LCP / bundle size
 - [ ] Keyboard / focus / screen-reader review (modal, nav, skip-link, scroll cue, VL home)
 - [ ] Cross-browser + **real-device** check — the scroll engine and mobile hero especially
 - [x] Legal: analytics wording in Datenschutz confirmed (§3 covers Vercel Web Analytics +
