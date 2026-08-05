@@ -18,6 +18,21 @@
   --size-sm: 0.875rem;
   --size-base: 1rem;
 
+  /* Large-screen upscale. Every type size on the site has reached its clamp
+     ceiling by ~1680px, while the panels and the card images keep growing with
+     the viewport — so on a 4K screen at 100% zoom the copy reads small against
+     its own imagery (at 2560px a card image is 532px wide and its title is
+     still 21px). 1920px is the design's native width: this unit is exactly
+     17px there, so nothing at or below it moves. Above, it grows to 22.6px
+     (+33%) by ~2550px and then holds. Sizes opt in with
+
+         font-size: max(<the normal size>, calc(<n> / 17 * var(--up)));
+
+     where <n> is that same size in px — the max() picks the normal size until
+     the upscale overtakes it. The legal pages and the 404 deliberately stay
+     out: they are plain reading columns with no imagery to keep up with. */
+  --up: min(0.8854vw, 22.6px);
+
   --leading-tight: 1.1;
   --leading-normal: 1.5;
 

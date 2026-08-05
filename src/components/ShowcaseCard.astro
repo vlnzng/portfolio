@@ -89,7 +89,7 @@ const num = String(order).padStart(2, '0');
      each share one row track across all four cards via subgrid, so results
      and footers align even when titles/hooks differ in length. Browsers
      without subgrid keep the plain column stack. */
-  @media (min-width: 821px) {
+  @media (min-width: 821px) and (min-height: 520px) {
     .wcard {
       display: grid;
       grid-template-rows: subgrid;
@@ -156,7 +156,7 @@ const num = String(order).padStart(2, '0');
     padding-top: 14px;
     border-top: 1px solid var(--color-border);
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: max(12px, calc(12 / 17 * var(--up)));
     letter-spacing: 0.1em;
     color: var(--color-accent);
     transition: border-color 0.25s ease;
@@ -170,7 +170,7 @@ const num = String(order).padStart(2, '0');
     margin: 10px 0 0;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(18px, 1.35vw, 21px);
+    font-size: max(clamp(18px, 1.35vw, 21px), calc(21 / 17 * var(--up)));
     line-height: 1.18;
     letter-spacing: -0.01em;
     color: var(--color-text);
@@ -185,7 +185,7 @@ const num = String(order).padStart(2, '0');
     margin: 11px 0 0;
     max-width: none;
     font-family: var(--font-body);
-    font-size: 13.5px;
+    font-size: max(13.5px, calc(13.5 / 17 * var(--up)));
     line-height: 1.6;
     color: var(--color-muted);
   }
@@ -198,7 +198,7 @@ const num = String(order).padStart(2, '0');
     margin: 14px 0 0;
     font-family: var(--font-body);
     font-weight: 500;
-    font-size: 12px;
+    font-size: max(12px, calc(12 / 17 * var(--up)));
     letter-spacing: 0.015em;
     color: var(--color-accent);
   }
@@ -244,7 +244,7 @@ const num = String(order).padStart(2, '0');
     margin: 0 0 12px;
     font-family: var(--font-body);
     font-weight: 500;
-    font-size: 11px;
+    font-size: max(11px, calc(11 / 17 * var(--up)));
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-muted);
@@ -265,7 +265,7 @@ const num = String(order).padStart(2, '0');
     border-radius: 999px;
     font-family: var(--font-body);
     font-weight: 500;
-    font-size: 11px;
+    font-size: max(11px, calc(11 / 17 * var(--up)));
     letter-spacing: 0.03em;
     color: var(--color-muted);
     transition: color 0.25s ease, border-color 0.25s ease;
@@ -318,7 +318,7 @@ const num = String(order).padStart(2, '0');
     color: var(--color-bg);
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 11px;
+    font-size: max(11px, calc(11 / 17 * var(--up)));
     letter-spacing: 0.08em;
     text-transform: uppercase;
     white-space: nowrap;
@@ -329,10 +329,10 @@ const num = String(order).padStart(2, '0');
   }
 
   .wcard-cursor-arrow {
-    font-size: 13px;
+    font-size: max(13px, calc(13 / 17 * var(--up)));
   }
 
-  @media (hover: hover) and (pointer: fine) and (min-width: 821px) and (prefers-reduced-motion: no-preference) {
+  @media (hover: hover) and (pointer: fine) and (min-width: 821px) and (min-height: 520px) and (prefers-reduced-motion: no-preference) {
     .wcard {
       cursor: none;
     }

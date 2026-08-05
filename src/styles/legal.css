@@ -72,6 +72,10 @@
   max-width: 760px;
   margin: 0 auto;
   padding: clamp(56px, 9vh, 104px) clamp(24px, 6vw, 40px) 0;
+  /* the German half is full of long legal compounds ("Verbraucher-
+     streitbeilegung") — at 320px one of those headings is wider than the
+     column and pushed the whole page into a horizontal overflow */
+  overflow-wrap: break-word;
 }
 
 .lg-eyebrow {
@@ -144,6 +148,9 @@
 
 .lg-sec-title {
   margin: 0;
+  /* flex item: without min-width:0 it refuses to shrink below the widest word,
+     so `overflow-wrap` on the wrapper never gets a chance to break it */
+  min-width: 0;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(21px, 2.4vw, 27px);

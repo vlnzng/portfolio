@@ -20,7 +20,9 @@ import wordmark from '../assets/brand/wordmark.svg?raw';
 <style>
   .wordmark {
     /* the sole size knob — the rendered height of the lockup (≈ the V) */
-    --wm-h: clamp(6.75rem, 13.5vw, 15rem);
+    /* tops out at a 1778px viewport; --up carries it on above that so the
+       lockup keeps its scale against the portrait on a 4K screen */
+    --wm-h: max(clamp(6.75rem, 13.5vw, 15rem), calc(240 / 17 * var(--up)));
 
     position: fixed;
     left: 0;
@@ -162,7 +164,7 @@ import wordmark from '../assets/brand/wordmark.svg?raw';
     }
   }
 
-  @media (max-width: 820px), (prefers-reduced-motion: reduce) {
+  @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce) {
     .wordmark {
       /* mobile: a static lockup at the top that scrolls away with the page */
       position: absolute;
@@ -175,6 +177,16 @@ import wordmark from '../assets/brand/wordmark.svg?raw';
     .wordmark :global([data-wm-tail]) {
       opacity: 1 !important;
       transform: none !important;
+    }
+
+    /* A phone in landscape has ~400px of height, so a width-driven lockup
+       (26vw of 852px = the 9.5rem cap) ate the whole hero and collided with
+       the role line. Size it off the height there instead. */
+    @media (max-height: 519px) {
+      .wordmark {
+        top: 5svh;
+        --wm-h: clamp(2.5rem, 15svh, 4.5rem);
+      }
     }
   }
 

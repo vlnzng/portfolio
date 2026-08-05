@@ -13,7 +13,7 @@ import portrait from '../assets/images/portrait.png';
     quality={80}
     alt=""
     widths={[960, 1440, 1920, 2560]}
-    sizes="(max-width: 820px) 92vw, 52vw"
+    sizes="(max-width: 820px) 92vw, (max-height: 519px) 92vw, 52vw"
     loading="eager"
     fetchpriority="high"
   />
@@ -114,7 +114,7 @@ import portrait from '../assets/images/portrait.png';
     background: linear-gradient(0deg, var(--color-bg), transparent);
   }
 
-  @media (max-width: 820px), (prefers-reduced-motion: reduce) {
+  @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce) {
     /* mobile: the cut-out sits in the LOWER half of the hero, below the text
        block (wordmark + role + pitch + statement live above it). Scrolls away
        with the page. */
@@ -122,14 +122,45 @@ import portrait from '../assets/images/portrait.png';
       position: absolute;
       left: auto;
       right: 0;
-      top: 54vh;
+      /* svh, not vh: the panel is 100svh tall, so a vh-based composition was
+         laid out against the taller "toolbar hidden" viewport and ran past the
+         bottom of the hero on first paint — the page looked zoomed in until
+         the address bar collapsed. 54 + 46 = exactly one small viewport. */
+      top: 54svh;
       width: 92%;
-      height: 46vh;
+      height: 46svh;
       transform: none !important;
+    }
+
+    /* Nothing in the hero may stick out sideways here: the panel is exactly
+       as wide as the screen and `.section` is `overflow: visible` on mobile,
+       so any bleed becomes real document overflow — and a mobile browser
+       answers that by rescaling the whole page, which is why the site used to
+       *start* looking zoomed and then settle.
+       1) the glow bled 14% (~51px) past the right edge — bleed vertically
+          only; the gradient is fully transparent well before the side edges
+       2) the load-in scale(1.05) spilled ~9px each side for its first 1.2s —
+          clip it to the frame it is settling into */
+    .portrait__glow {
+      inset: -14% 0;
+    }
+
+    .portrait picture {
+      overflow: hidden;
     }
 
     .portrait__fade--b {
       height: 16%;
+    }
+
+    /* Landscape phone: no room for a figure *below* the text — it takes the
+       right half of the hero instead (see Hero.astro). */
+    @media (max-height: 519px) and (min-width: 560px) {
+      .portrait {
+        top: 6svh;
+        width: 46%;
+        height: 94svh;
+      }
     }
   }
 </style>

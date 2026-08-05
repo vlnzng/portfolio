@@ -39,12 +39,13 @@ if (!prefersReducedMotion && desktopQuery.matches) {
   initStandardNavigation();
 }
 
-// The engine-vs-standard choice (and the CSS layout) hinge on the 821px / reduced
-// -motion boundary, decided once at load. Crossing it on a live resize would leave
-// JS and CSS disagreeing — the horizontal engine stays pinned while the layout is
-// vertical, so nav links jump to the wrong section. Re-initialise cleanly by
-// reloading when the boundary is actually crossed (a no-op on real phones, whose
-// width never crosses it; only fires on desktop resize / orientation change).
+// The engine-vs-standard choice (and the CSS layout) hinge on the engine
+// boundary (see media.ts) / reduced-motion, decided once at load. Crossing it on
+// a live resize would leave JS and CSS disagreeing — the horizontal engine stays
+// pinned while the layout is vertical, so nav links jump to the wrong section.
+// Re-initialise cleanly by reloading when the boundary is actually crossed (a
+// no-op on real phones, which fail the width test in both orientations; only
+// fires on desktop resize).
 let reinitialising = false;
 const reinitOnBoundaryChange = (): void => {
   if (reinitialising) return;
@@ -123,7 +124,14 @@ function initEngine(): void {
       panelEls.length > 1
         ? panelEls[1].offsetLeft - panelEls[0].offsetLeft
         : window.innerWidth;
-    morphDist = window.innerHeight * 1.15;
+    // Phase 1 costs 1.15 viewport heights of scrolling — but a wheel notch
+    // delivers a fixed number of pixels no matter how tall the screen is, so
+    // on a 1440px display that was 1656px of wheel travel against 1242px on a
+    // 1080px one: a third more work for the same morph, with no sideways
+    // motion yet to show for it. Cap the height the budget is derived from at
+    // 1080 (the same reference width/height the type scale anchors to), so the
+    // morph never costs more scrolling than it does on a 1080p screen.
+    morphDist = Math.min(window.innerHeight, 1080) * 1.15;
     panMax = Math.max(0, track.scrollWidth - panelW);
     total = morphDist + panMax;
   };
@@ -309,24 +317,33 @@ function initEngine(): void {
     else goTo(posToScroll(curPos + panelW * 0.9), 0.8);
   });
 
+  // Both entry paths below fire one frame after the engine is built — the frame
+  // in which ScrollTrigger's pin spacer first gives the document its real
+  // height (0 → ~9000px). Lenis caches its scroll limit and only refreshes it
+  // from a ResizeObserver, which has not fired yet, so it still believes the
+  // limit is 0 and silently clamps any target to it: every deep link and every
+  // return from a legal page landed back on the hero. Force the recalculation
+  // before scrolling. The trailing pinTrack() undoes the browser's own native
+  // anchor jump, which happened before the engine existed.
+  const restoreScroll = (scrollNow: () => void): void => {
+    requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+      lenis?.resize();
+      scrollNow();
+      requestAnimationFrame(pinTrack);
+    });
+  };
+
   // returning from a legal page → restore exact position (priority over hash)
   const returnY = takeReturnY();
   if (returnY != null) {
-    requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
+    restoreScroll(() => {
       if (lenis) lenis.scrollTo(returnY, { immediate: true });
       else window.scrollTo(0, returnY);
-      // the browser's own jump to /#contact happened before the engine existed
-      requestAnimationFrame(pinTrack);
     });
   } else {
     const initialHash = window.location.hash.replace('#', '');
-    if (initialHash) {
-      requestAnimationFrame(() => {
-        window.__portfolioScrollTo?.(initialHash);
-        requestAnimationFrame(pinTrack);
-      });
-    }
+    if (initialHash) restoreScroll(() => window.__portfolioScrollTo?.(initialHash));
   }
 }
 

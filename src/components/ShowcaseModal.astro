@@ -239,7 +239,11 @@
   .cs-head {
     position: relative;
     z-index: 2;
-    max-width: 820px;
+    /* grows with --up alongside the type inside it so the measure holds, but
+       caps at 1000px: the figures below break out of this column and they are
+       themselves capped by source resolution (see .case-figure), so letting the
+       column run to the full +33% would have swallowed that step. */
+    max-width: min(max(820px, calc(820 / 17 * var(--up))), 1000px);
     margin: -40px auto 0;
     padding: 0 clamp(20px, 5vw, 40px);
   }
@@ -249,7 +253,7 @@
     margin: 0;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(32px, 4vw, 56px);
+    font-size: max(clamp(32px, 4vw, 56px), calc(56 / 17 * var(--up)));
     line-height: 1.06;
     letter-spacing: -0.015em;
     text-wrap: balance;
@@ -261,7 +265,7 @@
     margin: 20px 0 0;
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(17px, 1.7vw, 22px);
+    font-size: max(clamp(17px, 1.7vw, 22px), calc(22 / 17 * var(--up)));
     line-height: 1.5;
     text-wrap: pretty;
     hyphens: auto;
@@ -280,7 +284,7 @@
     margin: 0 0 14px;
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 12px;
+    font-size: max(12px, calc(12 / 17 * var(--up)));
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-accent);
@@ -289,7 +293,7 @@
   .cs-head :global(.cs-glance-p) {
     margin: 0 0 16px;
     font-family: var(--font-body);
-    font-size: clamp(16px, 1.5vw, 19px);
+    font-size: max(clamp(16px, 1.5vw, 19px), calc(19 / 17 * var(--up)));
     line-height: 1.7;
     text-wrap: pretty;
     hyphens: auto;
@@ -302,7 +306,8 @@
 
   /* body — MDX-rendered case, styled as gold-headed sections */
   .cs-body {
-    max-width: 820px;
+    /* see .cs-head — same growth, same 1000px cap */
+    max-width: min(max(820px, calc(820 / 17 * var(--up))), 1000px);
     margin: 0 auto;
     padding: 8vh clamp(20px, 5vw, 40px) 13vh;
   }
@@ -311,7 +316,7 @@
     margin: 7.5vh 0 18px;
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 12px;
+    font-size: max(12px, calc(12 / 17 * var(--up)));
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-accent);
@@ -325,7 +330,7 @@
     margin: 4vh 0 14px;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(20px, 1.6vw, 26px);
+    font-size: max(clamp(20px, 1.6vw, 26px), calc(26 / 17 * var(--up)));
     color: var(--color-text);
   }
 
@@ -334,7 +339,7 @@
     max-width: none;
     font-family: var(--font-body);
     font-weight: 400;
-    font-size: clamp(17px, 1.45vw, 19px);
+    font-size: max(clamp(17px, 1.45vw, 19px), calc(19 / 17 * var(--up)));
     line-height: 1.72;
     text-wrap: pretty;
     hyphens: auto;
@@ -368,7 +373,13 @@
      screenshots bake in the rounded "product window" + shadow; diagrams are
      flat, site-native data viz. Captions sit centred beneath. */
   .cs-body :global(.case-figure) {
-    width: min(1080px, 92vw);
+    /* Scales with --up like the column it breaks out of — held at 1080px, the
+       upscaled column (1025px at 2560) all but caught up and the deliberate
+       wide-to-narrow step disappeared. The 1200px ceiling is an asset limit,
+       not a design one: the narrowest figures in use are case 2's participant
+       and manager shots at ~1195px, so anything past 1200 would upscale them.
+       Raise it if those are ever re-exported wider. */
+    width: min(max(1080px, calc(1080 / 17 * var(--up))), 1200px, 92vw);
     margin-top: 5vh;
     margin-bottom: 5vh;
     margin-left: 50%;
@@ -408,7 +419,7 @@
     padding: 15px 20px;
     border-left: 2px solid rgb(217 179 108 / 0.45);
     background: rgb(237 230 217 / 0.02);
-    font-size: clamp(15px, 1.35vw, 17px);
+    font-size: max(clamp(15px, 1.35vw, 17px), calc(17 / 17 * var(--up)));
     line-height: 1.6;
     color: var(--color-text-soft);
   }
@@ -434,7 +445,7 @@
     border-left: 2px solid var(--color-accent);
     font-family: var(--font-display);
     font-style: italic;
-    font-size: clamp(19px, 1.8vw, 25px);
+    font-size: max(clamp(19px, 1.8vw, 25px), calc(25 / 17 * var(--up)));
     line-height: 1.5;
     color: var(--color-text);
   }
@@ -467,7 +478,7 @@
     border: 1px solid rgb(217 179 108 / 0.45);
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 13.5px;
+    font-size: max(13.5px, calc(13.5 / 17 * var(--up)));
     letter-spacing: 0.04em;
     text-decoration: none;
     cursor: pointer;
@@ -484,7 +495,7 @@
      filled state — same beat as the contact links */
   .cs-cta :global(.cs-btn-arrow) {
     color: var(--color-accent);
-    font-size: 14px;
+    font-size: max(14px, calc(14 / 17 * var(--up)));
     transition: color 0.22s ease, transform 0.25s var(--ease-out);
   }
 
@@ -493,7 +504,7 @@
     transform: translate(3px, -3px);
   }
 
-  @media (max-width: 820px) {
+  @media (max-width: 820px), (max-height: 519px) {
     /* bigger, solid, gold-ringed close so it's unmistakable and easy to tap
        on top of any hero image */
     .cs-close {

@@ -149,9 +149,57 @@ copy/proofread pass**, and a **launch QA** sweep.
       p99.9 ≤ 13, so nothing is compression-damaged.
       *Source-limited: `case3/positioning.webp` is only 1157px wide — soft on retina until
       a larger export lands.*
+- [x] **Device sweep (2026-08-05)** — headless Chrome across 14 viewports (320px → 3440px,
+      phones/tablets in both orientations, reduced motion), plus a horizontal-overflow probe
+      on all four pages at ten widths. Five defects found and fixed:
+      - **Phones in landscape ran the desktop engine** (852×393 etc. pass `min-width: 821px`),
+        so hero text collided with the scroll cue and work cards were cut off top and bottom.
+        The engine boundary now also requires `min-height: 520px` — see `media.ts`, which is
+        the single source; the component queries carry its inverse. Landscape phones get the
+        vertical layout with their own two-column hero composition
+      - **Mobile page rendered zoomed** — the hero leaked ~51px of document width (portrait
+        glow bleeding `-14%` sideways) plus ~9px during the portrait's `scale(1.05)` load-in,
+        and mobile browsers answer that by rescaling the whole page. Both clipped; the nav's
+        "Contact" is no longer pushed off-screen
+      - **Mobile hero measured in `vh` inside a `100svh` panel** — laid out against the
+        toolbar-hidden viewport, so it overshot the fold until the address bar collapsed
+      - **Process double diamond never closed** — `vector-effect: non-scaling-stroke` on a
+        non-uniformly stretched SVG makes Chrome convert `stroke-dasharray` with one averaged
+        scale factor, drawing only ~79% of the outline at 2560px (~88% at 1920px). Stroke now
+        scales with the box; the dash maths is exact again
+      - **`/imprint` overflowed at 320px** — "Verbraucherstreitbeilegung" could not break
+      - **Every desktop deep link landed on the hero** — `/#work`, a refresh on any section,
+        and "Back to portfolio" from a legal page all reset to the top. Both restore paths run
+        one frame after the engine is built, the frame in which ScrollTrigger's pin spacer
+        first gives the document its real height; Lenis still held its cached limit of 0 and
+        silently clamped every target to it. Forcing `lenis.resize()` before the scroll fixes
+        all of them. Mobile was never affected (no Lenis). So the URL sync claimed above is
+        only actually shareable/refresh-stable as of this fix
+      Also: the vertical layout now goes two-up (four-up ≥1100px) for the work cards, which
+      fixes portrait tablets ≤820px and the reduced-motion desktop path
+- [x] **Large-screen scale (2026-08-05)** — every type size hit its clamp ceiling by ~1680px
+      while panels and card images kept growing, so 4K at 100% zoom read small against its own
+      imagery. New `--up` token in `tokens.css`: exactly 17px at 1920 (the design's native
+      width, so nothing at or below moves — verified pixel-identical), growing to +25% by
+      ~2550px. ~40 sizes opt in, plus the hero text column, contact photo column, modal
+      reading column and the wordmark so proportions hold. Legal pages / 404 stay out on
+      purpose. Two follow-ups from owner review:
+      - **About's measure never grew** — `.ab-body`'s `60ch` resolves against its own
+        font-size, and it has none, so the cap stayed pinned to the 16px page default while
+        the paragraphs scaled. At 2560 that squeezed the copy to ~55 characters and left 46%
+        of the column empty; now a constant ~73 characters at every width
+      - **Phase 1 felt laborious on a tall screen** — a wheel notch is a fixed number of
+        pixels, so `innerHeight * 1.15` charged 1656px of scrolling on a 1440px display
+        against 1242px on a 1080px one, with no sideways motion yet to show for it. The
+        height the budget derives from is now capped at 1080
 - [ ] Lighthouse 95+ across the board; check LCP / bundle size
 - [ ] Keyboard / focus / screen-reader review (modal, nav, skip-link, scroll cue, VL home)
-- [ ] Cross-browser + **real-device** check — the scroll engine and mobile hero especially
+      — note: the German half of `imprint`/`privacy` has no `lang="de"`, so a screen reader
+      reads it with English phonetics
+- [ ] Cross-browser + **real-device** check — still open for what headless Chrome cannot show:
+      touch-driving the pinned engine on a real iPad (landscape especially), Safari's dynamic
+      toolbar against the `svh` hero, and the wordmark morph. Portrait tablets ≥821px keep the
+      engine (decision D holds — the sweep found no breakage, only an airy composition)
 - [x] Legal: analytics wording in Datenschutz confirmed (§3 covers Vercel Web Analytics +
       Speed Insights, DE + EN); optional lawyer review still open (not a blocker)
 

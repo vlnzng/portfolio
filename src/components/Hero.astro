@@ -30,7 +30,9 @@
     position: absolute;
     left: 5.5vw;
     top: 54vh;
-    max-width: 640px;
+    /* scales with --up alongside the type inside it — held at 640px the
+       upscaled pitch broke its deliberate two-line <br> into four ragged ones */
+    max-width: max(640px, calc(640 / 17 * var(--up)));
     z-index: 40;
     will-change: transform;
   }
@@ -40,7 +42,7 @@
     font-family: var(--font-body);
     font-weight: 600;
     /* sized up so it reads as a peer of the pitch / statement, not a caption */
-    font-size: clamp(15px, 1.35vw, 20px);
+    font-size: max(clamp(15px, 1.35vw, 20px), calc(20 / 17 * var(--up)));
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-accent);
@@ -50,7 +52,7 @@
     margin: 0;
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(22px, 2.1vw, 31px);
+    font-size: max(clamp(22px, 2.1vw, 31px), calc(31 / 17 * var(--up)));
     line-height: 1.5;
     color: var(--color-text);
   }
@@ -62,7 +64,9 @@
     max-width: none;
     font-family: var(--font-body);
     font-weight: 400;
-    font-size: 16px;
+    /* only rendered on mobile / reduced motion — the upscale matters for the
+       reduced-motion desktop case, where this replaces the scroll cue */
+    font-size: max(16px, calc(16 / 17 * var(--up)));
     letter-spacing: 0.01em;
     line-height: 1.6;
     color: var(--color-muted);
@@ -77,7 +81,7 @@
   }
 
   /* On the desktop engine the statement lives in the scroll cue instead */
-  @media (min-width: 821px) and (prefers-reduced-motion: no-preference) {
+  @media (min-width: 821px) and (min-height: 520px) and (prefers-reduced-motion: no-preference) {
     .hero-statement {
       display: none;
     }
@@ -115,13 +119,15 @@
     }
   }
 
-  @media (max-width: 820px), (prefers-reduced-motion: reduce) {
+  @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce) {
     /* mobile composition: the text block sits at the top, just under the
        wordmark; the portrait drops to the lower half (see SharedPortrait) */
     .hero-text {
       left: 7vw;
       right: 7vw;
-      top: 25vh;
+      /* svh so the whole hero composition (text + portrait below) is measured
+         against the same viewport the panel itself uses — see SharedPortrait */
+      top: 25svh;
       max-width: none;
     }
 
@@ -132,6 +138,20 @@
 
     .hero-pitch {
       text-wrap: balance;
+    }
+
+    /* Landscape phone: wide and short. Stacking lockup → text → portrait
+       needs ~700px of height and there are ~400, so the figure moves beside
+       the text (the desktop composition, statically placed). */
+    @media (max-height: 519px) and (min-width: 560px) {
+      .hero-text {
+        top: 30svh;
+        right: 48vw;
+      }
+
+      .hero-pitch {
+        text-wrap: pretty;
+      }
     }
   }
 </style>

@@ -100,7 +100,7 @@ const links = [
     display: inline-block;
     font-family: var(--font-body);
     font-weight: 500;
-    font-size: 13px;
+    font-size: max(13px, calc(13 / 17 * var(--up)));
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-muted);
@@ -196,7 +196,7 @@ const links = [
     transform-origin: left center;
   }
 
-  @media (max-width: 820px), (prefers-reduced-motion: reduce) {
+  @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce) {
     .navbar {
       top: calc(20px + env(safe-area-inset-top, 0px));
       padding-right: calc(18px + env(safe-area-inset-right, 0px));

@@ -72,7 +72,13 @@
   }
 
   .ab-body {
-    max-width: 60ch;
+    /* `ch` resolves against THIS element's font-size, and it has none of its
+       own — so the measure stayed pinned to the 16px page default while the
+       paragraphs inside grew with --up. At 2560 that squeezed the copy to ~55
+       characters and left 521px of the column empty, which is what made the
+       panel look unbalanced on a large screen. The --up arm keeps the measure
+       at the ~73 characters it was tuned for; 60ch still governs below 1920. */
+    max-width: max(60ch, calc(606 / 17 * var(--up)));
   }
 
   /* scoped under .ab-body so it beats the `.ab-body p` body style */
@@ -80,7 +86,7 @@
     margin: 0 0 24px;
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: clamp(21px, 1.9vw, 27px);
+    font-size: max(clamp(21px, 1.9vw, 27px), calc(27 / 17 * var(--up)));
     line-height: 1.36;
     letter-spacing: -0.01em;
     color: var(--color-accent);
@@ -91,7 +97,7 @@
     max-width: none;
     font-family: var(--font-body);
     font-weight: 400;
-    font-size: 16.5px;
+    font-size: max(16.5px, calc(16.5 / 17 * var(--up)));
     line-height: 1.78;
     color: var(--color-text-soft);
   }
@@ -126,7 +132,7 @@
     margin: 0 0 13px;
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 11px;
+    font-size: max(11px, calc(11 / 17 * var(--up)));
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-accent);
@@ -136,7 +142,7 @@
     margin: 0 0 5px;
     font-family: var(--font-body);
     font-weight: 400;
-    font-size: 13px;
+    font-size: max(13px, calc(13 / 17 * var(--up)));
     line-height: 1.5;
     color: var(--color-muted);
   }
@@ -149,7 +155,7 @@
     color: var(--color-faint);
   }
 
-  @media (max-width: 820px), (prefers-reduced-motion: reduce) {
+  @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce) {
     .about-content {
       position: static;
       left: auto;
