@@ -177,6 +177,21 @@ copy/proofread pass**, and a **launch QA** sweep.
         only actually shareable/refresh-stable as of this fix
       Also: the vertical layout now goes two-up (four-up ≥1100px) for the work cards, which
       fixes portrait tablets ≤820px and the reduced-motion desktop path
+- [x] **Mobile hero stack rebuilt (2026-08-06)** — the hero's three pieces live in three
+      components (the portrait isn't even a DOM descendant of the panel), so each sat on its
+      own viewport fraction (8vh / 25svh / 54svh) while the copy inside them is sized in px.
+      On short phones the fractions collapsed around content that didn't: the gap under the
+      wordmark fell from 49px to 9px, and the portrait covered the statement by 31px at
+      375×667 and 93px at 320×568. Raising the text above the portrait was not an option —
+      `.horizontal-track`'s `will-change: transform` makes its own stacking context, so the
+      portrait outside it always wins. The stack is now one chain of custom properties in
+      `global.css` (`--hero-wm-top` → `--hero-text-top` → `--hero-portrait-top`), with
+      `--wm-h` promoted to a token. Constant 52px under the lockup on every phone, no
+      overlap anywhere from 320px up; the portrait absorbs the difference by running past
+      the fold, which is what it should do anyway
+- [x] **Contact quote capped to the photo column (2026-08-06)** — `.cquote` had
+      `max-width: none` (a desktop rule) while only `.cphoto` was capped on mobile, so from
+      ~700px up the quote ran 300–541px wider than the image above it
 - [x] **Large-screen scale (2026-08-05)** — every type size hit its clamp ceiling by ~1680px
       while panels and card images kept growing, so 4K at 100% zoom read small against its own
       imagery. New `--up` token in `tokens.css`: exactly 17px at 1920 (the design's native

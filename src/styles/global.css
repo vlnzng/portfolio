@@ -110,6 +110,31 @@ button:focus-visible,
 }
 
 @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce) {
+  /* ===== Mobile hero stack ================================================
+     The hero's three pieces live in different components (Wordmark, Hero,
+     SharedPortrait) and the portrait is not even a DOM descendant of the
+     panel, so each used to be placed on its own viewport fraction — 8vh, 25svh,
+     54svh. The copy inside them is sized in px, so on a short phone the
+     fractions collapsed around content that did not: the gap under the wordmark
+     fell from 49px to 9px, and the portrait covered the statement by 31px on a
+     667px screen and 93px on a 568px one.
+     Resolving the stack as one chain here gives every phone the same rhythm.
+     The portrait absorbs the difference by running past the fold, which is
+     fine — it is meant to reveal itself as you scroll. */
+  :root {
+    --wm-h: clamp(5.5rem, 26vw, 9.5rem);
+    --hero-wm-top: clamp(46px, 8svh, 72px);
+    /* 52px ≈ the rhythm between the text pieces below, so the lockup sits in
+       the same column rather than crowding the role line */
+    --hero-text-top: calc(var(--hero-wm-top) + var(--wm-h) + 52px);
+    /* the text block is content-sized, not viewport-sized: 264px is its
+       measured worst case (five wrapped pitch lines at 320px wide) plus a
+       little slack. Re-measure if the hero copy ever grows. */
+    --hero-text-h: 264px;
+    --hero-portrait-top: calc(var(--hero-text-top) + var(--hero-text-h));
+    --hero-portrait-h: 46svh;
+  }
+
   body {
     overflow-x: hidden;
   }

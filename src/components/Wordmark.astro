@@ -19,11 +19,8 @@ import wordmark from '../assets/brand/wordmark.svg?raw';
 
 <style>
   .wordmark {
-    /* the sole size knob — the rendered height of the lockup (≈ the V) */
-    /* tops out at a 1778px viewport; --up carries it on above that so the
-       lockup keeps its scale against the portrait on a 4K screen */
-    --wm-h: max(clamp(6.75rem, 13.5vw, 15rem), calc(240 / 17 * var(--up)));
-
+    /* --wm-h (the rendered height of the lockup) is a token: the mobile hero
+       stack in global.css positions the text block off it */
     position: fixed;
     left: 0;
     top: 0;
@@ -166,12 +163,12 @@ import wordmark from '../assets/brand/wordmark.svg?raw';
 
   @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce) {
     .wordmark {
-      /* mobile: a static lockup at the top that scrolls away with the page */
+      /* mobile: a static lockup at the top that scrolls away with the page.
+         Top and size both come from the hero stack in global.css. */
       position: absolute;
       left: 7vw;
-      top: 8vh;
+      top: var(--hero-wm-top);
       transform: none !important;
-      --wm-h: clamp(5.5rem, 26vw, 9.5rem);
     }
 
     .wordmark :global([data-wm-tail]) {

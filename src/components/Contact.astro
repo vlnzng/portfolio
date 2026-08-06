@@ -443,7 +443,11 @@ const mailDomain = 'gmail.com';
       padding: 10vh 7vw 8vh;
     }
 
-    .cphoto {
+    /* photo and quote are one column, so cap them together. Capping only the
+       photo left the quote free to run up to 541px wider than it once the
+       viewport got past ~700px (tablet portrait, phone landscape) — a stray
+       full-width line under a small left-aligned image. */
+    .c-left {
       max-width: 340px;
     }
 

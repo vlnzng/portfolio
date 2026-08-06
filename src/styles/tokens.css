@@ -40,6 +40,13 @@
   --space-3: 1rem;
   --space-4: 1.5rem;
 
+  /* the sole size knob for the lockup — the rendered height of the wordmark
+     (≈ the V). Lives here, not in Wordmark.astro, because the mobile hero
+     stack in global.css positions the text block off it. Tops out at a 1778px
+     viewport; --up carries it on above that so the lockup keeps its scale
+     against the portrait on a 4K screen. */
+  --wm-h: max(clamp(6.75rem, 13.5vw, 15rem), calc(240 / 17 * var(--up)));
+
   --section-padding: clamp(1.5rem, 4vw, 5rem);
   --section-width: 100vw;
   --section-height: 100vh;

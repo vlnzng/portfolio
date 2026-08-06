@@ -122,13 +122,13 @@ import portrait from '../assets/images/portrait.png';
       position: absolute;
       left: auto;
       right: 0;
-      /* svh, not vh: the panel is 100svh tall, so a vh-based composition was
-         laid out against the taller "toolbar hidden" viewport and ran past the
-         bottom of the hero on first paint — the page looked zoomed in until
-         the address bar collapsed. 54 + 46 = exactly one small viewport. */
-      top: 54svh;
+      /* starts where the text block ends (hero stack, global.css) instead of at
+         a viewport fraction — at 54svh it slid up over the statement on short
+         phones. It may now run past the fold; that is the point, more of the
+         figure comes in as you scroll. */
+      top: var(--hero-portrait-top);
       width: 92%;
-      height: 46svh;
+      height: var(--hero-portrait-h);
       transform: none !important;
     }
 

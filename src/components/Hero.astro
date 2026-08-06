@@ -122,12 +122,18 @@
   @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce) {
     /* mobile composition: the text block sits at the top, just under the
        wordmark; the portrait drops to the lower half (see SharedPortrait) */
+    /* the portrait is a shell sibling and contributes no flow height, so the
+       panel has to reserve the band it occupies itself */
+    .hero {
+      min-height: max(100svh, calc(var(--hero-portrait-top) + var(--hero-portrait-h)));
+    }
+
     .hero-text {
       left: 7vw;
       right: 7vw;
-      /* svh so the whole hero composition (text + portrait below) is measured
-         against the same viewport the panel itself uses — see SharedPortrait */
-      top: 25svh;
+      /* placed off the hero stack (global.css) rather than a viewport
+         fraction, so the gap under the lockup is the same on every phone */
+      top: var(--hero-text-top);
       max-width: none;
     }
 
@@ -144,6 +150,12 @@
        needs ~700px of height and there are ~400, so the figure moves beside
        the text (the desktop composition, statically placed). */
     @media (max-height: 519px) and (min-width: 560px) {
+      /* the stack above is a portrait-phone composition — here the figure sits
+         beside the text, so the panel is back to exactly one viewport */
+      .hero {
+        min-height: 100svh;
+      }
+
       .hero-text {
         top: 30svh;
         right: 48vw;
