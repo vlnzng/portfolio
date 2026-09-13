@@ -60,6 +60,15 @@
     scrollbar-color: var(--color-accent) transparent;
   }
 
+  /* keyboard scrolling (focus opens on #modal-body, inside this container)
+     animates each arrow press through scroll-behavior — not what someone who
+     asked for less motion wants from a plain scroll */
+  @media (prefers-reduced-motion: reduce) {
+    .cs-scroll {
+      scroll-behavior: auto;
+    }
+  }
+
   .cs-scroll::-webkit-scrollbar {
     width: 12px;
   }

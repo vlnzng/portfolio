@@ -10,19 +10,57 @@ declare global {
   interface Window {
     __portfolioScrollTo?: (id: string) => void;
     __portfolioSetActive?: (id: string) => void;
+    __portfolioScrollSettled?: boolean;
   }
 }
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-// One-shot scroll position stored when leaving for a legal page (Contact.astro)
-const takeReturnY = (): number | null => {
-  const raw = sessionStorage.getItem('vl:returnY');
-  if (raw == null) return null;
-  sessionStorage.removeItem('vl:returnY');
-  const y = Number.parseInt(raw, 10);
-  return Number.isNaN(y) ? null : y;
+// navigation.ts holds its URL syncing until this fires. The hash restore below
+// is a 0.9s animated scroll, and the pan reports "hero" for its first frames —
+// syncing that would replaceState the /#about a visitor arrived on down to "/"
+// mid-flight. The flag covers the case where navigation.ts registers late.
+const HASH_RESTORE_DURATION = 0.9;
+const markScrollSettled = (): void => {
+  if (window.__portfolioScrollSettled) return;
+  window.__portfolioScrollSettled = true;
+  window.dispatchEvent(new Event('vl:scroll-settled'));
 };
+
+// One-shot scroll position stored when leaving for a legal page (Contact.astro)
+// as "<y>:<timestamp>". Stale values are dropped: the engine range is ~9000px
+// tall, so reviving a forgotten one would silently open the site deep inside
+// the pan instead of on the hero.
+const RETURN_Y_MAX_AGE = 120_000;
+const takeReturnY = (): number | null => {
+  let raw: string | null = null;
+  try {
+    raw = sessionStorage.getItem('vl:returnY');
+    if (raw != null) sessionStorage.removeItem('vl:returnY');
+  } catch {
+    return null; // storage blocked — the hash fallback still works
+  }
+  if (raw == null) return null;
+
+  const [yPart, stampPart] = raw.split(':');
+  const y = Number.parseInt(yPart, 10);
+  if (Number.isNaN(y)) return null;
+  const stamp = Number.parseInt(stampPart ?? '', 10);
+  if (!Number.isNaN(stamp) && Date.now() - stamp > RETURN_Y_MAX_AGE) return null;
+  return y;
+};
+
+// A bfcache restore (Back from /imprint) revives the page without re-running
+// this module, so the key the click handler wrote is never consumed. Drop it
+// there rather than letting a later reload act on it.
+window.addEventListener('pageshow', (event) => {
+  if (!event.persisted) return;
+  try {
+    sessionStorage.removeItem('vl:returnY');
+  } catch {
+    /* storage blocked — nothing was stored either */
+  }
+});
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
@@ -121,9 +159,7 @@ function initEngine(): void {
   let panelW = 0;
   const measure = (): void => {
     panelW =
-      panelEls.length > 1
-        ? panelEls[1].offsetLeft - panelEls[0].offsetLeft
-        : window.innerWidth;
+      panelEls.length > 1 ? panelEls[1].offsetLeft - panelEls[0].offsetLeft : window.innerWidth;
     // Phase 1 costs 1.15 viewport heights of scrolling — but a wheel notch
     // delivers a fixed number of pixels no matter how tall the screen is, so
     // on a 1440px display that was 1656px of wheel travel against 1242px on a
@@ -310,6 +346,26 @@ function initEngine(): void {
     goTo(posToScroll(pos));
   };
 
+  // Keyboard focus has to drag the pan along with it. The browser's own attempt
+  // at that is to set container.scrollLeft, which pinTrack above deliberately
+  // reverts (the engine owns the sideways offset) — so a Tab into a later panel
+  // used to leave focus on a card or link nobody could see, with no way to
+  // scroll to it. Pan to whichever panel now holds focus instead.
+  track.addEventListener('focusin', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    const panel = target.closest<HTMLElement>('.section');
+    if (!panel) return;
+    const idx = panelEls.indexOf(panel);
+    if (idx < 0) return;
+
+    const pos = idx === 0 ? 0 : morphDist + panelOffset(idx);
+    // Already showing that panel — don't restart a scroll for every Tab step
+    // between two elements inside it.
+    if (Math.abs(scrollToPos(scrollY()) - pos) < 8) return;
+    goTo(posToScroll(pos), 0.45);
+  });
+
   // cue: first click finishes the morph, then each advances a panel
   cue?.addEventListener('click', () => {
     const curPos = scrollToPos(scrollY());
@@ -336,14 +392,21 @@ function initEngine(): void {
 
   // returning from a legal page → restore exact position (priority over hash)
   const returnY = takeReturnY();
+  const initialHash = returnY == null ? window.location.hash.replace('#', '') : '';
+
   if (returnY != null) {
     restoreScroll(() => {
       if (lenis) lenis.scrollTo(returnY, { immediate: true });
       else window.scrollTo(0, returnY);
+      requestAnimationFrame(markScrollSettled);
+    });
+  } else if (initialHash) {
+    restoreScroll(() => {
+      window.__portfolioScrollTo?.(initialHash);
+      window.setTimeout(markScrollSettled, HASH_RESTORE_DURATION * 1000 + 120);
     });
   } else {
-    const initialHash = window.location.hash.replace('#', '');
-    if (initialHash) restoreScroll(() => window.__portfolioScrollTo?.(initialHash));
+    requestAnimationFrame(markScrollSettled);
   }
 }
 
@@ -357,5 +420,8 @@ function initStandardNavigation(): void {
 
   // Returning from a legal page → restore the exact scroll position.
   const returnY = takeReturnY();
-  if (returnY != null) requestAnimationFrame(() => window.scrollTo(0, returnY));
+  requestAnimationFrame(() => {
+    if (returnY != null) window.scrollTo(0, returnY);
+    markScrollSettled();
+  });
 }

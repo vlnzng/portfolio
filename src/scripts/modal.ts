@@ -23,8 +23,12 @@ const showcases: ShowcaseData[] = dataNode?.textContent ? JSON.parse(dataNode.te
 
 let currentSlug: string | null = null;
 let scrollPositionBeforeOpen = 0;
-let prevUrl: string | null = null;
 let openerEl: HTMLElement | null = null;
+// True when opening pushed a history entry we own, so closing can pop it back
+// off with history.back(). False when the modal came up from a direct visit to
+// /work/<slug>, where there is no entry of ours behind it — going back there
+// would leave the site entirely.
+let ownsHistoryEntry = false;
 
 // Mirrors the homepage <title> in BaseLayout.astro — restored when a modal
 // closes so the tab title tracks whether a case study is open.
@@ -38,7 +42,9 @@ const modalBody = document.getElementById('modal-body');
 const modalMeta = document.getElementById('modal-meta');
 const modalFooter = document.getElementById('modal-footer');
 
-function openModal(slug: string): void {
+// `push` is false when history already sits on this case — a direct visit to
+// /work/<slug>, or the Back/Forward button walking onto that entry.
+function openModal(slug: string, push = true): void {
   const data = showcases.find((item) => item.slug === slug);
   const template = document.getElementById(`case-template-${slug}`) as HTMLTemplateElement | null;
 
@@ -49,12 +55,15 @@ function openModal(slug: string): void {
   // users land back on the card they activated, not at the top of the page).
   openerEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   scrollPositionBeforeOpen = window.scrollY;
-  // Remember where to return on close so we land exactly where we opened from.
-  prevUrl = location.pathname.startsWith('/work/')
-    ? '/'
-    : `${location.pathname}${location.search}${location.hash}`;
 
-  history.pushState({ modal: slug }, '', `/work/${slug}`);
+  if (push) {
+    history.pushState({ modal: slug }, '', `/work/${slug}/`);
+    ownsHistoryEntry = true;
+  } else {
+    // Record the slug on the entry we are already on, so Back/Forward onto it
+    // can tell that this case belongs open.
+    history.replaceState({ modal: slug }, '', `/work/${slug}/`);
+  }
 
   if (modalHero) {
     // Real key image when the case ships one; otherwise the deliberate
@@ -70,8 +79,7 @@ function openModal(slug: string): void {
     } else {
       const caption = data.heroCaption ?? `${data.title} — key image`;
       modalHero.style.removeProperty('--cs-hero-ar');
-      modalHero.innerHTML =
-        `<div class="wstripe"></div><span class="wcard-cap">${escapeHtml(caption)}</span>`;
+      modalHero.innerHTML = `<div class="wstripe"></div><span class="wcard-cap">${escapeHtml(caption)}</span>`;
       modalHero.setAttribute('aria-hidden', 'true');
     }
   }
@@ -108,7 +116,7 @@ function openModal(slug: string): void {
   modalFooter.innerHTML = ctaList
     .map(
       (cta) =>
-        `<a class="cs-btn" href="${escapeHtml(cta.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(cta.label)} <span class="cs-btn-arrow" aria-hidden="true">&#8599;</span></a>`,
+        `<a class="cs-btn" href="${escapeHtml(cta.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(cta.label)} <span class="cs-btn-arrow" aria-hidden="true">&#8599;</span></a>`
     )
     .join('');
 
@@ -118,7 +126,15 @@ function openModal(slug: string): void {
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
   if (modalScroll) modalScroll.scrollTop = 0;
-  modalClose?.focus();
+
+  // Focus the case body, not the close button. The close button is
+  // position:fixed OUTSIDE the scroll container, so with it focused the
+  // keyboard had no scrollable ancestor to act on and arrow/Page keys moved
+  // nothing — the case study was unreadable without a mouse. #modal-body sits
+  // inside .cs-scroll, so the same keys scroll the case immediately.
+  // preventScroll: the body starts below the hero band, and letting the
+  // browser bring it into view would skip past that hero.
+  (modalBody ?? modalClose)?.focus({ preventScroll: true });
 }
 
 // Make everything behind the modal inert while it is open: removes the
@@ -129,8 +145,12 @@ function setBackgroundInert(on: boolean): void {
   const main = document.getElementById('main-content');
   if (!main) return;
   if (on) {
-    Array.from(main.children).forEach((child) => {
-      if (child === modal || !(child instanceof HTMLElement)) return;
+    // Both levels: <main>'s own children AND its body-level siblings. The skip
+    // link is one of those siblings, and left live it was the one control a Tab
+    // from <body> could still reach out to from behind the open dialog.
+    const candidates = [...Array.from(document.body.children), ...Array.from(main.children)];
+    candidates.forEach((child) => {
+      if (child === main || child === modal || !(child instanceof HTMLElement)) return;
       if (child.inert) return;
       child.inert = true;
       inertedEls.push(child);
@@ -140,22 +160,51 @@ function setBackgroundInert(on: boolean): void {
   }
 }
 
-function closeModal(updateUrl = true): void {
+// Hides the dialog. History is NOT touched here — the callers own that, so
+// that a close triggered by the Back button doesn't push anything back on.
+function closeModal(): void {
   if (!modal || !currentSlug) return;
 
-  modal.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
   currentSlug = null;
   document.title = HOME_TITLE;
-  setBackgroundInert(false);
 
-  if (updateUrl) history.pushState(null, '', prevUrl ?? '/');
-  prevUrl = null;
+  // Lift inert and move focus out BEFORE hiding the dialog from assistive tech:
+  // applying aria-hidden to an element that still contains the focused node is
+  // ignored by Chrome ("Blocked aria-hidden … because its descendant retained
+  // focus") and leaves a screen reader inside a subtree being hidden.
+  setBackgroundInert(false);
+  document.body.style.overflow = '';
   window.scrollTo({ top: scrollPositionBeforeOpen });
 
-  // Return focus to the card that opened the modal (inert must be lifted first).
-  if (openerEl && document.contains(openerEl)) openerEl.focus();
+  if (openerEl && document.contains(openerEl)) {
+    // preventScroll: we just restored the scroll position, and on the pan
+    // engine a plain focus() would ask the engine to re-pan to the card.
+    openerEl.focus({ preventScroll: true });
+  } else if (document.activeElement instanceof HTMLElement) {
+    // Deep-link open — nothing behind to return to, but focus must still leave.
+    document.activeElement.blur();
+  }
   openerEl = null;
+
+  modal.setAttribute('aria-hidden', 'true');
+}
+
+// The X and Escape close by rewinding history, so the entry the open pushed
+// doesn't linger: Back used to land on /work/<slug> with nothing happening
+// (the popstate handler could only ever close), and every case viewed cost two
+// dead Back presses. history.back() pops our entry and the popstate handler
+// below does the closing.
+function dismissModal(): void {
+  if (!currentSlug) return;
+  if (ownsHistoryEntry) {
+    ownsHistoryEntry = false;
+    history.back();
+  } else {
+    // Opened straight from /work/<slug>: there is no entry of ours to pop, so
+    // rewrite this one instead of sending the visitor off the site.
+    history.replaceState(null, '', '/');
+    closeModal();
+  }
 }
 
 function escapeHtml(value: unknown): string {
@@ -167,11 +216,11 @@ function escapeHtml(value: unknown): string {
     .replaceAll("'", '&#039;');
 }
 
-modalClose?.addEventListener('click', () => closeModal());
+modalClose?.addEventListener('click', () => dismissModal());
 
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && modal?.getAttribute('aria-hidden') === 'false') {
-    closeModal();
+    dismissModal();
   }
 });
 
@@ -180,14 +229,24 @@ modal?.addEventListener('keydown', (event) => {
   if (event.key !== 'Tab' || modal.getAttribute('aria-hidden') !== 'false') return;
   const focusables = Array.from(
     modal.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-    ),
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
   );
-  if (!focusables.length) return;
+  if (!focusables.length) {
+    event.preventDefault();
+    return;
+  }
   const first = focusables[0];
   const last = focusables[focusables.length - 1];
   const active = document.activeElement;
-  if (event.shiftKey && (active === first || active === modal)) {
+
+  // Focus starts on #modal-body, which is tabindex="-1" and so not part of the
+  // cycle — step into it explicitly rather than letting the browser walk out of
+  // the dialog when a case happens to carry no CTA buttons.
+  if (!(active instanceof HTMLElement) || !focusables.includes(active)) {
+    event.preventDefault();
+    (event.shiftKey ? last : first).focus();
+  } else if (event.shiftKey && active === first) {
     event.preventDefault();
     last.focus();
   } else if (!event.shiftKey && active === last) {
@@ -196,8 +255,19 @@ modal?.addEventListener('keydown', (event) => {
   }
 });
 
+// History is the single source of truth for whether a case is open, so Back and
+// Forward both work: Back off a case closes it, Forward onto it opens it again.
 window.addEventListener('popstate', () => {
-  if (modal?.getAttribute('aria-hidden') === 'false') closeModal(false);
+  const state = history.state as { modal?: string } | null;
+  const fromPath = location.pathname.match(/^\/work\/([^/]+)\/?$/)?.[1];
+  const wanted = state?.modal ?? fromPath ?? null;
+
+  if (wanted && wanted !== currentSlug) {
+    openModal(wanted, false);
+  } else if (!wanted && currentSlug) {
+    ownsHistoryEntry = false;
+    closeModal();
+  }
 });
 
 document.querySelectorAll<HTMLElement>('.showcase-card').forEach((card) => {
@@ -214,9 +284,9 @@ document.querySelectorAll<HTMLElement>('.showcase-card').forEach((card) => {
 });
 
 // Case figures live inside inert <template>s, so the browser never fetches them
-// until a modal opens — which made the first open feel slow. Warm the cache on
-// idle: collect every hero image plus every <img> inside the case templates and
-// kick off the requests ahead of time.
+// until a modal opens — which made the first open feel slow. Warm the cache:
+// collect every hero image plus every <img> inside the case templates and kick
+// off the requests ahead of time.
 function preloadCaseAssets(): void {
   const urls = new Set<string>();
   showcases.forEach((item) => {
@@ -239,10 +309,28 @@ function preloadCaseAssets(): void {
 const requestIdle =
   (window as Window & { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback ??
   ((cb: () => void) => window.setTimeout(cb, 200));
-requestIdle(preloadCaseAssets);
+
+// Not before the page itself has finished loading. On idle alone this put the
+// best part of a megabyte of case imagery on the wire while the hero portrait
+// — the LCP element — was still arriving, and on a throttled phone connection
+// that is exactly the bandwidth it needs first. Skipped outright when the
+// visitor has asked for less data or is on a 2G-class connection, where
+// speculative downloads for a case they may never open are simply a cost.
+const connection = (
+  navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }
+).connection;
+const worthWarming = !connection?.saveData && !/(^|-)2g$/.test(connection?.effectiveType ?? '');
+
+if (worthWarming) {
+  const warm = (): void => requestIdle(preloadCaseAssets);
+  if (document.readyState === 'complete') warm();
+  else window.addEventListener('load', warm, { once: true });
+}
 
 const pathMatch = window.location.pathname.match(/^\/work\/([^/]+)\/?$/);
 const initialSlug = window.__initialModalSlug ?? pathMatch?.[1];
 if (initialSlug) {
-  requestAnimationFrame(() => openModal(initialSlug));
+  // push = false: the visitor is already ON /work/<slug>, so pushing would
+  // duplicate the entry and make the first Back press do nothing.
+  requestAnimationFrame(() => openModal(initialSlug, false));
 }
