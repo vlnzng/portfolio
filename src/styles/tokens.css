@@ -6,7 +6,11 @@
   --color-text-soft: #DAD3C7; /* body copy on dark */
   --color-text-dim: #C4BCAE; /* subtitles, ledes, asides */
   --color-muted: #9B9590;
-  --color-faint: #6F6A64; /* parentheticals */
+  /* parentheticals. Still the quietest text on the site, but #6F6A64 was
+     3.31:1 on --color-bg (2.95:1 on --color-surface) — below the 4.5:1 AA
+     floor for the 13px copy it styles. This clears it on both grounds
+     (5.25:1 / 4.69:1) and stays a step under --color-muted's 5.98:1. */
+  --color-faint: #918B84;
   --color-accent: #D9B36C;
   --color-accent-bright: #E4C384; /* accent hover states */
   --color-white: #FFF; /* hover brighten on text */

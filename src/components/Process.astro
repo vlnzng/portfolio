@@ -289,6 +289,32 @@ const phases = [
     text-align: center;
   }
 
+  /* Short desktop windows — see the matching block in About.astro. The panel
+     is a fixed 100vh box with overflow:hidden, so on a ~590px viewport the
+     statement under the four columns fell outside the frame. */
+  @media (max-height: 760px) {
+    .process-inner {
+      justify-content: safe center;
+      padding-block: max(28px, 5vh);
+    }
+
+    .pr-name {
+      margin-bottom: 16px;
+    }
+
+    .pr-act {
+      padding-block: 4px;
+    }
+
+    .pr-tools {
+      margin-top: 20px;
+    }
+
+    .pr-statement {
+      margin-top: 5.5vh;
+    }
+  }
+
   @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce) {
     .process-inner {
       position: static;
@@ -315,6 +341,15 @@ const phases = [
 
     .pr-statement {
       margin-top: 7vh;
+      text-wrap: pretty;
+    }
+
+    /* the three authored lines are measured for the desktop panel; in a ~300px
+       phone column each needs two lines of its own, so the hard breaks landed
+       mid-sentence and the block read as six ragged lines. Same treatment the
+       hero pitch already gets. */
+    .pr-statement br {
+      display: none;
     }
   }
 </style>
