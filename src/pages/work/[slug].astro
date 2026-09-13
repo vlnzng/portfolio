@@ -8,12 +8,17 @@ export async function getStaticPaths() {
   const showcases = await getCollection('showcases');
   return showcases.map((showcase) => ({
     params: { slug: showcase.id },
-    props: { title: `${showcase.data.title} — Valentin Lenzing` },
+    props: {
+      title: `${showcase.data.title} — Valentin Lenzing`,
+      // Without this every shared case link previewed with the generic
+      // homepage blurb under a case-specific title.
+      description: `${showcase.data.subtitle} — ${showcase.data.result} A case study by Valentin Lenzing, Product Designer · UX/UI.`,
+    },
   }));
 }
 
 const { slug } = Astro.params;
-const { title } = Astro.props;
+const { title, description } = Astro.props;
 ---
 
-<HomePage initialModalSlug={slug} title={title} />
+<HomePage initialModalSlug={slug} title={title} description={description} />

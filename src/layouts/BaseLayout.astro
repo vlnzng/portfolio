@@ -1,6 +1,17 @@
 ---
 import '@fontsource-variable/lora/index.css';
 import '@fontsource-variable/inter/index.css';
+// Lora's real italic. Without it every font-style:italic on the site — the
+// contact quote, the case pull quotes, the process statement, the 404 tagline —
+// was a browser-synthesised oblique of the upright, which throws away the
+// calligraphic italic the wordmark's own tails are drawn from. unicode-range +
+// style matching mean the file only downloads when italic text actually renders.
+import '@fontsource-variable/lora/wght-italic.css';
+// Preloaded below: these two are declared inside the stylesheet, so they were
+// discovered a full round trip after the HTML and the hero typography visibly
+// swapped in late. Imported as URLs so the hash stays in step with the build.
+import loraLatin from '@fontsource-variable/lora/files/lora-latin-wght-normal.woff2?url';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import SpeedInsights from '@vercel/speed-insights/astro';
 import Analytics from '@vercel/analytics/astro';
 
@@ -22,6 +33,12 @@ const site = Astro.site ?? new URL(Astro.url.origin);
 // The /work/<slug> deep links serve the homepage HTML (the modal opens via JS),
 // so they're duplicate content — point their canonical at the homepage.
 const canonicalURL = new URL(initialModalSlug ? '/' : Astro.url.pathname, site);
+// og:url deliberately does NOT follow canonical here. Facebook and LinkedIn
+// resolve a share through og:url, so pointing it at "/" made them replace the
+// case-specific title and description with the homepage's — the same link
+// previewed differently depending on where it was pasted. Keeping the real
+// address here fixes the preview; canonical alone does the SEO consolidation.
+const ogURL = new URL(Astro.url.pathname, site);
 ---
 
 <!doctype html>
@@ -36,9 +53,12 @@ const canonicalURL = new URL(initialModalSlug ? '/' : Astro.url.pathname, site);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
 
+    <link rel="preload" as="font" type="font/woff2" href={loraLatin} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={interLatin} crossorigin />
+
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Valentin Lenzing" />
-    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:url" content={ogURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(ogImage, site)} />
@@ -80,7 +100,13 @@ const canonicalURL = new URL(initialModalSlug ? '/' : Astro.url.pathname, site);
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <main id="main-content">
+    {/* Fixed shell furniture (nav, wordmark, portrait, scroll cue) renders
+        here, outside <main>: it is site chrome repeated on every view, and
+        while it sat inside <main> the skip link landed the visitor directly
+        in front of the nav links it exists to skip. */}
+    <slot name="furniture" />
+
+    <main id="main-content" tabindex="-1">
       <slot />
     </main>
 

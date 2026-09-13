@@ -16,9 +16,10 @@ import { getCollection, render } from 'astro:content';
 interface Props {
   initialModalSlug?: string;
   title?: string;
+  description?: string;
 }
 
-const { initialModalSlug, title } = Astro.props;
+const { initialModalSlug, title, description } = Astro.props;
 
 const showcases = (await getCollection('showcases')).sort((a, b) => a.data.order - b.data.order);
 const renderedShowcases = await Promise.all(
@@ -44,11 +45,11 @@ const showcaseData = showcases.map((showcase) => ({
 }));
 ---
 
-<BaseLayout initialModalSlug={initialModalSlug} title={title}>
-  <Navigation />
-  <Wordmark />
-  <SharedPortrait />
-  <ScrollCue />
+<BaseLayout initialModalSlug={initialModalSlug} title={title} description={description}>
+  <Navigation slot="furniture" />
+  <Wordmark slot="furniture" />
+  <SharedPortrait slot="furniture" />
+  <ScrollCue slot="furniture" />
 
   <div class="scroll-container">
     <div class="horizontal-track">

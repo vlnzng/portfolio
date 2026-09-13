@@ -9,7 +9,10 @@ const mailUser = 'valentin.lenzing';
 const mailDomain = 'gmail.com';
 ---
 
-<BaseLayout title="Legal Notice — Impressum | Valentin Lenzing">
+<BaseLayout
+  title="Legal Notice — Impressum | Valentin Lenzing"
+  description="Legal notice (Impressum) for valentinlenzing.com — provider details, contact, and liability information under § 5 DDG and § 18 (2) MStV."
+>
   <header class="lg-bar">
     <a class="lg-mark" href="/" aria-label="Valentin Lenzing — home"><Fragment set:html={logo} /></a>
     <a class="lg-back" href="/#contact">
@@ -17,116 +20,122 @@ const mailDomain = 'gmail.com';
     </a>
   </header>
 
-  <main class="lg-wrap">
-    <p class="lg-eyebrow">Rechtliches</p>
-    <h1 class="lg-title">Impressum</h1>
-    <p class="lg-lede">
-      Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG) und § 18 Abs. 2 Medienstaatsvertrag (MStV).
-      Die deutsche Fassung ist rechtlich maßgeblich; eine englische Übersetzung folgt darunter.
-    </p>
+  {/* div, not main: BaseLayout already wraps the slot in <main id="main-content">,
+      and a nested main is invalid HTML plus a duplicate landmark. */}
+  <div class="lg-wrap">
+    {/* lang="de" so a screen reader speaks the legally authoritative half with
+        German pronunciation rules — the document itself is lang="en". */}
+    <div lang="de">
+      <p class="lg-eyebrow">Rechtliches</p>
+      <h1 class="lg-title">Impressum</h1>
+      <p class="lg-lede">
+        Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG) und § 18 Abs. 2 Medienstaatsvertrag (MStV).
+        Die deutsche Fassung ist rechtlich maßgeblich; eine englische Übersetzung folgt darunter.
+      </p>
 
-    <hr class="lg-rule" />
+      <hr class="lg-rule" />
 
-    <!-- German is the legally authoritative version. -->
-    <section class="lg-sec" id="anbieter">
-      <div class="lg-sec-head"><span class="lg-sec-no">§1</span><h2 class="lg-sec-title">Diensteanbieter</h2></div>
-      <div class="lg-body">
-        <address class="lg-addr">
-          <strong>Valentin Lenzing</strong><br />
-          Clara-Zetkin-Straße 25<br />
-          14770 Brandenburg an der Havel<br />
-          Deutschland
-        </address>
-        <p>
-          Eine Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz liegt nicht vor.
-        </p>
-      </div>
-    </section>
+      <!-- German is the legally authoritative version. -->
+      <section class="lg-sec" id="anbieter">
+        <div class="lg-sec-head"><span class="lg-sec-no">§1</span><h2 class="lg-sec-title">Diensteanbieter</h2></div>
+        <div class="lg-body">
+          <address class="lg-addr">
+            <strong>Valentin Lenzing</strong><br />
+            Clara-Zetkin-Straße 25<br />
+            14770 Brandenburg an der Havel<br />
+            Deutschland
+          </address>
+          <p>
+            Eine Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz liegt nicht vor.
+          </p>
+        </div>
+      </section>
 
-    <section class="lg-sec" id="kontakt">
-      <div class="lg-sec-head"><span class="lg-sec-no">§2</span><h2 class="lg-sec-title">Kontakt</h2></div>
-      <div class="lg-body">
-        <dl class="lg-dl">
-          <dt>E-Mail</dt>
-          <dd>
-            <a class="lg-mail" data-mail-user={mailUser} data-mail-domain={mailDomain}>
-              <span data-mail-text>{mailUser} [at] {mailDomain}</span>
-            </a>
-          </dd>
-        </dl>
-      </div>
-    </section>
+      <section class="lg-sec" id="kontakt">
+        <div class="lg-sec-head"><span class="lg-sec-no">§2</span><h2 class="lg-sec-title">Kontakt</h2></div>
+        <div class="lg-body">
+          <dl class="lg-dl">
+            <dt>E-Mail</dt>
+            <dd>
+              <a class="lg-mail" data-mail-user={mailUser} data-mail-domain={mailDomain}>
+                <span data-mail-text>{mailUser} [at] {mailDomain}</span>
+              </a>
+            </dd>
+          </dl>
+        </div>
+      </section>
 
-    <section class="lg-sec" id="verantwortlich">
-      <div class="lg-sec-head"><span class="lg-sec-no">§3</span><h2 class="lg-sec-title">Verantwortlich für den Inhalt</h2></div>
-      <div class="lg-body">
-        <p>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:</p>
-        <address class="lg-addr"><strong>Valentin Lenzing</strong><br />Anschrift wie unter §1</address>
-      </div>
-    </section>
+      <section class="lg-sec" id="verantwortlich">
+        <div class="lg-sec-head"><span class="lg-sec-no">§3</span><h2 class="lg-sec-title">Verantwortlich für den Inhalt</h2></div>
+        <div class="lg-body">
+          <p>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:</p>
+          <address class="lg-addr"><strong>Valentin Lenzing</strong><br />Anschrift wie unter §1</address>
+        </div>
+      </section>
 
-    <section class="lg-sec" id="streit">
-      <div class="lg-sec-head"><span class="lg-sec-no">§4</span><h2 class="lg-sec-title">Verbraucherstreitbeilegung</h2></div>
-      <div class="lg-body">
-        <p>
-          Ich bin nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer
-          Verbraucherschlichtungsstelle teilzunehmen.
-        </p>
-      </div>
-    </section>
+      <section class="lg-sec" id="streit">
+        <div class="lg-sec-head"><span class="lg-sec-no">§4</span><h2 class="lg-sec-title">Verbraucherstreitbeilegung</h2></div>
+        <div class="lg-body">
+          <p>
+            Ich bin nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer
+            Verbraucherschlichtungsstelle teilzunehmen.
+          </p>
+        </div>
+      </section>
 
-    <section class="lg-sec" id="haftung-inhalt">
-      <div class="lg-sec-head"><span class="lg-sec-no">§5</span><h2 class="lg-sec-title">Haftung für Inhalte</h2></div>
-      <div class="lg-body">
-        <p>
-          Als Diensteanbieter bin ich gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den
-          allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG bin ich als Diensteanbieter jedoch nicht
-          verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen
-          zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
-        </p>
-        <p>
-          Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen
-          Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der
-          Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden entsprechender Rechtsverletzungen
-          werde ich diese Inhalte umgehend entfernen.
-        </p>
-      </div>
-    </section>
+      <section class="lg-sec" id="haftung-inhalt">
+        <div class="lg-sec-head"><span class="lg-sec-no">§5</span><h2 class="lg-sec-title">Haftung für Inhalte</h2></div>
+        <div class="lg-body">
+          <p>
+            Als Diensteanbieter bin ich gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den
+            allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG bin ich als Diensteanbieter jedoch nicht
+            verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen
+            zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+          </p>
+          <p>
+            Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen
+            Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der
+            Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden entsprechender Rechtsverletzungen
+            werde ich diese Inhalte umgehend entfernen.
+          </p>
+        </div>
+      </section>
 
-    <section class="lg-sec" id="haftung-links">
-      <div class="lg-sec-head"><span class="lg-sec-no">§6</span><h2 class="lg-sec-title">Haftung für Links</h2></div>
-      <div class="lg-body">
-        <p>
-          Dieses Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte ich keinen Einfluss habe.
-          Deshalb kann ich für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten
-          Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten
-          wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft; rechtswidrige Inhalte waren
-          zum Zeitpunkt der Verlinkung nicht erkennbar.
-        </p>
-        <p>
-          Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist ohne konkrete Anhaltspunkte einer
-          Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werde ich derartige Links
-          umgehend entfernen.
-        </p>
-      </div>
-    </section>
+      <section class="lg-sec" id="haftung-links">
+        <div class="lg-sec-head"><span class="lg-sec-no">§6</span><h2 class="lg-sec-title">Haftung für Links</h2></div>
+        <div class="lg-body">
+          <p>
+            Dieses Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte ich keinen Einfluss habe.
+            Deshalb kann ich für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten
+            Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten
+            wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft; rechtswidrige Inhalte waren
+            zum Zeitpunkt der Verlinkung nicht erkennbar.
+          </p>
+          <p>
+            Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist ohne konkrete Anhaltspunkte einer
+            Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werde ich derartige Links
+            umgehend entfernen.
+          </p>
+        </div>
+      </section>
 
-    <section class="lg-sec" id="urheberrecht">
-      <div class="lg-sec-head"><span class="lg-sec-no">§7</span><h2 class="lg-sec-title">Urheberrecht</h2></div>
-      <div class="lg-body">
-        <p>
-          Die durch den Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen
-          Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der
-          Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
-        </p>
-        <p>
-          Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte
-          Dritter beachtet. Sollten Sie dennoch auf eine Urheberrechtsverletzung aufmerksam werden, bitte ich um
-          einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werde ich derartige Inhalte
-          umgehend entfernen.
-        </p>
-      </div>
-    </section>
+      <section class="lg-sec" id="urheberrecht">
+        <div class="lg-sec-head"><span class="lg-sec-no">§7</span><h2 class="lg-sec-title">Urheberrecht</h2></div>
+        <div class="lg-body">
+          <p>
+            Die durch den Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen
+            Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der
+            Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+          </p>
+          <p>
+            Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte
+            Dritter beachtet. Sollten Sie dennoch auf eine Urheberrechtsverletzung aufmerksam werden, bitte ich um
+            einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werde ich derartige Inhalte
+            umgehend entfernen.
+          </p>
+        </div>
+      </section>
+    </div>
 
     <hr class="lg-rule" />
 
@@ -235,7 +244,7 @@ const mailDomain = 'gmail.com';
         </p>
       </div>
     </section>
-  </main>
+  </div>
 
   <footer class="lg-foot">
     <p class="lg-stand">Stand / Last updated: August 2026</p>

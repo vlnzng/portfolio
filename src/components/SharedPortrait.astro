@@ -7,12 +7,18 @@ import portrait from '../assets/images/portrait.png';
 
 <div class="portrait" aria-hidden="true" data-portrait>
   <div class="portrait__glow"></div>
+  {/* This is the LCP element on mobile, so both knobs here matter.
+      fallbackFormat: without it the fallback <img src> is the untouched 2.67MB
+      source PNG, which is what link scrapers and "open image in new tab" get.
+      widths: 768 and 1152 cover a 92vw phone at DPR 2 and 3 — without them the
+      smallest candidate was 960w and a 3x phone jumped straight to 1440w. */}
   <Picture
     src={portrait}
     formats={['avif', 'webp']}
+    fallbackFormat="webp"
     quality={80}
     alt=""
-    widths={[960, 1440, 1920, 2560]}
+    widths={[768, 960, 1152, 1440, 1920, 2560]}
     sizes="(max-width: 820px) 92vw, (max-height: 519px) 92vw, 52vw"
     loading="eager"
     fetchpriority="high"
@@ -52,16 +58,30 @@ import portrait from '../assets/images/portrait.png';
   }
 
   /* ---- load-in: the figure settles into place (opacity and scale finish
-     together — a trailing transform kept "re-animating" the photo) ---- */
-  :global(html.js) .portrait img {
-    opacity: 0;
-    transform: scale(1.05);
-    transition: opacity 1.2s ease, transform 1.2s var(--ease-glide);
+     together — a trailing transform kept "re-animating" the photo).
+     Driven by a CSS animation that starts with the first paint, NOT by the
+     `body.is-loaded` flag the rest of the hero waits on: that flag waits for
+     document.fonts.ready (the wordmark needs it so its write-in never paints
+     in a fallback face — a photo does not) plus the module bundle, which held
+     the largest element on the page at opacity 0 for ~2.3s and made it the
+     mobile LCP bottleneck. No JS gate needed either — the animation always
+     runs to opacity 1, so the figure is never stuck hidden. ---- */
+  @media (prefers-reduced-motion: no-preference) {
+    .portrait img {
+      animation: sp-settle-in 1.2s var(--ease-glide) both;
+    }
   }
 
-  :global(html.js body.is-loaded) .portrait img {
-    opacity: 1;
-    transform: none;
+  @keyframes sp-settle-in {
+    from {
+      opacity: 0;
+      transform: scale(1.05);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   /* ---- idle: only the halo breathes — animating the photo itself forced
@@ -80,14 +100,6 @@ import portrait from '../assets/images/portrait.png';
 
     50% {
       opacity: 0.72;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    :global(html.js) .portrait img {
-      opacity: 1;
-      transform: none;
-      transition: none;
     }
   }
 

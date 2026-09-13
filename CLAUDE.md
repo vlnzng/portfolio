@@ -58,6 +58,12 @@ npm run build    # static build → dist/
 - `design_handoff_portfolio/` — **local** reference only (gitignored): design intent,
   screenshots of target states, and the exact animation math in `reference/portfolio.js`.
   Reference, not code to copy.
+- `vercel.json` — response headers and `trailingSlash`. JSON takes no comments, so the
+  reasoning lives here: security headers Vercel doesn't set by default, plus a
+  `Cache-Control` override for `/assets/*`. Vercel's default serves anything under
+  `/assets/` as immutable for a year, but those files come from `public/assets/` under
+  stable hand-written names — re-export a `card.webp` and returning visitors would keep
+  the old one. `/_astro/*` keeps the immutable default, where the content hash earns it.
 - `PLAN.md` — rough roadmap / next steps.
 
 ## Conventions
@@ -68,6 +74,11 @@ npm run build    # static build → dist/
 - **Motion**: get the static layout right first, then add motion. Pull animation constants
   from `reference/portfolio.js` instead of guessing.
 - **Accessibility**: honor `prefers-reduced-motion`; keep focus states; modal closes on Escape.
+- **The engine boundary is one string.** Components' `<style>` blocks and `src/scripts/media.ts`
+  must use the *same* media query (`(max-width: 820px), (max-height: 519px)`), with JS
+  negating it — never an integer complement like `min-width: 821px`. Those two are different
+  conditions: page zoom produces fractional widths that match neither, and the page then
+  renders the desktop layout with the mobile scripts.
 - Initialize Lenis/GSAP **in the browser only** (Astro renders server-side).
 - Keep deliberate placeholders (work images, case figures, second contact photo, og:image)
   as clean components until real assets land.
