@@ -4,7 +4,6 @@ declare global {
   interface Window {
     __portfolioScrollTo?: (id: string) => void;
     __portfolioSetActive?: (id: string) => void;
-    __portfolioScrollSettled?: boolean;
   }
 }
 
@@ -16,12 +15,9 @@ const modal = document.getElementById('showcase-modal');
 // it never pollutes the back-history (Back leaves the page, it doesn't walk
 // section-by-section). The hash makes the current section refresh-stable and
 // shareable. While a case modal is open the URL belongs to it (/work/<slug>),
-// so section syncing stands down.
-//
-// Held until the scroll engine reports its initial restore done: arriving on
-// /#about starts a 0.9s animated pan whose first frames still read as "hero",
-// and syncing those would replaceState the visitor's own deep link down to "/"
-// mid-flight. Two frames (what this used to wait) is nowhere near that long.
+// so section syncing stands down. Held until the engine has finished its
+// initial restore (vl:scroll-settled) so it can't strip a deep link's hash
+// while the pan is still animating towards it.
 let allowUrlSync = false;
 let lastSyncedPath = location.pathname + location.hash;
 function syncUrl(id: string): void {
@@ -48,18 +44,13 @@ window.__portfolioSetActive = (id: string) => {
 
 function enableUrlSync(): void {
   if (allowUrlSync) return;
-  // Re-read: the restore may have legitimately changed the hash on the way.
   lastSyncedPath = location.pathname + location.hash;
   allowUrlSync = true;
 }
 
-if (window.__portfolioScrollSettled) {
-  enableUrlSync();
-} else {
-  window.addEventListener('vl:scroll-settled', enableUrlSync, { once: true });
-  // Safety net — if the engine never reports in, the URL should still track.
-  window.setTimeout(enableUrlSync, 2500);
-}
+window.addEventListener('vl:scroll-settled', enableUrlSync, { once: true });
+// safety net — if the engine never reports in, the URL should still track
+window.setTimeout(enableUrlSync, 2500);
 
 links.forEach((link) => {
   link.addEventListener('click', (event) => {
@@ -102,20 +93,15 @@ if (!desktopEngine) {
   sections.forEach((section) => observer.observe(section));
 }
 
-// Arrow keys step panel-by-panel — but ONLY on the pan engine, where one panel
-// is exactly one screen and there is nothing else for an arrow to scroll. In
-// the vertical layouts (phone widths, short windows, reduced motion) sections
-// run taller than the viewport — #work alone stacks four cards — so hijacking
-// ArrowUp/Down there replaced line-by-line scrolling with a jump that skips
-// content outright.
+// Arrow keys step panel-by-panel — only on the pan engine, where one panel is
+// exactly one screen. In the vertical layouts sections run taller than the
+// viewport, so arrows must keep scrolling line-by-line there.
 if (desktopEngine) {
   const sectionIds = sections.map((section) => section.id);
 
   document.addEventListener('keydown', (event) => {
-    // A dialog owns its own arrow keys. Checking the modal's state as well as
-    // the event target covers focus sitting on <body> (a click on non-focusable
-    // case-study text), where the target check alone would let the key through
-    // to pan the page behind the open modal.
+    // the state check covers focus on <body> (click on non-focusable modal
+    // text), where the target check alone would pan the page behind the dialog
     if (modal?.getAttribute('aria-hidden') === 'false') return;
     const target = event.target as HTMLElement;
     if (target.closest('[role="dialog"]')) return;

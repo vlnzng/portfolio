@@ -7,11 +7,8 @@ import portrait from '../assets/images/portrait.png';
 
 <div class="portrait" aria-hidden="true" data-portrait>
   <div class="portrait__glow"></div>
-  {/* This is the LCP element on mobile, so both knobs here matter.
-      fallbackFormat: without it the fallback <img src> is the untouched 2.67MB
-      source PNG, which is what link scrapers and "open image in new tab" get.
-      widths: 768 and 1152 cover a 92vw phone at DPR 2 and 3 — without them the
-      smallest candidate was 960w and a 3x phone jumped straight to 1440w. */}
+  {/* the mobile LCP element. fallbackFormat keeps the <img src> off the 2.67MB
+      source PNG; 768/1152 cover a 92vw phone at DPR 2 and 3 */}
   <Picture
     src={portrait}
     formats={['avif', 'webp']}
@@ -57,15 +54,11 @@ import portrait from '../assets/images/portrait.png';
     object-position: 50% 14%;
   }
 
-  /* ---- load-in: the figure settles into place (opacity and scale finish
-     together — a trailing transform kept "re-animating" the photo).
-     Driven by a CSS animation that starts with the first paint, NOT by the
-     `body.is-loaded` flag the rest of the hero waits on: that flag waits for
-     document.fonts.ready (the wordmark needs it so its write-in never paints
-     in a fallback face — a photo does not) plus the module bundle, which held
-     the largest element on the page at opacity 0 for ~2.3s and made it the
-     mobile LCP bottleneck. No JS gate needed either — the animation always
-     runs to opacity 1, so the figure is never stuck hidden. ---- */
+  /* ---- load-in: the figure settles in from the first paint, deliberately NOT
+     gated on `body.is-loaded` like the rest of the hero — that flag waits for
+     fonts + the JS bundle, which a photo doesn't need, and it held the mobile
+     LCP element at opacity 0 for seconds. The animation always ends at
+     opacity 1, so the figure can't get stuck hidden without JS either. ---- */
   @media (prefers-reduced-motion: no-preference) {
     .portrait img {
       animation: sp-settle-in 1.2s var(--ease-glide) both;
@@ -126,7 +119,7 @@ import portrait from '../assets/images/portrait.png';
     background: linear-gradient(0deg, var(--color-bg), transparent);
   }
 
-  @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce) {
+  @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1180px), (prefers-reduced-motion: reduce) {
     /* mobile: the cut-out sits in the LOWER half of the hero, below the text
        block (wordmark + role + pitch + statement live above it). Scrolls away
        with the page. */

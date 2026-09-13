@@ -62,8 +62,10 @@ npm run build    # static build → dist/
   reasoning lives here: security headers Vercel doesn't set by default, plus a
   `Cache-Control` override for `/assets/*`. Vercel's default serves anything under
   `/assets/` as immutable for a year, but those files come from `public/assets/` under
-  stable hand-written names — re-export a `card.webp` and returning visitors would keep
-  the old one. `/_astro/*` keeps the immutable default, where the content hash earns it.
+  stable hand-written names (case hero images, in-body figures, PDFs) — re-export one
+  and returning visitors would keep the old file. `/_astro/*` keeps the immutable
+  default, where the content hash earns it (this is why `cardImage` in the showcase
+  schema goes through `astro:assets` instead of living in `public/`).
 - `PLAN.md` — rough roadmap / next steps.
 
 ## Conventions
@@ -75,10 +77,12 @@ npm run build    # static build → dist/
   from `reference/portfolio.js` instead of guessing.
 - **Accessibility**: honor `prefers-reduced-motion`; keep focus states; modal closes on Escape.
 - **The engine boundary is one string.** Components' `<style>` blocks and `src/scripts/media.ts`
-  must use the *same* media query (`(max-width: 820px), (max-height: 519px)`), with JS
-  negating it — never an integer complement like `min-width: 821px`. Those two are different
-  conditions: page zoom produces fractional widths that match neither, and the page then
-  renders the desktop layout with the mobile scripts.
+  must use the *exact same* media query, with JS negating it — never an integer complement
+  like `min-width: 821px`. Those two are different conditions: page zoom produces fractional
+  widths that match neither, and the page then renders the desktop layout with the mobile
+  scripts. Current string: `(max-width: 820px), (max-height: 519px), (pointer: coarse) and
+  (max-width: 1180px)` — the third arm keeps portrait touch tablets (834–1024px) on the
+  stacked layout, where the four-column pan doesn't fit.
 - Initialize Lenis/GSAP **in the browser only** (Astro renders server-side).
 - Keep deliberate placeholders (work images, case figures, second contact photo, og:image)
   as clean components until real assets land.

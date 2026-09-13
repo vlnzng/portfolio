@@ -1,4 +1,5 @@
 ---
+import { Picture } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -8,6 +9,10 @@ interface Props {
 const { showcase } = Astro.props;
 const { title, subtitle, result, tags, order, cardImage, cardAlt, tools } = showcase.data;
 const num = String(order).padStart(2, '0');
+
+// Rendered card widths: ~86vw stacked, ~42vw in the two-column band, ~22vw in
+// the four-column rows (engine and ≥1100px vertical alike).
+const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
 ---
 
 <button
@@ -21,7 +26,16 @@ const num = String(order).padStart(2, '0');
   <div class="wcard-media">
     <div class="wcard-media-inner">
       {cardImage ? (
-        <img class="wcard-img" src={cardImage} alt={cardAlt ?? `${title} — key image`} loading="lazy" />
+        <Picture
+          class="wcard-img"
+          src={cardImage}
+          formats={['avif', 'webp']}
+          fallbackFormat="webp"
+          alt={cardAlt ?? `${title} — key image`}
+          widths={[360, 480, 720]}
+          sizes={cardSizes}
+          loading="lazy"
+        />
       ) : (
         <Fragment>
           <div class="wstripe"></div>
@@ -72,14 +86,9 @@ const num = String(order).padStart(2, '0');
      the .reveal primitive) so it composes with the reveal's transform. */
   /* The six card zones (media, number, title, hook, result, foot) each share
      one row track across all four cards via subgrid, so results and footers
-     align even when titles/hooks differ in length. Browsers without subgrid
-     keep the plain column stack, as do the vertical layouts (below) where the
-     cards are stacked and there is nothing to align them against.
-     Written desktop-first and switched off in the vertical block rather than
-     switched on above `min-width: 821px`: that integer complement left the
-     cards unaligned in the fractional band the layout query does not cover,
-     and it also reached reduced-motion desktops, where .work-row has a real
-     row-gap that subgrid then repeated inside every card. */
+     align even when titles/hooks differ in length. Desktop-first, switched off
+     in the vertical block below (must be the boundary's exact inverse, per
+     CLAUDE.md); browsers without subgrid keep the plain column stack. */
   .wcard {
     position: relative;
     display: grid;
@@ -346,10 +355,9 @@ const num = String(order).padStart(2, '0');
     }
   }
 
-  /* Anywhere the trailing pill can't be the affordance — no hover pointer, a
-     stacked layout, or reduced motion — the same label becomes a static line at
-     the foot of the card. Without it a phone or tablet visitor got image + text
-     with nothing at all saying the cards open, on the site's core content.
+  /* Wherever the trailing pill can't appear — no hover pointer, a stacked
+     layout, or reduced motion — the same label becomes a static line at the
+     foot of the card, so touch visitors still see that cards open.
      Must follow the hover block: same specificity, later rule wins. */
   @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce),
     (hover: none), (pointer: coarse) {

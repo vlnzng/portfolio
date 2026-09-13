@@ -5,43 +5,47 @@ const showcases = defineCollection({
   // Flat only — nested paths would put a "/" in the id, which the /work/<slug>
   // route and modal deep links don't support.
   loader: glob({ pattern: '*.mdx', base: './src/content/showcases' }),
-  schema: z.object({
-    title: z.string(),
-    subtitle: z.string(),
-    summary: z.string().optional(),
-    // Gold outcome line on the card — part of the card design, so required.
-    result: z.string(),
-    heroCaption: z.string().optional(),
-    tools: z.array(z.string()),
-    // Card pills. System: six competences, each on exactly two cards — every
-    // pair of projects shares exactly one. Keep the invariant when editing.
-    tags: z.array(z.string()),
-    heroImage: z.string().optional(),
-    heroAlt: z.string().optional(),
-    // Aspect ratio of heroImage as a CSS ratio ("2400 / 620"). The hero band
-    // adopts it, so the image fills the band edge to edge instead of sitting
-    // pillarboxed inside a fixed 2400/620 frame. Case 1's diagram is authored
-    // at the band's native ratio; the photographic heroes are all ~2:1.
-    heroRatio: z.string().optional(),
-    cardImage: z.string().optional(),
-    cardAlt: z.string().optional(),
-    order: z.number(),
-    externalLink: z.string().url().optional(),
-    githubLink: z.string().url().optional(),
-    // Custom modal CTAs — when present they replace the default buttons
-    // built from externalLink / githubLink. `url` is a plain string, not
-    // z.string().url(): site-relative targets (the hosted case PDFs under
-    // /assets/showcases/…) are valid here too. All CTAs share one button
-    // style, so there is no variant to pick.
-    ctas: z
-      .array(
-        z.object({
-          label: z.string(),
-          url: z.string(),
-        }),
-      )
-      .optional(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      subtitle: z.string(),
+      summary: z.string().optional(),
+      // Gold outcome line on the card — part of the card design, so required.
+      result: z.string(),
+      heroCaption: z.string().optional(),
+      tools: z.array(z.string()),
+      // Card pills. System: six competences, each on exactly two cards — every
+      // pair of projects shares exactly one. Keep the invariant when editing.
+      tags: z.array(z.string()),
+      heroImage: z.string().optional(),
+      heroAlt: z.string().optional(),
+      // Aspect ratio of heroImage as a CSS ratio ("2400 / 620"). The hero band
+      // adopts it, so the image fills the band edge to edge instead of sitting
+      // pillarboxed inside a fixed 2400/620 frame. Case 1's diagram is authored
+      // at the band's native ratio; the photographic heroes are all ~2:1.
+      heroRatio: z.string().optional(),
+      // Through astro:assets (responsive srcset + AVIF), unlike heroImage and
+      // the in-body figures — those stay public/ paths because modal.ts injects
+      // them client-side.
+      cardImage: image().optional(),
+      cardAlt: z.string().optional(),
+      order: z.number(),
+      externalLink: z.string().url().optional(),
+      githubLink: z.string().url().optional(),
+      // Custom modal CTAs — when present they replace the default buttons
+      // built from externalLink / githubLink. `url` is a plain string, not
+      // z.string().url(): site-relative targets (the hosted case PDFs under
+      // /assets/showcases/…) are valid here too. All CTAs share one button
+      // style, so there is no variant to pick.
+      ctas: z
+        .array(
+          z.object({
+            label: z.string(),
+            url: z.string(),
+          })
+        )
+        .optional(),
+    }),
 });
 
 export const collections = { showcases };

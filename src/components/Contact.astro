@@ -13,10 +13,8 @@ const mailDomain = 'gmail.com';
   <div class="c-inner">
     <div class="c-left">
       <figure class="cphoto reveal reveal-x" style="--i:0">
-        {/* lazy like the work cards: this is the last panel of the pan and
-            several screens down on mobile, so eager only bought a 1.5MB fetch
-            competing with the hero portrait. fallbackFormat keeps the fallback
-            <img src> off the untouched source JPG. */}
+        {/* lazy like the work cards — eager competed with the LCP portrait;
+            fallbackFormat keeps the <img src> off the multi-MB source JPG */}
         <Picture
           src={contactPhoto}
           formats={['avif', 'webp']}
@@ -96,19 +94,15 @@ const mailDomain = 'gmail.com';
 
   // Remember the scroll position when leaving for a legal page, so returning
   // lands exactly where the link was clicked (restored in scroll.ts on load).
-  // Only for a plain left click that actually navigates this tab: a Ctrl/Cmd
-  // (or middle) click opens a new tab and leaves this one where it is, so
-  // storing there would teleport the NEXT load of this tab to the contact
-  // panel. The timestamp lets scroll.ts drop values a bfcache restore left
-  // behind (Back from /imprint replays the click handler's tab without ever
-  // running scroll.ts, so the key would otherwise survive to a later visit).
+  // Only for a plain left click: a modified click opens a new tab, and storing
+  // in this one would teleport its next load deep into the pan.
   document.querySelectorAll<HTMLAnchorElement>('.clegal a').forEach((a) => {
     a.addEventListener('click', (event) => {
       if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
         return;
       }
       try {
-        sessionStorage.setItem('vl:returnY', `${window.scrollY}:${Date.now()}`);
+        sessionStorage.setItem('vl:returnY', String(window.scrollY));
       } catch {
         /* sessionStorage unavailable — fall back to the #contact hash */
       }
@@ -422,12 +416,10 @@ const mailDomain = 'gmail.com';
     writing-mode: vertical-rl;
     display: flex;
     align-items: center;
-    /* the 14px rhythm now comes from the links' own padding (see .clegal-link) */
     gap: 2px;
   }
 
-  /* padding rather than a bigger font: bare, these were a ~17px hit target in
-     both the vertical desktop rail and the horizontal mobile row */
+  /* the padding is tap target, not rhythm — the 14px visual gap above absorbs it */
   .clegal-link {
     padding: 6px;
     font-family: var(--font-body);
@@ -448,7 +440,7 @@ const mailDomain = 'gmail.com';
     font-size: max(11px, calc(11 / 17 * var(--up)));
   }
 
-  @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce) {
+  @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1180px), (prefers-reduced-motion: reduce) {
     .contact {
       min-height: auto;
     }
