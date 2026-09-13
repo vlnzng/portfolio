@@ -355,12 +355,15 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
     }
   }
 
-  /* Wherever the trailing pill can't appear — no hover pointer, a stacked
-     layout, or reduced motion — the same label becomes a static line at the
-     foot of the card, so touch visitors still see that cards open.
-     Must follow the hover block: same specificity, later rule wins. */
-  @media (max-width: 820px), (max-height: 519px), (prefers-reduced-motion: reduce),
-    (hover: none), (pointer: coarse) {
+  /* Wherever the trailing pill can't appear, the same label becomes a static
+     line at the foot of the card, so touch visitors still see that cards
+     open. Must be the exact engine boundary (see CLAUDE.md / media.ts): a
+     bare (pointer: coarse) here previously fired at any width, so a coarse
+     pointer on a wide screen dropped the card out of the 4-column subgrid
+     even though .work-row and the JS engine still ran the desktop layout.
+     Must also follow the hover block: same specificity, later rule wins. */
+  @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1180px),
+    (prefers-reduced-motion: reduce) {
     .wcard {
       display: flex;
       flex-direction: column;
