@@ -46,6 +46,10 @@ function enableUrlSync(): void {
   if (allowUrlSync) return;
   lastSyncedPath = location.pathname + location.hash;
   allowUrlSync = true;
+  // catch up with a section that became active while syncing was held — the
+  // return from a legal page lands on "/" and restores straight into Contact
+  const active = links.find((link) => link.classList.contains('is-active'))?.dataset.sectionLink;
+  if (active) syncUrl(active);
 }
 
 window.addEventListener('vl:scroll-settled', enableUrlSync, { once: true });

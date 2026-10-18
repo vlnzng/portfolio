@@ -403,10 +403,11 @@ function initStandardNavigation(): void {
     section.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
   };
 
-  // Returning from a legal page → restore the exact scroll position.
+  // Returning from a legal page → restore the exact scroll position. Instant:
+  // html's scroll-behavior: smooth would otherwise animate down from the top.
   const returnY = takeReturnY();
   requestAnimationFrame(() => {
-    if (returnY != null) window.scrollTo(0, returnY);
+    if (returnY != null) window.scrollTo({ top: returnY, behavior: 'instant' });
     markScrollSettled();
   });
 }

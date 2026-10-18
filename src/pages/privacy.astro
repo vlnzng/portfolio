@@ -359,4 +359,15 @@ const mailDomain = 'gmail.com';
     const text = link.querySelector<HTMLElement>('[data-mail-text]');
     if (text) text.textContent = address;
   });
+
+  // With a stored return position (Contact.astro), go back to "/" instead of
+  // "/#contact": arriving on the fragment made the browser scroll to the top
+  // of the section, overriding the exact spot scroll.ts restores.
+  try {
+    if (sessionStorage.getItem('vl:returnY') != null) {
+      document.querySelector<HTMLAnchorElement>('.lg-back')?.setAttribute('href', '/');
+    }
+  } catch {
+    /* storage blocked — keep the #contact fallback */
+  }
 </script>
