@@ -11,7 +11,9 @@ const { title, subtitle, result, tags, order, cardImage, cardAlt, tools } = show
 const num = String(order).padStart(2, '0');
 
 // Rendered card widths: ~86vw stacked, ~42vw in the two-column band, ~22vw in
-// the four-column rows (engine and ≥1100px vertical alike).
+// the four-column rows (engine and ≥1100px vertical alike). 1080 is for a
+// stacked phone at DPR 3 (~1000 device px) — the old public/ originals were
+// 1200px, so stopping at 720 upscaled the card art there.
 const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
 ---
 
@@ -31,8 +33,9 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
           src={cardImage}
           formats={['avif', 'webp']}
           fallbackFormat="webp"
+          quality={80}
           alt={cardAlt ?? `${title} — key image`}
-          widths={[360, 480, 720]}
+          widths={[360, 480, 720, 1080]}
           sizes={cardSizes}
           loading="lazy"
         />
