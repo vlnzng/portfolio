@@ -86,11 +86,11 @@ npm run build    # static build → dist/
   keep the engine. Image `sizes` attributes that switch on the layout (SharedPortrait,
   Contact) must list every arm too, or the browser picks a candidate for the wrong layout.
 - Initialize Lenis/GSAP **in the browser only** (Astro renders server-side).
-- Keep deliberate placeholders (work images, case figures, second contact photo, og:image)
-  as clean components until real assets land.
-- **Legal pages** (`imprint`, `privacy`): German first, English version below; placeholder
-  content for now, to be completed and legally reviewed before launch. Labelled "Legal Notice"
-  / "Privacy Policy" on the site.
+- All four cases ship real imagery. The stripe placeholder in `ShowcaseCard` / `modal.ts`
+  stays as the fallback for a case without `cardImage` / `heroImage`.
+- **Legal pages** (`imprint`, `privacy`): German first, English version below; real content,
+  an optional lawyer review is still open. When the text changes, bump the "Stand / Last
+  updated" line in both footers. Labelled "Legal Notice" / "Privacy Policy" on the site.
 
 ## Deploy
 

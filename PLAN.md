@@ -6,20 +6,15 @@ reference for look and motion.
 
 ## Where we are
 
-The 1.0 rebuild is complete and most launch infrastructure has landed: all five panels, the
-two-phase scroll engine, the case-study modal, the legal pages, the 404, the sitemap, and
-per-page meta are built faithfully to the handoff. Beyond that, two big passes are now done:
+The site is feature-complete and live on `valentinlenzing.com`: all five panels, the
+two-phase scroll engine, the case-study modal, legal pages, 404, sitemap and per-page meta.
+All four case studies carry final copy and real imagery; the real V/L marks drive the
+wordmark, favicon and share card. Two hardening passes have shipped on top: a live-site
+audit (Sept 2026) and a review of that work against live (Oct 2026) — see E. Lighthouse on
+production (2026-10-19): mobile 95–96 / 100 / 100 / 100, desktop 100 across the board.
 
-- **Content** — all four case studies carry their *final* copy and a single, consistent
-  card + modal structure. Cases 1–2 (Fair Monetisation, RunForRecht) ship real, optimised
-  imagery; cases 3–4 (ToolSynergy, Portfolio Website) have the copy and clean figure
-  placeholders, waiting on real images.
-- **UX / accessibility / responsive hardening** — a thorough review pass: the engine's
-  navigation is now exact and refresh-stable, the modal is a proper accessible dialog, the
-  tab title tracks state, and mobile has been reworked end-to-end.
-
-What's left is mostly **real assets** (wordmark SVG, case 3–4 images), a **final
-copy/proofread pass**, and a **launch QA** sweep.
+What's left before tagging 1.0: the **owner's content freeze / proofread**, a decision on
+the **wordmark morph end state** (D), and a **real screen-reader + real-device** pass (E).
 
 ---
 
@@ -59,7 +54,7 @@ copy/proofread pass**, and a **launch QA** sweep.
 - [x] **Fair Monetisation** — real card/hero/figures
 - [x] **RunForRecht** — real card, hero, participant + manager screens, process diagram
       (exported/normalised onto `#1A1816`, lossless where needed)
-- [x] **ToolSynergy** + **Portfolio Website** — final copy + figure placeholders in place
+- [x] **ToolSynergy** + **Portfolio Website** — final copy and real imagery (see B)
 
 ### UX, accessibility & responsive hardening (recent pass)
 - [x] **Engine navigation made exact** — Lenis runs desktop-only (no touch conflict); reload on
@@ -138,7 +133,12 @@ copy/proofread pass**, and a **launch QA** sweep.
       tablets (1080px+, e.g. iPad Air 1180×820) keep the engine — a first cut at 1180px sent
       them to the stacked layout too, where the short viewport cut the portrait off at the
       fold. The exact string lives in `media.ts` / CLAUDE.md
-- [ ] Wordmark morph fine-tuning (timing / end position) once the SVG lands
+- [ ] **Wordmark morph end state** — the SVG has landed, so this is now actionable. Measured
+      (Oct 2026): the collapsed V/L keeps its top at 30px while its size follows the hero
+      wordmark (42px tall at 1280 → 70px at 2560), so its centre drifts from 5px above the
+      nav line (1280) to 12px below it (2560); within ±5px from 1280 to 1920. Options: keep
+      as is, or centre it on the nav line with a size tied to the nav type (`--up`). The
+      handoff's dip before lift-off was dropped on purpose (see `applyMorph`)
 - ~~Extract the inline Work section into `Work.astro`~~ — dropped as over-engineering; the
   section is a thin wrapper around `ShowcaseCard` and has no reuse case
 
@@ -209,17 +209,26 @@ copy/proofread pass**, and a **launch QA** sweep.
         pixels, so `innerHeight * 1.15` charged 1656px of scrolling on a 1440px display
         against 1242px on a 1080px one, with no sideways motion yet to show for it. The
         height the budget derives from is now capped at 1080
-- [ ] Lighthouse 95+ across the board; check LCP / bundle size
+- [x] **Lighthouse 95+** — production, 2026-10-19: mobile 95–96 (three runs) / 100 / 100 /
+      100, desktop 100 / 100 / 100 / 100. Remaining hints are deliberate: image "savings"
+      assume lower quality than the chosen 80; ~40 KiB of GSAP/Lenis is unused on mobile
+      (optional: import the engine dynamically, desktop only)
+- [x] **"Back to portfolio" lands exactly (2026-10-19)** — on phones it arrived at the top of
+      Contact instead of the legal links: `/#contact` made the browser scroll to the fragment,
+      and html's `scroll-behavior: smooth` animated the restore down from the top. With a
+      stored position the link now goes to `/`, the restore is instant, and the URL syncs
+      back to `/#contact`
 - [ ] Keyboard / focus / screen-reader review (modal, nav, skip-link, scroll cue, VL home)
       — headless Chrome now covers: Tab drags the pan along, the modal opens on its body and
       traps focus, X / Escape / Back return focus *and* scroll position to the card (also
       from `/#work`, via the Navigation API), arrow keys scroll the case, skip link skips the
       chrome on every page, `lang="de"` on the German legal half. Still open: a real screen
-      reader pass (VoiceOver / NVDA)
+      reader pass (NVDA or Windows Narrator, VoiceOver)
 - [ ] Cross-browser + **real-device** check — still open for what headless Chrome cannot show:
       touch-driving the pinned engine on a real iPad in landscape, Safari's dynamic toolbar
-      against the `svh` hero, the wordmark morph, and closing a case in Safari / Firefox
-      (no Navigation API there — check the page stays on the card, not at the top of Work)
+      against the `svh` hero, and the wordmark morph. Closing a case uses the Navigation API,
+      which Safari (26.2+, iOS too) and Firefox (147+) support, so it runs the tested path
+      there as well
 - [x] Legal: analytics wording in Datenschutz confirmed (§3 covers Vercel Web Analytics +
       Speed Insights, DE + EN); optional lawyer review still open (not a blocker)
 
