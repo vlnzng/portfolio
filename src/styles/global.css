@@ -55,6 +55,13 @@ button:focus-visible,
   outline-offset: 4px;
 }
 
+/* Programmatic focus targets — the case body a modal opens on, <main> behind
+   the skip link — are starting points, not controls; the UA ring framed the
+   entire case text in white whenever a case was opened from the keyboard. */
+[tabindex='-1']:focus {
+  outline: none;
+}
+
 .skip-link {
   position: absolute;
   top: -100%;

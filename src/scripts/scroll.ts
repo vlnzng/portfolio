@@ -335,9 +335,11 @@ function initEngine(): void {
   // Keyboard focus has to drag the pan along: the browser reveals a focused
   // element by setting container.scrollLeft, which pinTrack reverts — so
   // without this, Tab into a later panel lands on something invisible.
+  // Keyboard only (:focus-visible): a mouse click focuses its button too, and
+  // aligning the panel under the pointer jolted the page behind an opening case.
   track.addEventListener('focusin', (event) => {
     const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
+    if (!(target instanceof HTMLElement) || !target.matches(':focus-visible')) return;
     const panel = target.closest<HTMLElement>('.section');
     if (!panel) return;
     const idx = panelEls.indexOf(panel);

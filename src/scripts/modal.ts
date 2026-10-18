@@ -55,11 +55,13 @@ function openModal(slug: string, push = true): void {
   scrollPositionBeforeOpen = window.scrollY;
 
   if (push) {
-    history.pushState({ modal: slug }, '', `/work/${slug}/`);
+    // `pushed` marks an entry this script added — see the popstate handler
+    history.pushState({ modal: slug, pushed: true }, '', `/work/${slug}/`);
     ownsHistoryEntry = true;
   } else {
     // record the slug on the current entry so Back/Forward onto it reopens
-    history.replaceState({ modal: slug }, '', `/work/${slug}/`);
+    // (keeping its `pushed` flag when Forward is what brought us here)
+    history.replaceState({ ...history.state, modal: slug }, '', `/work/${slug}/`);
   }
 
   if (modalHero) {
@@ -166,13 +168,22 @@ function closeModal(): void {
   document.body.style.overflow = '';
   window.scrollTo({ top: scrollPositionBeforeOpen });
 
-  if (openerEl && document.contains(openerEl)) {
+  const opener = openerEl;
+  openerEl = null;
+  if (opener && document.contains(opener)) {
     // preventScroll — the scroll position was just restored above
-    openerEl.focus({ preventScroll: true });
+    opener.focus({ preventScroll: true });
+    // Fallback for browsers without the Navigation API (see the navigate
+    // handler below): arriving on the /#work fragment can clear focus right
+    // after popstate, dropping keyboard users onto <body> — re-apply then.
+    requestAnimationFrame(() => {
+      if (!currentSlug && document.activeElement === document.body) {
+        opener.focus({ preventScroll: true });
+      }
+    });
   } else if (document.activeElement instanceof HTMLElement) {
     document.activeElement.blur();
   }
-  openerEl = null;
 
   modal.setAttribute('aria-hidden', 'true');
 }
@@ -238,15 +249,39 @@ modal?.addEventListener('keydown', (event) => {
   }
 });
 
+// Back, X and Escape all close by traversing onto the entry the case was opened
+// from — usually /#work. Chromium handles arriving on that fragment like a
+// fragment navigation: it smooth-scrolls the section to the top and clears
+// focus, undoing closeModal's restore (on a phone: back to the first card).
+// Taking over scroll and focus for that one traversal keeps the visitor where
+// they were. (Navigation API — where it's missing, closeModal's rAF re-focus
+// is the fallback.)
+type TraverseEvent = Event & {
+  navigationType: string;
+  canIntercept: boolean;
+  intercept(options: { scroll: 'manual'; focusReset: 'manual' }): void;
+};
+const navigationApi = (window as Window & { navigation?: EventTarget }).navigation;
+navigationApi?.addEventListener('navigate', (event) => {
+  const nav = event as TraverseEvent;
+  if (currentSlug && nav.navigationType === 'traverse' && nav.canIntercept) {
+    nav.intercept({ scroll: 'manual', focusReset: 'manual' });
+  }
+});
+
 // History is the single source of truth for whether a case is open, so Back and
 // Forward both work: Back off a case closes it, Forward onto it opens it again.
 window.addEventListener('popstate', () => {
-  const state = history.state as { modal?: string } | null;
+  const state = history.state as { modal?: string; pushed?: boolean } | null;
   const fromPath = location.pathname.match(/^\/work\/([^/]+)\/?$/)?.[1];
   const wanted = state?.modal ?? fromPath ?? null;
 
   if (wanted && wanted !== currentSlug) {
     openModal(wanted, false);
+    // Forward onto an entry an earlier open pushed: the page it was opened
+    // from sits right behind it again, so X/Escape can rewind as usual —
+    // rewriting it instead left a duplicate of that page as a dead Back stop.
+    ownsHistoryEntry = state?.pushed === true;
   } else if (!wanted && currentSlug) {
     ownsHistoryEntry = false;
     closeModal();
