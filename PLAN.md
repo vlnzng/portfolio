@@ -131,11 +131,13 @@ copy/proofread pass**, and a **launch QA** sweep.
 - [ ] Owner skim at content freeze
 
 ### D. Open decisions
-- [x] **820px breakpoint — decided: keep 821** — half-screen desktop windows (960–1280px)
-      are the common in-between case and should keep the signature horizontal experience;
-      portrait tablets are rare for this audience and get a dense but functional engine
-      (content fits — clamp()-based type, sections have vertical headroom). Revisit only
-      if real-device QA (E) shows actual breakage
+- [x] **Engine boundary — revised (Sept/Oct 2026)** — half-screen desktop windows
+      (960–1280px) still keep the signature horizontal experience. Portrait touch tablets
+      (744–1024px, `pointer: coarse`) now get the stacked layout: on the engine the iPad Pro
+      11" hero portrait covered the pitch text and the four cards shrank to ~170px. Landscape
+      tablets (1080px+, e.g. iPad Air 1180×820) keep the engine — a first cut at 1180px sent
+      them to the stacked layout too, where the short viewport cut the portrait off at the
+      fold. The exact string lives in `media.ts` / CLAUDE.md
 - [ ] Wordmark morph fine-tuning (timing / end position) once the SVG lands
 - ~~Extract the inline Work section into `Work.astro`~~ — dropped as over-engineering; the
   section is a thin wrapper around `ShowcaseCard` and has no reuse case
@@ -209,12 +211,15 @@ copy/proofread pass**, and a **launch QA** sweep.
         height the budget derives from is now capped at 1080
 - [ ] Lighthouse 95+ across the board; check LCP / bundle size
 - [ ] Keyboard / focus / screen-reader review (modal, nav, skip-link, scroll cue, VL home)
-      — note: the German half of `imprint`/`privacy` has no `lang="de"`, so a screen reader
-      reads it with English phonetics
+      — headless Chrome now covers: Tab drags the pan along, the modal opens on its body and
+      traps focus, X / Escape / Back return focus *and* scroll position to the card (also
+      from `/#work`, via the Navigation API), arrow keys scroll the case, skip link skips the
+      chrome on every page, `lang="de"` on the German legal half. Still open: a real screen
+      reader pass (VoiceOver / NVDA)
 - [ ] Cross-browser + **real-device** check — still open for what headless Chrome cannot show:
-      touch-driving the pinned engine on a real iPad (landscape especially), Safari's dynamic
-      toolbar against the `svh` hero, and the wordmark morph. Portrait tablets ≥821px keep the
-      engine (decision D holds — the sweep found no breakage, only an airy composition)
+      touch-driving the pinned engine on a real iPad in landscape, Safari's dynamic toolbar
+      against the `svh` hero, the wordmark morph, and closing a case in Safari / Firefox
+      (no Navigation API there — check the page stays on the card, not at the top of Work)
 - [x] Legal: analytics wording in Datenschutz confirmed (§3 covers Vercel Web Analytics +
       Speed Insights, DE + EN); optional lawyer review still open (not a blocker)
 
