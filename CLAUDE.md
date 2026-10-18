@@ -81,8 +81,10 @@ npm run build    # static build → dist/
   like `min-width: 821px`. Those two are different conditions: page zoom produces fractional
   widths that match neither, and the page then renders the desktop layout with the mobile
   scripts. Current string: `(max-width: 820px), (max-height: 519px), (pointer: coarse) and
-  (max-width: 1180px)` — the third arm keeps portrait touch tablets (834–1024px) on the
-  stacked layout, where the four-column pan doesn't fit.
+  (max-width: 1024px)` — the third arm keeps portrait touch tablets (744–1024px) on the
+  stacked layout, where the four-column pan doesn't fit; landscape tablets (1080px and up)
+  keep the engine. Image `sizes` attributes that switch on the layout (SharedPortrait,
+  Contact) must list every arm too, or the browser picks a candidate for the wrong layout.
 - Initialize Lenis/GSAP **in the browser only** (Astro renders server-side).
 - Keep deliberate placeholders (work images, case figures, second contact photo, og:image)
   as clean components until real assets land.

@@ -362,7 +362,7 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
      pointer on a wide screen dropped the card out of the 4-column subgrid
      even though .work-row and the JS engine still ran the desktop layout.
      Must also follow the hover block: same specificity, later rule wins. */
-  @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1180px),
+  @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px),
     (prefers-reduced-motion: reduce) {
     .wcard {
       display: flex;

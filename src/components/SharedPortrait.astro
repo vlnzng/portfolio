@@ -8,7 +8,9 @@ import portrait from '../assets/images/portrait.png';
 <div class="portrait" aria-hidden="true" data-portrait>
   <div class="portrait__glow"></div>
   {/* the mobile LCP element. fallbackFormat keeps the <img src> off the 2.67MB
-      source PNG; 768/1152 cover a 92vw phone at DPR 2 and 3 */}
+      source PNG; 768/1152 cover a 92vw phone at DPR 2 and 3. `sizes` repeats
+      every arm of the engine boundary — a stacked portrait tablet left out
+      here picked a candidate for 52vw and upscaled it 1.6x */}
   <Picture
     src={portrait}
     formats={['avif', 'webp']}
@@ -16,7 +18,7 @@ import portrait from '../assets/images/portrait.png';
     quality={80}
     alt=""
     widths={[768, 960, 1152, 1440, 1920, 2560]}
-    sizes="(max-width: 820px) 92vw, (max-height: 519px) 92vw, 52vw"
+    sizes="(max-width: 820px) 92vw, (max-height: 519px) 92vw, (pointer: coarse) and (max-width: 1024px) 92vw, 52vw"
     loading="eager"
     fetchpriority="high"
   />
@@ -119,7 +121,7 @@ import portrait from '../assets/images/portrait.png';
     background: linear-gradient(0deg, var(--color-bg), transparent);
   }
 
-  @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1180px), (prefers-reduced-motion: reduce) {
+  @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px), (prefers-reduced-motion: reduce) {
     /* mobile: the cut-out sits in the LOWER half of the hero, below the text
        block (wordmark + role + pitch + statement live above it). Scrolls away
        with the page. */
