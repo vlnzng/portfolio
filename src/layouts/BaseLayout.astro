@@ -100,10 +100,10 @@ const ogURL = new URL(Astro.url.pathname, site);
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    {/* Fixed shell furniture (nav, wordmark, portrait, scroll cue) renders
-        here, outside <main>: it is site chrome repeated on every view, and
-        while it sat inside <main> the skip link landed the visitor directly
-        in front of the nav links it exists to skip. */}
+    {/* Site chrome renders here, outside <main> — the home page's fixed shell
+        (nav, wordmark, portrait, scroll cue) and the legal / 404 page headers.
+        While it sat inside <main>, the skip link landed the visitor directly
+        in front of the links it exists to skip. */}
     <slot name="furniture" />
 
     <main id="main-content" tabindex="-1">

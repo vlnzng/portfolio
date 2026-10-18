@@ -5,6 +5,8 @@ import { getCollection } from 'astro:content';
 import HomePage from '../index.astro';
 
 export async function getStaticPaths() {
+  // subtitles end in a full stop, result lines don't — normalise both
+  const sentence = (text: string) => (/[.!?]$/.test(text.trim()) ? text.trim() : `${text.trim()}.`);
   const showcases = await getCollection('showcases');
   return showcases.map((showcase) => ({
     params: { slug: showcase.id },
@@ -12,7 +14,7 @@ export async function getStaticPaths() {
       title: `${showcase.data.title} — Valentin Lenzing`,
       // Without this every shared case link previewed with the generic
       // homepage blurb under a case-specific title.
-      description: `${showcase.data.subtitle} — ${showcase.data.result} A case study by Valentin Lenzing, Product Designer · UX/UI.`,
+      description: `${sentence(showcase.data.subtitle)} ${sentence(showcase.data.result)} A case study by Valentin Lenzing, Product Designer · UX/UI.`,
     },
   }));
 }

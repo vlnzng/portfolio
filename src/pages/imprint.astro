@@ -13,7 +13,7 @@ const mailDomain = 'gmail.com';
   title="Legal Notice — Impressum | Valentin Lenzing"
   description="Legal notice (Impressum) for valentinlenzing.com — provider details, contact, and liability information under § 5 DDG and § 18 (2) MStV."
 >
-  <header class="lg-bar">
+  <header class="lg-bar" slot="furniture">
     <a class="lg-mark" href="/" aria-label="Valentin Lenzing — home"><Fragment set:html={logo} /></a>
     <a class="lg-back" href="/#contact">
       <span class="arr" aria-hidden="true">&larr;</span><span class="lbl-full">Back to portfolio</span>
@@ -249,8 +249,8 @@ const mailDomain = 'gmail.com';
   <footer class="lg-foot">
     <p class="lg-stand">Stand / Last updated: August 2026</p>
     <nav class="lg-foot-links" aria-label="Legal pages">
-      <a href="/imprint" aria-current="page">Legal Notice</a>
-      <a href="/privacy">Privacy Policy</a>
+      <a href="/imprint/" aria-current="page">Legal Notice</a>
+      <a href="/privacy/">Privacy Policy</a>
       <a href="/">Portfolio</a>
     </nav>
   </footer>
