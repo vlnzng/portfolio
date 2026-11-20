@@ -11,7 +11,7 @@ tags: ["Research", "Strategy", "Code"]
 heroImage: "/assets/showcases/case1/hero.svg"
 heroAlt: "Four risk domains — transparency, consent, pressure and safeguards — converging into one assessment, which maps to a concern level from minimal to elevated."
 cardImage: "../../assets/showcases/case1/card.webp"
-cardAlt: "The live tool: a summary panel counting four risk domains and 12 guided questions above the minimal, moderate and elevated concern levels, beside a guided question answered Yes, No or Unsure."
+cardAlt: "The tool's hero sketch: a limited skin priced in Gems, with a countdown and a tiny “no thanks”, each annotated as one question in the check."
 order: 1
 externalLink: "https://fair-monetisation.valentinlenzing.com"
 ---
@@ -58,8 +58,8 @@ The result is a live web tool. A team runs one purchase flow through three steps
 The context step asks two things: whether players under 18 are in the audience, and which of four features the flow includes (virtual currency, a renewing subscription or pass, offers limited by time or stock, paid random items). These answers decide which questions follow, so nobody reads a question that does not apply. A run has between 6 and 15 questions, one step per area. Each question is phrased so that Yes is the unproblematic answer and comes with a short example of how a Yes can look.
 
 <figure class="case-figure">
-  <img class="case-shot" src="/assets/showcases/case1/questions.webp" alt="Three guided questions from the price transparency and virtual currency clarity domain, each answered with Yes, No or Unsure." width="2000" height="855" loading="lazy" />
-  <figcaption>The guided-questions UI, using a non-neutral “Unsure” state.</figcaption>
+  <img class="case-shot" src="/assets/showcases/case1/questions.webp" alt="The prices and currency step: three questions answered Yes, Unsure and No, each beside a small sketch of how a Yes can look." width="1600" height="1358" loading="lazy" />
+  <figcaption>One step per area. Each question shows how a Yes can look.</figcaption>
 </figure>
 
 “Unsure” is not treated as neutral. It counts as a weak signal, because uncertainty at the decision point is itself relevant for review. Co-occurring signals raise the level: one Elevated area makes the overall result Elevated, and two Moderate areas make it at least Moderate, because risk mechanisms in monetisation tend to compound rather than act in isolation. One answer overrides everything else: an offer that tells children to buy sets the result to Elevated, since EU law bans exactly that.
@@ -67,8 +67,8 @@ The context step asks two things: whether players under 18 are in the audience, 
 The result shows an overall level, from Minimal to Moderate to Elevated, with its reason in one sentence and a level for each area. Every No and Unsure comes back with what it means, what is expected and which source it rests on. The result can be copied as a plain-text report, shared as a link or printed. Three built-in example results, one per level, show what the tool does before a team runs its own flow. The logic is deliberately conservative. It flags what merits a closer look, but it does not declare a design lawful or unlawful.
 
 <figure class="case-figure">
-  <img class="case-shot" src="/assets/showcases/case1/result.webp" alt="The tool's result screen: an overall risk orientation of minimal concern, followed by block-level results — moderate concern for price transparency, minimal for consent, choice architecture and safeguards." width="1400" height="924" loading="lazy" />
-  <figcaption>Concern orientation with domain-specific review areas.</figcaption>
+  <img class="case-shot" src="/assets/showcases/case1/result.webp" alt="Example result for a high-pressure battle pass: overall Moderate because two areas reached Moderate, a level for each of the five areas, and the first answer worth a closer look with its explanation and sources." width="1400" height="1057" loading="lazy" />
+  <figcaption>A level per area, the reason in one sentence and an explanation for every No and Unsure.</figcaption>
 </figure>
 
 The tool is built from scratch with plain HTML, CSS and JavaScript: no framework, no build step and no external requests, so answers never leave the browser. Questions, sources and scoring rules live in data files separate from the interface, so the criteria can evolve as regulation, guidance and case law change. Automated tests check the scoring against reference cases and confirm that a worse answer can never lower a level.
