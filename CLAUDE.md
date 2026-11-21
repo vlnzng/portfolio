@@ -101,9 +101,11 @@ production.
 ## Git
 
 - **Work on `dev`, then bring it to `main`.** `main` only ever fast-forwards to `dev`.
-- **Prepare commits locally, then stop.** Show me what's ready and push or sync only after my
-  OK. `main` is production, so it needs its own OK unless I approve both at once:
-  `git push origin dev`, then `git switch main`, `git merge --ff-only dev`,
+- **Prepare commits locally, then wait for my OK.** Tell me what's ready (I review in VS Code's
+  Source Control) before pushing or syncing.
+- **Exception:** small changes, or ones that clearly can't affect the site (docs, notes), may go
+  to `dev` and `main` without asking. Tell me what went out. If in doubt, ask.
+- **Release:** `git push origin dev`, `git switch main`, `git merge --ff-only dev`,
   `git push origin main`, `git switch dev`.
 - **No attribution.** No `Co-Authored-By` line and no other attribution to Claude or any tool,
   in commits or PRs.
