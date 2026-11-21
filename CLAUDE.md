@@ -100,7 +100,13 @@ production.
 
 ## Git
 
+- **Work on `dev`, then bring it to `main`.** `main` only ever fast-forwards to `dev`.
+- **Prepare commits locally, then stop.** Show me what's ready and push or sync only after my
+  OK. `main` is production, so it needs its own OK unless I approve both at once:
+  `git push origin dev`, then `git switch main`, `git merge --ff-only dev`,
+  `git push origin main`, `git switch dev`.
+- **No attribution.** No `Co-Authored-By` line and no other attribution to Claude or any tool,
+  in commits or PRs.
 - Commit in logical chunks (see `PLAN.md` for a rough sequence).
-- Use branches when they earn their keep (bigger or risky changes, or to get a Vercel preview)
-  — not required for every small change.
+- Extra feature branches only when they earn their keep (bigger or risky changes).
 - Imperative commit subjects: "Add hero panel", "Wire wordmark morph".
