@@ -25,6 +25,9 @@ Thumbs.db
 .claude/settings.local.json
 CLAUDE.local.md
 
+# Antigravity / Gemini — local personal workflow, not for sharing
+GEMINI.md
+
 # Design handoff — local reference material, keep out of the repo
 design_handoff_portfolio/
 
