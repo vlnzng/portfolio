@@ -13,8 +13,11 @@ wordmark, favicon and share card. Two hardening passes have shipped on top: a li
 audit (Sept 2026) and a review of that work against live (Oct 2026) — see E. Lighthouse on
 production (2026-10-19): mobile 95–96 / 100 / 100 / 100, desktop 100 across the board.
 
-What's left before tagging 1.0: the **owner's content freeze / proofread**, a decision on
-the **wordmark morph end state** (D), and a **real screen-reader + real-device** pass (E).
+A third pass (Nov 2026) hardened layout, pacing, accessibility, performance and the legal
+pages — see E.
+
+What's left before tagging 1.0: the **owner's content freeze / proofread** and a **real
+screen-reader + real-device** pass (E).
 
 ---
 
@@ -134,7 +137,7 @@ the **wordmark morph end state** (D), and a **real screen-reader + real-device**
       them to the stacked layout too, where the short viewport cut the portrait off at the
       fold. The exact string lives in `media.ts` / CLAUDE.md
 - [x] **Wordmark morph end state** — the collapsed V/L is now centred on the live nav line
-      at every width (`measure()` in `scroll.ts`). Its size follows the lockup up to 1920px,
+      at every width (`measure()` in `desktop-engine.ts`). Its size follows the lockup up to 1920px,
       then holds against the nav type. The handoff's dip before lift-off stays dropped on
       purpose (see `applyMorph`)
 - ~~Extract the inline Work section into `Work.astro`~~ — dropped as over-engineering; the
@@ -209,13 +212,21 @@ the **wordmark morph end state** (D), and a **real screen-reader + real-device**
         height the budget derives from is now capped at 1080
 - [x] **Lighthouse 95+** — production, 2026-10-19: mobile 95–96 (three runs) / 100 / 100 /
       100, desktop 100 / 100 / 100 / 100. Remaining hints are deliberate: image "savings"
-      assume lower quality than the chosen 80; ~40 KiB of GSAP/Lenis is unused on mobile
-      (optional: import the engine dynamically, desktop only)
+      assume lower quality than the chosen 80. The engine has loaded on demand since Nov 2026,
+      so phones no longer fetch GSAP/Lenis
 - [x] **"Back to portfolio" lands exactly (2026-10-19)** — on phones it arrived at the top of
       Contact instead of the legal links: `/#contact` made the browser scroll to the fragment,
       and html's `scroll-behavior: smooth` animated the restore down from the top. With a
       stored position the link now goes to `/`, the restore is instant, and the URL syncs
       back to `/#contact`
+- [x] **Hardening pass (Nov 2026)** — short-laptop and half-screen layouts; snappier pan;
+      case cards as real links, per-element mobile reveal; WebP-only pictures (build images
+      5.9 → 2.9 MB), engine on demand (phone JS ~147 → 11 KB), case images preloaded on
+      approach; Case 1 diagrams rebuilt in the v2.0 blue with outlined text
+      (`npm run gen:diagrams`); privacy wording and Vercel address corrected; legal home links
+      return to the Hero; `gen:assets` no longer needs the local handoff; `npm run check` added
+- [ ] Dependency update — `npm audit` reports 13 findings in the build toolchain; the Astro
+      and sharp fixes are major upgrades, so they get their own tested pass
 - [ ] Keyboard / focus / screen-reader review (modal, nav, skip-link, scroll cue, VL home)
       — headless Chrome now covers: Tab drags the pan along, the modal opens on its body and
       traps focus, X / Escape / Back return focus *and* scroll position to the card (also
