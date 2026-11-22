@@ -1,6 +1,6 @@
 ---
 // One fixed portrait shared across panels: rests hero-right, glides to
-// about-left as the pan begins. scroll.ts drives left/width/transform.
+// about-left as the pan begins. desktop-engine.ts drives left/width/transform.
 import { Picture } from 'astro:assets';
 import portrait from '../assets/images/portrait.png';
 ---
@@ -33,11 +33,13 @@ import portrait from '../assets/images/portrait.png';
     width: 52vw;
     height: 100vh;
     z-index: 30;
+    /* the engine's rest position, so nothing moves when its chunk arrives */
+    transform: translateY(15vh);
     /* transparent: the cut-out floats directly on the page, no background box */
     will-change: left, width, transform;
   }
 
-  /* picture is the parallax layer (scroll.ts nudges it a few px against the
+  /* picture is the parallax layer (desktop-engine.ts nudges it a few px against the
      cursor while the figure rests); the img inside carries load-in + breath */
   .portrait picture {
     position: relative;

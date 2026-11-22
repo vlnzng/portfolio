@@ -1,7 +1,7 @@
 ---
 // The hero panel now holds only the text block. The wordmark and the portrait
 // are fixed shell elements (Wordmark.astro / SharedPortrait.astro) so they can
-// morph / glide across panels, driven by scroll.ts.
+// morph / glide across panels, driven by desktop-engine.ts.
 ---
 
 <section class="section hero" id="hero" aria-label="Hero">
@@ -34,6 +34,8 @@
        upscaled pitch broke its deliberate two-line <br> into four ragged ones */
     max-width: max(640px, calc(640 / 17 * var(--up)));
     z-index: 40;
+    /* the engine's rest position, so nothing moves when its chunk arrives */
+    transform: translateY(min(64px, calc(100vh * 64 / 1080)));
     will-change: transform;
   }
 
@@ -130,6 +132,7 @@
          fraction, so the gap under the lockup is the same on every phone */
       top: var(--hero-text-top);
       max-width: none;
+      transform: none;
     }
 
     .hero-statement {

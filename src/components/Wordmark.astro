@@ -3,7 +3,7 @@
 // src/assets/brand/wordmark.svg: a V/L monogram with "alentin"/"enzing" tails in a
 // calligraphic italic. The tails carry data-wm-tail so the morph can fade them,
 // leaving the V (.mark-v, gold) + L — exactly the collapsed monogram (same paths as
-// logo.svg / the favicon). scroll.ts drives the fly-to-navbar.
+// logo.svg / the favicon). desktop-engine.ts drives the fly-to-navbar.
 import wordmark from '../assets/brand/wordmark.svg?raw';
 ---
 
@@ -49,7 +49,7 @@ import wordmark from '../assets/brand/wordmark.svg?raw';
     color: var(--color-accent);
   }
 
-  /* the tails fade + retract during the morph — scroll.ts sets opacity/transform
+  /* the tails fade + retract during the morph — desktop-engine.ts sets opacity/transform
      per frame; fill-box + left origin makes its % translate / scale behave */
   .wordmark :global([data-wm-tail]) {
     transform-box: fill-box;

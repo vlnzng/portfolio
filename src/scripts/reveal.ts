@@ -1,7 +1,7 @@
 /* Arrival choreography: CSS does the motion, this module only toggles
    .is-in (early, while the panel slides in) and .is-centred (once the visitor
    has arrived — e.g. the process diamond draw). Desktop is driven per panel by
-   the pan (scroll.ts calls revealOnPan), mobile per element by an
+   the pan (desktop-engine.ts calls revealOnPan), mobile per element by an
    IntersectionObserver; both reset so revisits re-play. The hero load-in waits
    for fonts so the wordmark write-in never paints with a fallback font. */
 import { desktopQuery, prefersReducedMotion } from './media';
@@ -30,7 +30,7 @@ if (prefersReducedMotion) {
   setTimeout(heroIn, 1400); // safety net if fonts stall
 }
 
-/* ---- desktop: pan-driven reveal (called from scroll.ts) ---------------- */
+/* ---- desktop: pan-driven reveal (called from desktop-engine.ts) ------ */
 const revealed: boolean[] = [];
 const centred: boolean[] = [];
 

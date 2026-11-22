@@ -187,7 +187,7 @@ button:focus-visible,
 /* ===== Entrance choreography ============================================
    Generic reveal primitive (from the design handoff). Content is hidden
    until it gets .is-in: on desktop its owning panel, driven by the pan
-   position (scroll.ts → reveal.ts); on mobile each element on its own,
+   position (desktop-engine.ts → reveal.ts); on mobile each element on its own,
    driven by an IntersectionObserver.
    Side-panel content rides in from the +X direction so each arrival echoes
    the leftward pan: the horizontal motion is the signature, so the

@@ -1,5 +1,5 @@
 ---
-// Hero statement + scroll hint fused into one line, bottom centre. scroll.ts
+// Hero statement + scroll hint fused into one line, bottom centre. desktop-engine.ts
 // toggles .is-broken at the down-to-pan hinge, rotates the arrow and drives the
 // container's opacity per frame. Clicking advances (morph first, then a panel).
 // Hidden on mobile / reduced motion — the statement lives in the hero there.
@@ -96,7 +96,7 @@
   }
 
   /* load-in: the line arrives last, once the name has been written
-     (on the children — scroll.ts drives the container's opacity) */
+     (on the children — desktop-engine.ts drives the container's opacity) */
   :global(html.js) .scrollcue__stack,
   :global(html.js) .scrollcue__arrow {
     opacity: 0;
