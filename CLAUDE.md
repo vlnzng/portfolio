@@ -5,11 +5,11 @@ Working context for Claude Code on this repo. Keep it lean; update it as the pro
 ## What this is
 
 Personal portfolio for **Valentin Lenzing**, Product Designer (UX/UI). It grew out of an
-old university project and is being rebuilt into a high-quality portfolio — its main job is
-to help land a design role. One page, five sections (Hero · About · Work · Process · Contact),
-a case-study modal, and two legal pages. Signature interaction: a two-phase scroll on desktop
-(the wordmark morphs "down", then a horizontal pan across the sections); plain vertical scroll
-on mobile.
+old university project and is now live on `valentinlenzing.com`, evolving as a living
+product — its main job is to help land a design role. One page, five sections (Hero · About ·
+Work · Process · Contact), a case-study modal, and two legal pages. Signature interaction: a
+two-phase scroll on desktop (the wordmark morphs "down", then a horizontal pan across the
+sections); plain vertical scroll on mobile.
 
 ## How to work with me
 
@@ -45,9 +45,12 @@ below**. On the site they're labelled "Legal Notice" and "Privacy Policy".
 ## Setup
 
 ```bash
-npm install      # Node ≥ 22.12
-npm run dev      # dev server
-npm run build    # static build → dist/
+npm install           # Node ≥ 22.12
+npm run dev           # dev server
+npm run build         # static build → dist/
+npm run check         # type and template check (astro check)
+npm run gen:assets    # favicon, touch icon, share card
+npm run gen:diagrams  # Case 1 diagrams with outlined text
 ```
 
 ## Where things live
@@ -55,9 +58,8 @@ npm run build    # static build → dist/
 - `src/` — the real implementation. Check it before assuming anything.
 - `src/styles/tokens.css` — live design tokens; the authority for colors, fonts, spacing.
 - `src/content/showcases/*.mdx` — the four case studies (content, not hardcoded markup).
-- `design_handoff_portfolio/` — **local** reference only (gitignored): design intent,
-  screenshots of target states, and the exact animation math in `reference/portfolio.js`.
-  Reference, not code to copy.
+- `design_handoff_portfolio/` — **local**, historical visual reference only (gitignored). The
+  live code has moved past it, so `src/` wins wherever they differ.
 - `vercel.json` — response headers and `trailingSlash`. JSON takes no comments, so the
   reasoning lives here: security headers Vercel doesn't set by default, plus a
   `Cache-Control` override for `/assets/*`. Vercel's default serves anything under
@@ -70,11 +72,12 @@ npm run build    # static build → dist/
 
 ## Conventions
 
+These are the current baseline, not dogma: change one when a better idea earns it.
+
 - **One accent color** (`--color-accent`, #D9B36C). No new colors outside `tokens.css`.
-- **Square shapes** — no border-radius on cards/media/modal; only chips and the status dot
-  are round.
-- **Motion**: get the static layout right first, then add motion. Pull animation constants
-  from `reference/portfolio.js` instead of guessing.
+- **Square shapes** — no border-radius on cards/media/modal; only pills/chips and the modal's
+  close button, CTAs, and scrollbar thumb are round.
+- **Motion**: get the static layout right first, then add motion.
 - **Accessibility**: honor `prefers-reduced-motion`; keep focus states; modal closes on Escape.
 - **The engine boundary is one string.** Components' `<style>` blocks and `src/scripts/media.ts`
   must use the *exact same* media query, with JS negating it — never an integer complement
@@ -86,6 +89,8 @@ npm run build    # static build → dist/
   keep the engine. Image `sizes` attributes that switch on the layout (SharedPortrait,
   Contact) must list every arm too, or the browser picks a candidate for the wrong layout.
 - Initialize Lenis/GSAP **in the browser only** (Astro renders server-side).
+  `desktop-engine.ts` loads dynamically on desktop only, so `scroll.ts` stays light for mobile
+  and reduced motion.
 - All four cases ship real imagery. The stripe placeholder in `ShowcaseCard` / `modal.ts`
   stays as the fallback for a case without `cardImage` / `heroImage`.
 - **Legal pages** (`imprint`, `privacy`): German first, English version below; real content,
@@ -109,6 +114,6 @@ production.
   `git push origin main`, `git switch dev`.
 - **No attribution.** No `Co-Authored-By` line and no other attribution to Claude or any tool,
   in commits or PRs.
-- Commit in logical chunks (see `PLAN.md` for a rough sequence).
+- Commit in logical chunks.
 - Extra feature branches only when they earn their keep (bigger or risky changes).
 - Imperative commit subjects: "Add hero panel", "Wire wordmark morph".
