@@ -1,0 +1,80 @@
+<svg width="2400" height="620" viewBox="0 0 2400 620" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+  <defs>
+    <radialGradient id="node" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#DCEBFA" stop-opacity="1"/>
+      <stop offset="34%" stop-color="#7DB3E8" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#7DB3E8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="field" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#7DB3E8" stop-opacity="0.09"/>
+      <stop offset="70%" stop-color="#7DB3E8" stop-opacity="0.02"/>
+      <stop offset="100%" stop-color="#7DB3E8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lin" gradientUnits="userSpaceOnUse" x1="470" y1="0" x2="1124" y2="0">
+      <stop offset="0%" stop-color="#7DB3E8" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#7DB3E8" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="lout" gradientUnits="userSpaceOnUse" x1="1276" y1="0" x2="1891" y2="0">
+      <stop offset="0%" stop-color="#7DB3E8" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#7DB3E8" stop-opacity="0.42"/>
+    </linearGradient>
+    <style>
+      .dot{fill:#252220;stroke:#7DB3E8;stroke-width:1.6;}
+      .dlbl{fill:#EDE6D9;font-weight:600;}
+      .kick{fill:#A39B8E;font-family:'DejaVu Sans Mono',monospace;font-weight:700;letter-spacing:.18em;}
+      .clbl{fill:#C9C2B6;font-weight:500;}
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="2400" height="620" fill="#1A1816"/>
+  <rect x="500" y="-300" width="1400" height="1220" fill="url(#field)"/>
+
+  <!-- kickers -->
+  <text class="kick" x="300" y="118" font-size="16">FIVE AREAS</text>
+  <text class="kick" x="1958" y="118" font-size="16">CONCERN LEVEL</text>
+
+  <!-- fan-in: five areas converge to the node -->
+  <g fill="none" stroke="url(#lin)" stroke-width="1.7">
+    <path d="M 470 167 C 800 167, 920 300, 1132 307"/>
+    <path d="M 470 239 C 800 239, 980 304, 1132 309"/>
+    <path d="M 470 311 C 800 311, 980 311, 1132 311"/>
+    <path d="M 470 383 C 800 383, 980 318, 1132 313"/>
+    <path d="M 470 455 C 800 455, 920 322, 1132 315"/>
+  </g>
+
+  <!-- fan-out: node diverges to three concern outcomes -->
+  <g fill="none" stroke="url(#lout)" stroke-width="1.7">
+    <path d="M 1276 310 C 1500 310, 1660 220, 1891 220"/>
+    <path d="M 1276 311 C 1480 310, 1700 312, 1891 311"/>
+    <path d="M 1276 312 C 1500 312, 1660 402, 1891 402"/>
+  </g>
+
+  <!-- left area nodes + labels -->
+  <g font-size="25">
+    <text class="dlbl" x="432" y="174" text-anchor="end">Prices &amp; currency</text>
+    <circle class="dot" cx="462" cy="167" r="8"/>
+    <text class="dlbl" x="432" y="246" text-anchor="end">Checkout &amp; control</text>
+    <circle class="dot" cx="462" cy="239" r="8"/>
+    <text class="dlbl" x="432" y="318" text-anchor="end">Offers &amp; pressure</text>
+    <circle class="dot" cx="462" cy="311" r="8"/>
+    <text class="dlbl" x="432" y="390" text-anchor="end">Under-18 protection</text>
+    <circle class="dot" cx="462" cy="383" r="8"/>
+    <text class="dlbl" x="432" y="462" text-anchor="end">Paid random items</text>
+    <circle class="dot" cx="462" cy="455" r="8"/>
+  </g>
+
+  <!-- centre node -->
+  <circle cx="1200" cy="311" r="76" fill="url(#node)"/>
+  <circle cx="1200" cy="311" r="12" fill="#F2ECDF"/>
+  <text class="kick" x="1200" y="432" font-size="13" text-anchor="middle" opacity="0.9">ASSESSMENT</text>
+
+  <!-- right outcome nodes (concern colours) + labels -->
+  <g font-size="23">
+    <circle cx="1900" cy="220" r="9" fill="#7FA98B"/>
+    <text class="clbl" x="1932" y="228">Minimal</text>
+    <circle cx="1900" cy="311" r="9" fill="#C9A05C"/>
+    <text class="clbl" x="1932" y="319">Moderate</text>
+    <circle cx="1900" cy="402" r="9" fill="#C97B6B"/>
+    <text class="clbl" x="1932" y="410">Elevated</text>
+  </g>
+</svg>
