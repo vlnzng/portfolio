@@ -22,7 +22,8 @@
   .scrollcue {
     position: fixed;
     left: 50%;
-    bottom: 46px;
+    /* 46px from 1080px up; tightens so it clears the hero text on short laptops */
+    bottom: clamp(22px, 4.26vh, 46px);
     transform: translateX(-50%);
     z-index: 60;
     display: flex;

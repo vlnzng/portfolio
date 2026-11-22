@@ -191,8 +191,9 @@ function initEngine(): void {
     wordmark.classList.toggle('is-collapsed', t > 0.45);
 
     // hero content rests slightly low, then scrolls up and away like a normal
-    // page (the portrait lifting at the same time completes that read)
-    const HERO_REST_Y = 64;
+    // page (the portrait lifting at the same time completes that read). The
+    // offset shrinks below 1080px height so the text clears the scroll cue.
+    const HERO_REST_Y = Math.min(64, (window.innerHeight * 64) / 1080);
     if (heroText) heroText.style.transform = `translateY(${lerp(HERO_REST_Y, -90, t)}px)`;
   }
 
@@ -396,6 +397,18 @@ function initEngine(): void {
 }
 
 function initStandardNavigation(): void {
+  // The stacked hero places the portrait below the text via --hero-text-h. CSS
+  // holds the measured default; this follows text scaling and unusual wraps.
+  const heroText = document.querySelector<HTMLElement>('[data-hero-text]');
+  if (heroText) {
+    new ResizeObserver(() => {
+      document.documentElement.style.setProperty(
+        '--hero-text-h',
+        `${Math.ceil(heroText.offsetHeight + 28)}px`,
+      );
+    }).observe(heroText);
+  }
+
   window.__portfolioScrollTo = (id: string) => {
     const section = document.getElementById(id);
     if (!section) return;

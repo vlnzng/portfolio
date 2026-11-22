@@ -63,7 +63,8 @@
     bottom: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* `safe`: a column taller than the frame spills down, never up under the nav */
+    justify-content: safe center;
     gap: clamp(26px, 4vh, 56px);
     /* headroom so the vertically-centred column never rises under the fixed
        navbar (top-right) on short viewports, plus matching bottom breathing room */
@@ -155,15 +156,13 @@
     color: var(--color-faint);
   }
 
-  /* Short desktop windows (a 720p laptop leaves ~590px, still engine range):
-     the panel is a fixed 100vh overflow:hidden box, and the tall layout's
-     spacing needs ~700px — tighten to fit, and centre with `safe` so anything
-     still too tall spills down instead of clipping its opening lines. */
-  @media (max-height: 760px) {
+  /* Short or narrow desktop windows (a 720p laptop leaves ~590px, still engine
+     range): the panel is a fixed 100vh overflow:hidden box, and the tall
+     layout's spacing needs ~700px at full column width — tighten to fit. */
+  @media (max-height: 760px), (max-width: 1150px) {
     .about-content {
-      justify-content: safe center;
       gap: clamp(14px, 2.2vh, 26px);
-      padding: clamp(58px, 8.5vh, 92px) 0 clamp(24px, 3.5vh, 56px);
+      padding: var(--nav-clearance) 0 clamp(24px, 3.5vh, 56px);
     }
 
     .ab-body .ab-hook {
@@ -187,6 +186,51 @@
     }
   }
 
+  @media (max-height: 660px) {
+    .ab-body .ab-hook {
+      margin-bottom: 10px;
+    }
+
+    .ab-body p {
+      margin-bottom: 10px;
+      line-height: 1.55;
+    }
+
+    .about-foot {
+      padding-top: 14px;
+    }
+  }
+
+  /* the shortest windows the engine still runs on */
+  @media (max-height: 560px) {
+    .ab-body .ab-hook {
+      margin-bottom: 8px;
+    }
+
+    .ab-body p {
+      margin-bottom: 8px;
+      font-size: max(14.5px, calc(14.5 / 17 * var(--up)));
+      line-height: 1.5;
+    }
+  }
+
+  /* half-screen desktop: the column reclaims the slack beside the portrait and
+     the three-column footer gives up some padding */
+  @media (max-width: 1150px) {
+    .about-content {
+      left: 46vw;
+      right: 3.5vw;
+    }
+
+    .ab-foot-col {
+      padding-right: 14px;
+    }
+
+    .ab-foot-col + .ab-foot-col {
+      padding-left: 14px;
+    }
+  }
+
   @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px), (prefers-reduced-motion: reduce) {
     .about-content {
       position: static;
@@ -201,8 +245,27 @@
       max-width: none;
     }
 
+    /* the stacked page scrolls freely, so it keeps the full reading type
+       instead of the fixed-frame compaction above */
+    .ab-body .ab-hook {
+      margin-bottom: 24px;
+      font-size: max(clamp(21px, 1.9vw, 27px), calc(27 / 17 * var(--up)));
+      line-height: 1.36;
+    }
+
+    .ab-body p {
+      margin-bottom: 20px;
+      font-size: max(16.5px, calc(16.5 / 17 * var(--up)));
+      line-height: 1.78;
+    }
+
+    .ab-foot-label {
+      margin-bottom: 13px;
+    }
+
     .about-foot {
       margin-top: 40px;
+      padding-top: 26px;
       grid-template-columns: 1fr;
       gap: 26px;
     }

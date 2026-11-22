@@ -113,8 +113,8 @@ const phases = [
     inset: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 8vh 5.5vw;
+    justify-content: safe center;
+    padding: var(--nav-clearance) 5.5vw;
     overflow: hidden;
   }
 
@@ -293,8 +293,7 @@ const phases = [
      the statement under the four columns that fell out of the 100vh frame. */
   @media (max-height: 760px) {
     .process-inner {
-      justify-content: safe center;
-      padding-block: max(28px, 5vh);
+      padding: var(--nav-clearance) 5.5vw clamp(24px, 4vh, 48px);
     }
 
     .pr-name {
@@ -311,6 +310,32 @@ const phases = [
 
     .pr-statement {
       margin-top: 5.5vh;
+    }
+  }
+
+  @media (max-height: 680px) {
+    .pr-mark {
+      margin-bottom: 14px;
+    }
+
+    .pr-tag {
+      margin-bottom: 8px;
+    }
+
+    .pr-name {
+      margin-bottom: 10px;
+    }
+
+    .pr-act {
+      padding-block: 2px;
+    }
+
+    .pr-tools {
+      margin-top: 12px;
+    }
+
+    .pr-statement {
+      margin-top: 3.5vh;
     }
   }
 

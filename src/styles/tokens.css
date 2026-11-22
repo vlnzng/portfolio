@@ -48,8 +48,13 @@
      (≈ the V). Lives here, not in Wordmark.astro, because the mobile hero
      stack in global.css positions the text block off it. Tops out at a 1778px
      viewport; --up carries it on above that so the lockup keeps its scale
-     against the portrait on a 4K screen. */
-  --wm-h: max(clamp(6.75rem, 13.5vw, 15rem), calc(240 / 17 * var(--up)));
+     against the portrait on a 4K screen. The 34vh cap only bites on wide, short
+     windows, where a width-driven lockup would run into the hero text. */
+  --wm-h: min(max(clamp(6.75rem, 13.5vw, 15rem), calc(240 / 17 * var(--up))), 34vh);
+
+  /* top inset that keeps panel content clear of the fixed navbar and the
+     collapsed V/L mark on the desktop engine */
+  --nav-clearance: clamp(76px, 10.5vh, 108px);
 
   --section-padding: clamp(1.5rem, 4vw, 5rem);
   --section-width: 100vw;

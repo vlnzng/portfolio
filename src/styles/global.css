@@ -134,12 +134,25 @@ button:focus-visible,
     /* 52px ≈ the rhythm between the text pieces below, so the lockup sits in
        the same column rather than crowding the role line */
     --hero-text-top: calc(var(--hero-wm-top) + var(--wm-h) + 52px);
-    /* the text block is content-sized, not viewport-sized: 264px is its
-       measured worst case (five wrapped pitch lines at 320px wide) plus a
-       little slack. Re-measure if the hero copy ever grows. */
-    --hero-text-h: 264px;
+    /* the text block is content-sized, not viewport-sized. These are its
+       measured heights plus a 28px gap, so the first paint is already right;
+       scroll.ts only corrects it when the text wraps differently (text
+       scaling, unusual widths). Re-measure if the hero copy ever grows. */
+    --hero-text-h: 253px;
     --hero-portrait-top: calc(var(--hero-text-top) + var(--hero-text-h));
     --hero-portrait-h: 46svh;
+  }
+
+  @media (max-width: 359px) {
+    :root {
+      --hero-text-h: 286px;
+    }
+  }
+
+  @media (min-width: 600px) {
+    :root {
+      --hero-text-h: 220px;
+    }
   }
 
   body {

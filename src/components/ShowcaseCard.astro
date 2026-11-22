@@ -287,6 +287,55 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
     border-color: rgb(217 179 108 / 0.55);
   }
 
+  /* Short laptops: the text zones give back their spacing, and the square art
+     takes what's left of the viewport after the insets and ~236px of card
+     text. It stays uncropped and only narrows when the column would not fit. */
+  @media (max-height: 760px) {
+    .wcard-media {
+      width: min(
+        100%,
+        calc(
+          100vh - var(--nav-clearance) - clamp(24px, 4vh, 48px) -
+            max(236px, calc(236 / 17 * var(--up)))
+        )
+      );
+    }
+
+    .wcard-num {
+      margin-top: 12px;
+      padding-top: 9px;
+    }
+
+    .wcard-title {
+      margin-top: 6px;
+    }
+
+    .wcard-hook {
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .wcard-result {
+      margin-top: 8px;
+    }
+
+    .wcard-foot {
+      margin-top: 10px;
+    }
+
+    .wcard-meta {
+      margin-bottom: 7px;
+    }
+
+    .wcard-tags {
+      gap: 5px;
+    }
+
+    .wcard-tag {
+      padding: 2px 9px;
+    }
+  }
+
   /* ---- arrival: a one-time light sweep across each placeholder ---- */
   .wcard-media-inner::after {
     content: '';
@@ -373,10 +422,28 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
       cursor: pointer;
     }
 
+    /* the stacked page scrolls, so the art keeps the full column */
+    .wcard-media {
+      width: 100%;
+    }
+  }
+
+  /* A landscape touch tablet keeps the engine's four-column subgrid but has no
+     hover either, so the static label takes a seventh shared row there. */
+  @media (hover: none), (pointer: coarse) {
+    .wcard {
+      grid-row: span 7;
+    }
+  }
+
+  /* the engine boundary plus any touch pointer */
+  @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px),
+    (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
     .wcard-cursor {
       display: inline-flex;
       position: static;
       align-self: flex-start;
+      justify-self: start;
       margin-top: 16px;
       padding: 0;
       border-radius: 0;

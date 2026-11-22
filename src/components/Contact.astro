@@ -22,7 +22,7 @@ const mailDomain = 'gmail.com';
           quality={80}
           alt="Valentin Lenzing as a child in a black-and-white studio portrait, holding the handset of a rotary phone to his ear, a teddy bear sitting beside him."
           widths={[360, 540, 720, 900]}
-          sizes="(max-width: 820px) 86vw, (max-height: 519px) 86vw, 380px"
+          sizes="(max-width: 820px) min(86vw, 340px), (max-height: 519px) min(86vw, 340px), (pointer: coarse) and (max-width: 1024px) min(86vw, 340px), (prefers-reduced-motion: reduce) min(86vw, 340px), max(clamp(348px, 29vw, 384px), min(20vw, 511px))"
           loading="lazy"
         />
       </figure>
@@ -124,11 +124,20 @@ const mailDomain = 'gmail.com';
     position: absolute;
     inset: 0;
     z-index: 3;
-    padding: 0 5.5vw;
+    padding: var(--nav-clearance) 5.5vw;
     display: grid;
     /* the photo column scales with --up too, so it keeps its weight against
-       the upscaled email/labels instead of shrinking into the left margin */
-    grid-template-columns: max(clamp(348px, 29vw, 384px), calc(384 / 17 * var(--up))) 1fr;
+       the upscaled email/labels instead of shrinking into the left margin.
+       The second arm caps it on short screens: what's left of the viewport
+       after the insets and ~130px of quote, divided by the 4/5 photo ratio. */
+    grid-template-columns:
+      min(
+        max(clamp(348px, 29vw, 384px), calc(384 / 17 * var(--up))),
+        calc(
+          (100vh - var(--nav-clearance) - clamp(28px, 4vh, 56px) - max(130px, calc(130 / 17 * var(--up)))) / 1.25
+        )
+      )
+      1fr;
     align-items: center;
     gap: clamp(56px, 7vw, 120px);
   }
@@ -438,6 +447,12 @@ const mailDomain = 'gmail.com';
   .clegal-dot {
     color: var(--color-border);
     font-size: max(11px, calc(11 / 17 * var(--up)));
+  }
+
+  @media (max-height: 760px) {
+    .c-inner {
+      padding: var(--nav-clearance) 5.5vw clamp(28px, 4vh, 56px);
+    }
   }
 
   @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px), (prefers-reduced-motion: reduce) {

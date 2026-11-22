@@ -57,8 +57,10 @@
     color: var(--color-text);
   }
 
+  /* On the desktop engine the statement lives in the scroll cue instead;
+     the boundary block below turns it on everywhere else */
   .hero-statement {
-    display: grid;
+    display: none;
     gap: 2px;
     margin: 26px 0 0;
     max-width: none;
@@ -78,13 +80,6 @@
 
   .hero-statement .gold {
     color: var(--color-accent);
-  }
-
-  /* On the desktop engine the statement lives in the scroll cue instead */
-  @media (min-width: 821px) and (min-height: 520px) and (prefers-reduced-motion: no-preference) {
-    .hero-statement {
-      display: none;
-    }
   }
 
   /* ---- load-in: role → pitch → statement rise on first paint ---- */
@@ -135,6 +130,10 @@
          fraction, so the gap under the lockup is the same on every phone */
       top: var(--hero-text-top);
       max-width: none;
+    }
+
+    .hero-statement {
+      display: grid;
     }
 
     /* the fixed two-line break is a desktop composition — let it reflow */
