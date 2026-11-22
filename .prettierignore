@@ -1,0 +1,6 @@
+# Generated or binary-adjacent output
+package-lock.json
+public/
+
+# Final copy: formatting must never rewrap it
+src/content/
