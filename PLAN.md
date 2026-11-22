@@ -133,12 +133,10 @@ the **wordmark morph end state** (D), and a **real screen-reader + real-device**
       tablets (1080px+, e.g. iPad Air 1180×820) keep the engine — a first cut at 1180px sent
       them to the stacked layout too, where the short viewport cut the portrait off at the
       fold. The exact string lives in `media.ts` / CLAUDE.md
-- [ ] **Wordmark morph end state** — the SVG has landed, so this is now actionable. Measured
-      (Oct 2026): the collapsed V/L keeps its top at 30px while its size follows the hero
-      wordmark (42px tall at 1280 → 70px at 2560), so its centre drifts from 5px above the
-      nav line (1280) to 12px below it (2560); within ±5px from 1280 to 1920. Options: keep
-      as is, or centre it on the nav line with a size tied to the nav type (`--up`). The
-      handoff's dip before lift-off was dropped on purpose (see `applyMorph`)
+- [x] **Wordmark morph end state** — the collapsed V/L is now centred on the live nav line
+      at every width (`measure()` in `scroll.ts`). Its size follows the lockup up to 1920px,
+      then holds against the nav type. The handoff's dip before lift-off stays dropped on
+      purpose (see `applyMorph`)
 - ~~Extract the inline Work section into `Work.astro`~~ — dropped as over-engineering; the
   section is a thin wrapper around `ShowcaseCard` and has no reuse case
 

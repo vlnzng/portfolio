@@ -52,6 +52,9 @@
      windows, where a width-driven lockup would run into the hero text. */
   --wm-h: min(max(clamp(6.75rem, 13.5vw, 15rem), calc(240 / 17 * var(--up))), 34vh);
 
+  /* desktop navbar offset: 40px from 1080px height up, tighter on short laptops */
+  --nav-top: clamp(22px, 3.71vh, 40px);
+
   /* top inset that keeps panel content clear of the fixed navbar and the
      collapsed V/L mark on the desktop engine */
   --nav-clearance: clamp(76px, 10.5vh, 108px);

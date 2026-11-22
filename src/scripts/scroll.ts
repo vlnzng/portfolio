@@ -47,7 +47,9 @@ window.addEventListener('pageshow', (event) => {
   }
 });
 
-const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+// Morph travel: part linear, part ease-out. It answers the first scroll tick
+// (slope 1.6 at t=0) and never fully stalls before the pan takes over (0.4 at t=1).
+const morphEase = (t: number) => t + 0.6 * t * (1 - t);
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
 let lenis: Lenis | undefined;
@@ -81,7 +83,7 @@ reducedMotionQuery.addEventListener('change', reinitOnBoundaryChange);
 
 function initLenis(): Lenis {
   const instance = new Lenis({
-    duration: 1.1,
+    duration: 0.95,
     easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     orientation: 'vertical',
     gestureOrientation: 'vertical',
@@ -97,10 +99,12 @@ function initLenis(): Lenis {
 
 /* Two-phase desktop engine (ported from the design handoff, driven by a single
    pinned ScrollTrigger):
-     Phase 1 (t 0→1, ~1.15 viewport heights) — the wordmark morphs from the hero
+     Phase 1 (t 0→1, ~0.65 viewport heights) — the wordmark morphs from the hero
        lockup into the VL home button; the track does NOT pan yet.
      Phase 2 (panX 0→panMax) — the track pans horizontally; the shared portrait
-       glides hero-right → about-left, the cue spins ↓→→, progress fills. */
+       glides hero-right → about-left, the cue spins ↓→→, progress fills. Its
+       scroll budget per panel is normalised, so a panel costs about the same
+       wheel travel on a laptop as on a large desktop. */
 function initEngine(): void {
   const track = document.querySelector<HTMLElement>('.horizontal-track');
   const container = document.querySelector<HTMLElement>('.scroll-container');
@@ -134,9 +138,17 @@ function initEngine(): void {
   const panelEls = Array.from(track.querySelectorAll<HTMLElement>('.section'));
   const panelOffset = (i: number): number => Math.min(panelEls[i]?.offsetLeft ?? 0, panMax);
 
+  const navList = document.querySelector<HTMLElement>('.navbar__list');
+  const navLabel = navList?.querySelector<HTMLElement>('span');
+  const wordmarkSvg = wordmark?.querySelector<SVGSVGElement>('svg');
+
   let morphDist = 0;
   let panMax = 0;
+  let panScrollDist = 0; // scroll travel that drives panX from 0 to panMax
   let total = 0;
+  // where the collapsed V/L ends up: centred on the live nav line
+  let markY = 30;
+  let markScale = 0.22;
   // The real rendered width of one panel (CSS `100vw`). This can differ from
   // window.innerWidth when a vertical scrollbar / device-emulation inflates `vw`;
   // using it everywhere the engine emulates a vw-based value keeps the pan math
@@ -146,17 +158,35 @@ function initEngine(): void {
   const measure = (): void => {
     panelW =
       panelEls.length > 1 ? panelEls[1].offsetLeft - panelEls[0].offsetLeft : window.innerWidth;
-    // Phase 1 costs 1.15 viewport heights of scrolling — but a wheel notch
-    // delivers a fixed number of pixels no matter how tall the screen is, so
-    // on a 1440px display that was 1656px of wheel travel against 1242px on a
-    // 1080px one: a third more work for the same morph, with no sideways
-    // motion yet to show for it. Cap the height the budget is derived from at
-    // 1080 (the same reference width/height the type scale anchors to), so the
-    // morph never costs more scrolling than it does on a 1080p screen.
-    morphDist = Math.min(window.innerHeight, 1080) * 1.15;
+    // A wheel notch delivers a fixed number of pixels however large the screen
+    // is, so both budgets are bounded in absolute terms. The morph stays a short
+    // gesture with no sideways motion to wait through.
+    morphDist = clamp(window.innerHeight * 0.65, 380, 720);
     panMax = Math.max(0, track.scrollWidth - panelW);
-    total = morphDist + panMax;
+    // Panning 1:1 made a 1280px laptop cross a panel 1.5x faster per scroll
+    // pixel than a 1920px desktop. Between these bounds it still runs 1:1.
+    panScrollDist = panMax > 0 ? (panelEls.length - 1) * clamp(panelW, 1480, 1920) : 0;
+    total = morphDist + panScrollDist;
+
+    if (navList && navLabel && wordmarkSvg) {
+      const navRect = navList.getBoundingClientRect();
+      // the labels carry padding below the text for their active underline
+      const labelPad = parseFloat(getComputedStyle(navLabel).paddingBottom) || 0;
+      const navCenterY = navRect.top + (navRect.height - labelPad) / 2;
+      // computed height: unlike a rect it ignores the morph's current scale
+      const wordmarkH = parseFloat(getComputedStyle(wordmarkSvg).height);
+      // follows the lockup up to 1920px, then holds its size against the nav type
+      const markH = clamp(wordmarkH * 0.22, 38, navRect.height * 1.85);
+      markScale = markH / wordmarkH;
+      markY = navCenterY - markH / 2;
+    }
   };
+
+  const panFromPos = (pos: number): number =>
+    panScrollDist > 0 ? (clamp(pos - morphDist, 0, panScrollDist) / panScrollDist) * panMax : 0;
+  const posFromPan = (panX: number): number =>
+    morphDist + (panMax > 0 ? (panX / panMax) * panScrollDist : 0);
+  const panelPos = (i: number): number => (i === 0 ? 0 : posFromPan(panelOffset(i)));
   measure();
 
   // ---- wordmark morph (t in [0,1]) ----
@@ -173,20 +203,18 @@ function initEngine(): void {
     });
 
     // travel: a single, monotonic glide up to the navbar corner while
-    // shrinking — driven by the same easeInOut as the portrait so the
+    // shrinking — driven by the same morphEase as the portrait so the
     // wordmark, the hero text and the figure all settle on the same curve
     // (no dip: the "down" read comes from the text + portrait, not a wobble).
     // heroX/heroY mirror the wordmark's CSS resting transform (5.5vw / 20vh).
-    const heroX = Math.max(64, panelW * 0.055);
+    const heroX = panelW * 0.055;
     const heroY = window.innerHeight * 0.2;
     const navX = 54;
-    const navY = 30;
-    const endScale = 0.22;
 
-    const te = easeInOut(t);
+    const te = morphEase(t);
     const x = lerp(heroX, navX, te);
-    const y = lerp(heroY, navY, te);
-    const s = lerp(1, endScale, te);
+    const y = lerp(heroY, markY, te);
+    const s = lerp(1, markScale, te);
     wordmark.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
     wordmark.classList.toggle('is-collapsed', t > 0.45);
 
@@ -209,7 +237,7 @@ function initEngine(): void {
     // sits low at rest; scrolling down reveals more of the figure, and it
     // stays up once the pan takes over (one direction, no wobble)
     const restY = vh * 0.15;
-    portrait.style.transform = `translateY(${lerp(restY, 0, easeInOut(t))}px)`;
+    portrait.style.transform = `translateY(${lerp(restY, 0, morphEase(t))}px)`;
   }
 
   // ---- portrait parallax: a few px of depth against the cursor, only while
@@ -279,6 +307,19 @@ function initEngine(): void {
     window.__portfolioSetActive?.(panelEls[nearest].id);
   }
 
+  const render = (pos: number): void => {
+    const t = clamp(pos / morphDist, 0, 1);
+    const panX = panFromPos(pos);
+    gsap.set(track, { x: -panX });
+    applyMorph(t);
+    positionPortrait(t, panX);
+    updateParallaxRest(t);
+    updateCue(t, panX);
+    updateProgress(panX, t);
+    updateNav(panX);
+    revealOnPan(panX, panelW);
+  };
+
   const st = ScrollTrigger.create({
     trigger: container,
     pin: true,
@@ -288,20 +329,12 @@ function initEngine(): void {
       return `+=${total}`;
     },
     invalidateOnRefresh: true,
-    onRefresh: measure,
-    onUpdate: (self) => {
-      const pos = self.progress * total;
-      const t = clamp(pos / morphDist, 0, 1);
-      const panX = clamp(pos - morphDist, 0, panMax);
-      gsap.set(track, { x: -panX });
-      applyMorph(t);
-      positionPortrait(t, panX);
-      updateParallaxRest(t);
-      updateCue(t, panX);
-      updateProgress(panX, t);
-      updateNav(panX);
-      revealOnPan(panX, panelW);
+    // re-render too: the collapsed mark's target moves with the viewport
+    onRefresh: (self) => {
+      measure();
+      render(self.progress * total);
     },
+    onUpdate: (self) => render(self.progress * total),
   });
 
   // initial paint (before the first scroll)
@@ -328,9 +361,8 @@ function initEngine(): void {
   window.__portfolioScrollTo = (id: string) => {
     const idx = panelEls.findIndex((s) => s.id === id);
     if (idx < 0) return;
-    const pos = idx === 0 ? 0 : morphDist + panelOffset(idx);
     // URL is kept in sync by navigation.ts as the pan settles on a section.
-    goTo(posToScroll(pos));
+    goTo(posToScroll(panelPos(idx)));
   };
 
   // Keyboard focus has to drag the pan along: the browser reveals a focused
@@ -346,7 +378,7 @@ function initEngine(): void {
     const idx = panelEls.indexOf(panel);
     if (idx < 0) return;
 
-    const pos = idx === 0 ? 0 : morphDist + panelOffset(idx);
+    const pos = panelPos(idx);
     // already showing that panel — don't re-scroll on every Tab step inside it
     if (Math.abs(scrollToPos(scrollY()) - pos) < 8) return;
     goTo(posToScroll(pos), 0.45);
@@ -356,7 +388,7 @@ function initEngine(): void {
   cue?.addEventListener('click', () => {
     const curPos = scrollToPos(scrollY());
     if (curPos < morphDist - 10) goTo(posToScroll(morphDist), 0.8);
-    else goTo(posToScroll(curPos + panelW * 0.9), 0.8);
+    else goTo(posToScroll(posFromPan(Math.min(panFromPos(curPos) + panelW * 0.9, panMax))), 0.8);
   });
 
   // Both entry paths below fire one frame after the engine is built — the frame

@@ -41,7 +41,7 @@ const links = [
      can if its containing block is mis-resolved */
   .navbar {
     position: fixed;
-    top: calc(40px + env(safe-area-inset-top, 0px));
+    top: calc(var(--nav-top) + env(safe-area-inset-top, 0px));
     left: 0;
     right: 0;
     z-index: 60;
