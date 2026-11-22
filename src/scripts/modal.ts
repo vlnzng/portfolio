@@ -1,3 +1,5 @@
+import { desktopQuery, prefersReducedMotion } from './media';
+
 declare global {
   interface Window {
     __initialModalSlug?: string;
@@ -336,18 +338,38 @@ const requestIdle =
   (window as Window & { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback ??
   ((cb: () => void) => window.setTimeout(cb, 200));
 
-// Only after the load event — fired on idle alone, ~1MB of case imagery
-// competed with the LCP portrait for bandwidth. Skipped on save-data / 2G,
-// where speculative downloads are pure cost.
+// Warm up only once the visitor heads for the work, so someone who leaves after
+// the hero never pays for ~1.4MB of case imagery. Stacked, that is #work coming
+// within a screen. On the engine the track is clipped, so an off-screen panel
+// never intersects: the panel before it (About) sliding in is the signal.
+function warmOnApproach(): void {
+  const engine = desktopQuery.matches && !prefersReducedMotion;
+  const sentinel = document.getElementById(engine ? 'about' : 'work');
+  if (!sentinel || !('IntersectionObserver' in window)) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      // a ratio, not isIntersecting: a panel waiting right beside the viewport
+      // only touches its edge, and that already counts as intersecting
+      if (!entries.some((entry) => entry.intersectionRatio > 0)) return;
+      observer.disconnect();
+      requestIdle(preloadCaseAssets);
+    },
+    { rootMargin: '100% 0px', threshold: 0.01 },
+  );
+  observer.observe(sentinel);
+}
+
+// Only after the load event, so case imagery never competes with the LCP
+// portrait. Skipped on save-data / 2G, where speculative downloads are pure cost.
 const connection = (
   navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }
 ).connection;
 const worthWarming = !connection?.saveData && !/(^|-)2g$/.test(connection?.effectiveType ?? '');
 
 if (worthWarming) {
-  const warm = (): void => requestIdle(preloadCaseAssets);
-  if (document.readyState === 'complete') warm();
-  else window.addEventListener('load', warm, { once: true });
+  if (document.readyState === 'complete') warmOnApproach();
+  else window.addEventListener('load', warmOnApproach, { once: true });
 }
 
 const pathMatch = window.location.pathname.match(/^\/work\/([^/]+)\/?$/);
