@@ -257,24 +257,5 @@ const mailDomain = 'gmail.com';
 </BaseLayout>
 
 <script>
-  // Assemble obfuscated email addresses (parts kept in data-attributes).
-  document.querySelectorAll<HTMLAnchorElement>('a[data-mail-user]').forEach((link) => {
-    const user = link.dataset.mailUser ?? '';
-    const domain = link.dataset.mailDomain ?? '';
-    const address = `${user}@${domain}`;
-    link.href = `mailto:${address}`;
-    const text = link.querySelector<HTMLElement>('[data-mail-text]');
-    if (text) text.textContent = address;
-  });
-
-  // With a stored return position (Contact.astro), go back to "/" instead of
-  // "/#contact": arriving on the fragment made the browser scroll to the top
-  // of the section, overriding the exact spot scroll.ts restores.
-  try {
-    if (sessionStorage.getItem('vl:returnY') != null) {
-      document.querySelector<HTMLAnchorElement>('.lg-back')?.setAttribute('href', '/');
-    }
-  } catch {
-    /* storage blocked — keep the #contact fallback */
-  }
+  import '../scripts/legal';
 </script>
