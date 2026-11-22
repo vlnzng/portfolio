@@ -321,7 +321,8 @@ const mailDomain = 'gmail.com';
     transition: transform 0.9s var(--ease-glide) 0.25s;
   }
 
-  :global(html.js) .contact.is-in .cmail::before {
+  /* the panel on the desktop engine, its own group in the stacked layout */
+  :global(html.js) :is(.contact.is-in, .cgroup.is-in) .cmail::before {
     transform: scaleX(1);
   }
 

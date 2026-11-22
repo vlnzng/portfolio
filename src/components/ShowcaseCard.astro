@@ -17,14 +17,7 @@ const num = String(order).padStart(2, '0');
 const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
 ---
 
-<button
-  class="showcase-card wcard reveal reveal-x"
-  style={`--i:${order - 1}`}
-  data-slug={showcase.id}
-  type="button"
-  aria-haspopup="dialog"
-  aria-label={`Open case study: ${title}`}
->
+<article class="showcase-card wcard reveal reveal-x" style={`--i:${order - 1}`}>
   <div class="wcard-media">
     <div class="wcard-media-inner">
       {cardImage ? (
@@ -49,7 +42,9 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
   </div>
 
   <span class="wcard-num">{num}</span>
-  <h3 class="wcard-title">{title}</h3>
+  <h3 class="wcard-title">
+    <a class="wcard-link" href={`/work/${showcase.id}/`} data-case-link={showcase.id} aria-haspopup="dialog">{title}</a>
+  </h3>
   <p class="wcard-hook">{subtitle}</p>
   {result && <p class="wcard-result">{result}</p>}
 
@@ -62,7 +57,7 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
   </div>
 
   <span class="wcard-cursor" aria-hidden="true">View case <span class="wcard-cursor-arrow">&rarr;</span></span>
-</button>
+</article>
 
 <script>
   import { desktopQuery, prefersReducedMotion } from '../scripts/media';
@@ -98,12 +93,6 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
     grid-template-rows: subgrid;
     grid-row: span 6;
     min-height: 0;
-    text-align: left;
-    background: none;
-    border: 0;
-    padding: 0;
-    color: inherit;
-    font: inherit;
     cursor: pointer;
     will-change: transform;
   }
@@ -112,7 +101,25 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
     translate: 0 -10px;
   }
 
-  .wcard:focus-visible {
+  /* The title is the card's one real link. Its ::after stretches over the whole
+     card, so every click target (new tab, context menu, middle click) is that
+     link. Above the placeholder caption; below the trailing pill. */
+  .wcard-link {
+    cursor: inherit;
+  }
+
+  .wcard-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+  }
+
+  .wcard-link:focus-visible {
+    outline: none;
+  }
+
+  .wcard-link:focus-visible::after {
     outline: 2px solid var(--color-accent);
     outline-offset: 8px;
   }
@@ -357,6 +364,11 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
     animation-delay: calc(var(--i, 0) * 0.1s);
   }
 
+  /* stacked layout: each card reveals on its own, so nothing to stagger */
+  :global(html.js .wcard.is-in) .wcard-media-inner::after {
+    animation: wcard-sweep 1.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
   @keyframes wcard-sweep {
     to {
       transform: translateX(130%);
@@ -422,9 +434,44 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
       cursor: pointer;
     }
 
-    /* the stacked page scrolls, so the art keeps the full column */
+    /* The stacked page scrolls, so a short phone must not inherit the short
+       laptop compaction above: full column for the art, normal spacing. */
     .wcard-media {
       width: 100%;
+    }
+
+    .wcard-num {
+      margin-top: 20px;
+      padding-top: 14px;
+    }
+
+    .wcard-title {
+      margin-top: 10px;
+    }
+
+    .wcard-hook {
+      margin-top: 11px;
+      line-height: 1.6;
+    }
+
+    .wcard-result {
+      margin-top: 14px;
+    }
+
+    .wcard-foot {
+      margin-top: 18px;
+    }
+
+    .wcard-meta {
+      margin-bottom: 12px;
+    }
+
+    .wcard-tags {
+      gap: 8px;
+    }
+
+    .wcard-tag {
+      padding: 4px 12px;
     }
   }
 

@@ -186,8 +186,9 @@ button:focus-visible,
 
 /* ===== Entrance choreography ============================================
    Generic reveal primitive (from the design handoff). Content is hidden
-   until its owning panel gets .is-in — on desktop driven by the pan
-   position (scroll.ts → reveal.ts), on mobile by an IntersectionObserver.
+   until it gets .is-in: on desktop its owning panel, driven by the pan
+   position (scroll.ts → reveal.ts); on mobile each element on its own,
+   driven by an IntersectionObserver.
    Side-panel content rides in from the +X direction so each arrival echoes
    the leftward pan: the horizontal motion is the signature, so the
    choreography leans into it. Gated behind html.js so nothing is ever
@@ -205,9 +206,18 @@ html.js .reveal {
   will-change: opacity, transform;
 }
 
-html.js .section.is-in .reveal {
+html.js .section.is-in .reveal,
+html.js .reveal.is-in {
   opacity: 1;
   transform: none;
+}
+
+/* Stacked, each element reveals as it scrolls in, so the scroll is the stagger.
+   A per-panel delay would only hold back what is already on screen. */
+@media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px), (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    --d: 0ms;
+  }
 }
 
 /* short offsets: the panel itself is already moving during the pan, so the

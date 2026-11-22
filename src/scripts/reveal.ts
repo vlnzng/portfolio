@@ -1,9 +1,9 @@
 /* Arrival choreography: CSS does the motion, this module only toggles
    .is-in (early, while the panel slides in) and .is-centred (once the visitor
-   has arrived — e.g. the process diamond draw). Desktop is driven by the pan
-   (scroll.ts calls revealOnPan), mobile by an IntersectionObserver; both reset
-   on the way out so revisits re-play. The hero load-in waits for fonts so the
-   wordmark write-in never paints with a fallback font. */
+   has arrived — e.g. the process diamond draw). Desktop is driven per panel by
+   the pan (scroll.ts calls revealOnPan), mobile per element by an
+   IntersectionObserver; both reset so revisits re-play. The hero load-in waits
+   for fonts so the wordmark write-in never paints with a fallback font. */
 import { desktopQuery, prefersReducedMotion } from './media';
 
 export const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
@@ -58,7 +58,9 @@ export function revealOnPan(panX: number, vw: number): void {
   }
 }
 
-/* ---- mobile: IntersectionObserver -------------------------------------- */
+/* ---- mobile: one IntersectionObserver over the individual elements ------
+   A ratio on the whole section left a blank half screen before #work (about
+   2700px tall on a phone) while its later cards animated off-screen. */
 let io: IntersectionObserver | null = null;
 
 function startIO(): void {
@@ -66,26 +68,16 @@ function startIO(): void {
   io = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
-          entry.target.classList.add('is-in');
-        } else if (entry.intersectionRatio < 0.04) {
-          entry.target.classList.remove('is-in');
-        }
-
-        if (entry.isIntersecting && entry.intersectionRatio > 0.42) {
-          entry.target.classList.add('is-centred');
-        } else if (entry.intersectionRatio < 0.15) {
-          entry.target.classList.remove('is-centred');
-        }
+        // Resets only below the fold, so scrolling down replays it. Past the top
+        // it stays shown: the hidden state sits 24px lower, which would pull the
+        // element back into view there and make it flicker.
+        const passed = entry.boundingClientRect.bottom <= 0;
+        entry.target.classList.toggle('is-in', entry.isIntersecting || passed);
       });
     },
-    // a little bottom margin so a panel begins revealing just before it scrolls
-    // fully into view
-    { threshold: [0, 0.04, 0.1, 0.15, 0.42], rootMargin: '0px 0px 8% 0px' },
+    { threshold: 0, rootMargin: '0px 0px -6% 0px' },
   );
-  panels.forEach((panel, i) => {
-    if (i > 0) io?.observe(panel);
-  });
+  document.querySelectorAll('.section:not(#hero) .reveal').forEach((el) => io?.observe(el));
 }
 
 function stopIO(): void {
@@ -109,6 +101,7 @@ if (!prefersReducedMotion) {
     panels.forEach((panel, i) => {
       if (i > 0) panel.classList.remove('is-in', 'is-centred');
     });
+    document.querySelectorAll('.reveal.is-in').forEach((el) => el.classList.remove('is-in'));
     revealed.length = 0;
     centred.length = 0;
     syncMode();

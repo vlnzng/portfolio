@@ -94,11 +94,14 @@ function openModal(slug: string, push = true): void {
         .join('')}</div>`
     : '';
 
+  // h1: the page behind is inert while this is open, and the MDX sections are
+  // h2s. The dialog is named here because the title only exists once injected.
   modalMeta.innerHTML = `
-    <h2 id="modal-title" class="cs-title">${escapeHtml(data.title)}</h2>
+    <h1 id="modal-title" class="cs-title">${escapeHtml(data.title)}</h1>
     <p class="cs-sub">${escapeHtml(data.subtitle)}</p>
     ${glance}
   `;
+  modal.setAttribute('aria-labelledby', 'modal-title');
 
   modalBody.replaceChildren(template.content.cloneNode(true));
 
@@ -166,7 +169,8 @@ function closeModal(): void {
   // an ancestor of the focused element, and AT would sit in a hidden subtree.
   setBackgroundInert(false);
   document.body.style.overflow = '';
-  window.scrollTo({ top: scrollPositionBeforeOpen });
+  // instant: html's scroll-behavior: smooth would animate the restore
+  window.scrollTo({ top: scrollPositionBeforeOpen, behavior: 'instant' });
 
   const opener = openerEl;
   openerEl = null;
@@ -288,16 +292,20 @@ window.addEventListener('popstate', () => {
   }
 });
 
-document.querySelectorAll<HTMLElement>('.showcase-card').forEach((card) => {
-  const slug = card.dataset.slug;
+// A plain click opens the case in place. Modified and middle clicks stay normal
+// links to /work/<slug>/, so cases can be opened side by side in new tabs.
+document.querySelectorAll<HTMLAnchorElement>('[data-case-link]').forEach((link) => {
+  const slug = link.dataset.caseLink;
   if (!slug) return;
 
-  card.addEventListener('click', () => openModal(slug));
-  card.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      openModal(slug);
+  link.addEventListener('click', (event) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+      return;
     }
+    event.preventDefault();
+    // Safari doesn't focus links on click, and closing returns focus to the opener
+    link.focus({ preventScroll: true });
+    openModal(slug);
   });
 });
 

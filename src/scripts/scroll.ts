@@ -48,8 +48,8 @@ window.addEventListener('pageshow', (event) => {
 });
 
 // Morph travel: part linear, part ease-out. It answers the first scroll tick
-// (slope 1.6 at t=0) and never fully stalls before the pan takes over (0.4 at t=1).
-const morphEase = (t: number) => t + 0.6 * t * (1 - t);
+// (slope 1.3 at t=0) and keeps moving into the handoff to the pan (0.7 at t=1).
+const morphEase = (t: number) => t + 0.3 * t * (1 - t);
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
 let lenis: Lenis | undefined;
@@ -163,9 +163,9 @@ function initEngine(): void {
     // gesture with no sideways motion to wait through.
     morphDist = clamp(window.innerHeight * 0.65, 380, 720);
     panMax = Math.max(0, track.scrollWidth - panelW);
-    // Panning 1:1 made a 1280px laptop cross a panel 1.5x faster per scroll
-    // pixel than a 1920px desktop. Between these bounds it still runs 1:1.
-    panScrollDist = panMax > 0 ? (panelEls.length - 1) * clamp(panelW, 1480, 1920) : 0;
+    // About 0.5-0.65px of pan per scroll pixel on laptops and desktops. At 1:1 the
+    // side-scroll felt abruptly fast right after the morph on a real touchpad.
+    panScrollDist = panMax > 0 ? (panelEls.length - 1) * clamp(panelW * 1.9, 2400, 3000) : 0;
     total = morphDist + panScrollDist;
 
     if (navList && navLabel && wordmarkSvg) {
@@ -176,9 +176,11 @@ function initEngine(): void {
       // computed height: unlike a rect it ignores the morph's current scale
       const wordmarkH = parseFloat(getComputedStyle(wordmarkSvg).height);
       // follows the lockup up to 1920px, then holds its size against the nav type
-      const markH = clamp(wordmarkH * 0.22, 38, navRect.height * 1.85);
-      markScale = markH / wordmarkH;
-      markY = navCenterY - markH / 2;
+      if (wordmarkH > 0) {
+        const markH = clamp(wordmarkH * 0.22, 38, navRect.height * 1.85);
+        markScale = markH / wordmarkH;
+        markY = navCenterY - markH / 2;
+      }
     }
   };
 
