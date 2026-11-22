@@ -83,7 +83,7 @@ reducedMotionQuery.addEventListener('change', reinitOnBoundaryChange);
 
 function initLenis(): Lenis {
   const instance = new Lenis({
-    duration: 0.95,
+    duration: 0.9,
     easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     orientation: 'vertical',
     gestureOrientation: 'vertical',
@@ -163,9 +163,10 @@ function initEngine(): void {
     // gesture with no sideways motion to wait through.
     morphDist = clamp(window.innerHeight * 0.65, 380, 720);
     panMax = Math.max(0, track.scrollWidth - panelW);
-    // About 0.5-0.65px of pan per scroll pixel on laptops and desktops. At 1:1 the
-    // side-scroll felt abruptly fast right after the morph on a real touchpad.
-    panScrollDist = panMax > 0 ? (panelEls.length - 1) * clamp(panelW * 1.9, 2400, 3000) : 0;
+    // Pans 1:1 between these bounds. The floor keeps a small laptop from crossing
+    // a panel in a few wheel notches, the ceiling keeps large screens from feeling
+    // sluggish on a mouse wheel (a budget near 3000px took 30 notches per panel).
+    panScrollDist = panMax > 0 ? (panelEls.length - 1) * clamp(panelW, 1400, 1800) : 0;
     total = morphDist + panScrollDist;
 
     if (navList && navLabel && wordmarkSvg) {
