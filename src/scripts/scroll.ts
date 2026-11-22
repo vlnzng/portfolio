@@ -8,7 +8,9 @@ declare global {
 }
 
 // Tells navigation.ts that the initial scroll restore is done.
-const markScrollSettled = (): void => window.dispatchEvent(new Event('vl:scroll-settled'));
+const markScrollSettled = (): void => {
+  window.dispatchEvent(new Event('vl:scroll-settled'));
+};
 
 // One-shot scroll position stored when leaving for a legal page (Contact.astro).
 // try/catch: blocked storage must not take the whole scroll engine down.
