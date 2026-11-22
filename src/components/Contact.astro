@@ -14,12 +14,13 @@ const mailDomain = 'gmail.com';
     <div class="c-left">
       <figure class="cphoto reveal reveal-x" style="--i:0">
         {/* lazy like the work cards — eager competed with the LCP portrait;
-            fallbackFormat keeps the <img src> off the multi-MB source JPG */}
+            fallbackFormat + width keep the <img src> off the multi-MB source JPG */}
         <Picture
           src={contactPhoto}
-          formats={['avif', 'webp']}
+          formats={['webp']}
           fallbackFormat="webp"
           quality={80}
+          width={900}
           alt="Valentin Lenzing as a child in a black-and-white studio portrait, holding the handset of a rotary phone to his ear, a teddy bear sitting beside him."
           widths={[360, 540, 720, 900]}
           sizes="(max-width: 820px) min(86vw, 340px), (max-height: 519px) min(86vw, 340px), (pointer: coarse) and (max-width: 1024px) min(86vw, 340px), (prefers-reduced-motion: reduce) min(86vw, 340px), max(clamp(348px, 29vw, 384px), min(20vw, 511px))"
