@@ -19,9 +19,6 @@
   --font-body: 'Inter Variable', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'Menlo', 'Courier New', monospace;
 
-  --size-sm: 0.875rem;
-  --size-base: 1rem;
-
   /* Large-screen upscale. Every type size on the site has reached its clamp
      ceiling by ~1680px, while the panels and the card images keep growing with
      the viewport — so on a 4K screen at 100% zoom the copy reads small against
@@ -36,13 +33,6 @@
      the upscale overtakes it. The legal pages and the 404 deliberately stay
      out: they are plain reading columns with no imagery to keep up with. */
   --up: min(0.8854vw, 22.6px);
-
-  --leading-tight: 1.1;
-  --leading-normal: 1.5;
-
-  --space-2: 0.5rem;
-  --space-3: 1rem;
-  --space-4: 1.5rem;
 
   /* the sole size knob for the lockup — the rendered height of the wordmark
      (≈ the V). Lives here, not in Wordmark.astro, because the mobile hero
@@ -59,9 +49,6 @@
      collapsed V/L mark on the desktop engine */
   --nav-clearance: clamp(76px, 10.5vh, 108px);
 
-  --section-width: 100vw;
-  --section-height: 100vh;
-
   /* diagonal-stripe surface shared by all image placeholders */
   --stripe-surface: repeating-linear-gradient(
     -45deg,
@@ -72,7 +59,6 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   /* the handoff's signature glide — used by all entrance choreography */
   --ease-glide: cubic-bezier(0.2, 0.7, 0.3, 1);
-  --duration-fast: 200ms;
 
   --z-modal: 100;
   --z-overlay: 200;

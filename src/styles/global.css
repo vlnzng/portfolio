@@ -21,8 +21,8 @@ html {
 body {
   min-width: 320px;
   font-family: var(--font-body);
-  font-size: var(--size-base);
-  line-height: var(--leading-normal);
+  font-size: 1rem;
+  line-height: 1.5;
   background: var(--color-bg);
   color: var(--color-text);
   overflow-x: hidden;
@@ -35,7 +35,7 @@ h4,
 h5,
 h6 {
   font-family: var(--font-display);
-  line-height: var(--leading-tight);
+  line-height: 1.1;
   letter-spacing: 0;
 }
 
@@ -65,15 +65,15 @@ button:focus-visible,
 .skip-link {
   position: absolute;
   top: -100%;
-  left: var(--space-3);
+  left: 1rem;
   z-index: var(--z-overlay);
-  padding: var(--space-2) var(--space-4);
+  padding: 0.5rem 1.5rem;
   background: var(--color-accent);
   color: var(--color-bg);
-  font-size: var(--size-sm);
+  font-size: 0.875rem;
   font-weight: 700;
   text-decoration: none;
-  transition: top var(--duration-fast) var(--ease-out);
+  transition: top 0.2s var(--ease-out);
 }
 
 .skip-link:focus {
@@ -108,8 +108,8 @@ button:focus-visible,
 }
 
 .section {
-  width: var(--section-width);
-  height: var(--section-height);
+  width: 100vw;
+  height: 100vh;
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
