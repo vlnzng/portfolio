@@ -59,7 +59,6 @@
      collapsed V/L mark on the desktop engine */
   --nav-clearance: clamp(76px, 10.5vh, 108px);
 
-  --section-padding: clamp(1.5rem, 4vw, 5rem);
   --section-width: 100vw;
   --section-height: 100vh;
 

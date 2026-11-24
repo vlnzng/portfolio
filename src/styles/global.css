@@ -111,7 +111,6 @@ button:focus-visible,
   width: var(--section-width);
   height: var(--section-height);
   flex-shrink: 0;
-  padding: var(--section-padding);
   position: relative;
   overflow: hidden;
 }
