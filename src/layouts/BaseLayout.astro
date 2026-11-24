@@ -14,6 +14,7 @@ import loraLatin from '@fontsource-variable/lora/files/lora-latin-wght-normal.wo
 import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import SpeedInsights from '@vercel/speed-insights/astro';
 import Analytics from '@vercel/analytics/astro';
+import { SITE } from '../data/site';
 
 interface Props {
   title?: string;
@@ -23,7 +24,7 @@ interface Props {
 }
 
 const {
-  title = 'Valentin Lenzing | Product Designer · UX/UI',
+  title = SITE.title,
   description = 'Portfolio of Valentin Lenzing, Product Designer · UX/UI, working across research, interaction design, and front-end implementation.',
   ogImage = '/og-image.jpg',
   initialModalSlug,
@@ -84,11 +85,7 @@ const ogURL = new URL(Astro.url.pathname, site);
         name: 'Valentin Lenzing',
         jobTitle: 'Product Designer (UX/UI)',
         url: site.href,
-        // keep in sync with the links in Contact.astro
-        sameAs: [
-          'https://www.linkedin.com/in/valentinlenzing',
-          'https://github.com/vlnzng',
-        ],
+        sameAs: [SITE.social.linkedin, SITE.social.github],
       })}
     />
 

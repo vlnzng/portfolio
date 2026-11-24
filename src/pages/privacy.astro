@@ -2,9 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/legal.css';
 import logo from '../assets/brand/logo.svg?raw';
+import { SITE } from '../data/site';
 
-const mailUser = 'valentin.lenzing';
-const mailDomain = 'gmail.com';
+const { emailUser: mailUser, emailDomain: mailDomain } = SITE;
 ---
 
 <BaseLayout

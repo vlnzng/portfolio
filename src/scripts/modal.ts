@@ -1,3 +1,4 @@
+import { SITE } from '../data/site';
 import { desktopQuery, prefersReducedMotion } from './media';
 
 declare global {
@@ -28,10 +29,6 @@ let openerEl: HTMLElement | null = null;
 // True when opening pushed a history entry, so closing can history.back() it
 // away. False on a direct /work/<slug> visit — Back there would leave the site.
 let ownsHistoryEntry = false;
-
-// Mirrors the homepage <title> in BaseLayout.astro — restored when a modal
-// closes so the tab title tracks whether a case study is open.
-const HOME_TITLE = 'Valentin Lenzing | Product Designer · UX/UI';
 
 const modal = document.getElementById('showcase-modal');
 const modalScroll = document.getElementById('modal-scroll');
@@ -164,7 +161,8 @@ function closeModal(): void {
   if (!modal || !currentSlug) return;
 
   currentSlug = null;
-  document.title = HOME_TITLE;
+  // the homepage title, also on a direct /work/<slug> visit
+  document.title = SITE.title;
 
   // Lift inert and move focus out BEFORE aria-hidden: browsers refuse to hide
   // an ancestor of the focused element, and AT would sit in a hidden subtree.

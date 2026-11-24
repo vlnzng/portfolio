@@ -1,11 +1,9 @@
 ---
 import { Picture } from 'astro:assets';
 import contactPhoto from '../assets/images/contact.jpg';
+import { SITE } from '../data/site';
 
-// Email is assembled client-side so the literal address never appears as a
-// contiguous "user@domain" string in the served HTML (basic crawler defence).
-const mailUser = 'valentin.lenzing';
-const mailDomain = 'gmail.com';
+const { emailUser: mailUser, emailDomain: mailDomain } = SITE;
 ---
 
 <section class="section contact" id="contact" aria-label="Contact">
@@ -50,11 +48,11 @@ const mailDomain = 'gmail.com';
       <div class="cgroup reveal" style="--i:1">
         <p class="clabel">Elsewhere</p>
         <p class="clinks">
-          <a class="clink" href="https://www.linkedin.com/in/valentinlenzing" target="_blank" rel="noopener noreferrer">
+          <a class="clink" href={SITE.social.linkedin} target="_blank" rel="noopener noreferrer">
             LinkedIn <span class="clink-arrow" aria-hidden="true">&#8599;</span>
           </a>
           <span class="clink-sep" aria-hidden="true">&middot;</span>
-          <a class="clink" href="https://github.com/vlnzng" target="_blank" rel="noopener noreferrer">
+          <a class="clink" href={SITE.social.github} target="_blank" rel="noopener noreferrer">
             GitHub <span class="clink-arrow" aria-hidden="true">&#8599;</span>
           </a>
         </p>
