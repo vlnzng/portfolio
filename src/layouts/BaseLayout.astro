@@ -17,6 +17,8 @@ interface Props {
   description?: string;
   ogImage?: string;
   initialModalSlug?: string;
+  // the 404 page answers for every unknown URL, so it has no address to name
+  notFound?: boolean;
 }
 
 const {
@@ -24,6 +26,7 @@ const {
   description = 'Portfolio of Valentin Lenzing, Product Designer · UX/UI, working across research, interaction design, and front-end implementation.',
   ogImage = '/og-image.jpg',
   initialModalSlug,
+  notFound = false,
 } = Astro.props;
 
 const site = Astro.site ?? new URL(Astro.url.origin);
@@ -45,14 +48,14 @@ const ogURL = new URL(Astro.url.pathname, site);
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalURL} />
+    {!notFound && <link rel="canonical" href={canonicalURL} />}
 
     <link rel="preload" as="font" type="font/woff2" href={loraLatin} crossorigin />
     <link rel="preload" as="font" type="font/woff2" href={interLatin} crossorigin />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Valentin Lenzing" />
-    <meta property="og:url" content={ogURL} />
+    {!notFound && <meta property="og:url" content={ogURL} />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(ogImage, site)} />
