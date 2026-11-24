@@ -102,8 +102,12 @@ check('js budget', kb > JS_BUDGET_KB ? [`${kb.toFixed(1)} KB: ${[...eager].join(
 const svgs = distFiles.filter((f) => f.endsWith('.svg'));
 check('svg text', svgs.filter((f) => /<text[\s>]/.test(read(f))).map(rel), `${svgs.length} SVGs, none with live <text>`);
 
-// 4. A <button> holds phrasing content only: cards and headings inside one are
-//    invalid and lose their semantics for assistive tech.
+// 4. Document shape: every page ends with </body></html> (a <script> placed after
+//    the layout component would land behind </html>), and a <button> holds
+//    phrasing content only, or cards and headings inside it lose their semantics.
+const trailing = pages.filter((file) => !/<\/body>\s*<\/html>\s*$/.test(read(file))).map(rel);
+check('document', trailing, `all ${pages.length} pages end with </body></html>`);
+
 const wrapped = pages.flatMap((file) =>
   [...read(file).matchAll(/<button\b[^>]*>([\s\S]*?)<\/button>/g)]
     .filter(([, inner]) => /<(div|p|h[1-6]|ul|ol|li|section|article|figure|header|footer|nav)\b/.test(inner))

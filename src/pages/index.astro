@@ -83,14 +83,15 @@ const showcaseData = showcases.map((showcase) => ({
   <script is:inline type="application/json" id="showcase-data" set:html={JSON.stringify(showcaseData)}></script>
 
   <ShowcaseModal />
-</BaseLayout>
 
-<script>
-  import '../scripts/reveal';
-  import '../scripts/scroll';
-  import '../scripts/modal';
-  import '../scripts/navigation';
-</script>
+  {/* inside the layout, so it renders within <body> rather than after </html> */}
+  <script>
+    import '../scripts/reveal';
+    import '../scripts/scroll';
+    import '../scripts/modal';
+    import '../scripts/navigation';
+  </script>
+</BaseLayout>
 
 <style>
   .work {

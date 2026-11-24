@@ -35,8 +35,9 @@ const { title, description, current } = Astro.props;
       <a href="/">Portfolio</a>
     </nav>
   </footer>
-</BaseLayout>
 
-<script>
-  import '../scripts/legal';
-</script>
+  {/* inside the layout, so it renders within <body> rather than after </html> */}
+  <script>
+    import '../scripts/legal';
+  </script>
+</BaseLayout>
