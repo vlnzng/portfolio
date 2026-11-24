@@ -4,13 +4,10 @@ const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-sec
 const sections = Array.from(document.querySelectorAll<HTMLElement>('.section'));
 const modal = document.getElementById('showcase-modal');
 
-// Keep the address bar in step with the section in view, using replaceState so
-// it never pollutes the back-history (Back leaves the page, it doesn't walk
-// section-by-section). The hash makes the current section refresh-stable and
-// shareable. While a case modal is open the URL belongs to it (/work/<slug>),
-// so section syncing stands down. Held until the engine has finished its
-// initial restore (vl:scroll-settled) so it can't strip a deep link's hash
-// while the pan is still animating towards it.
+// Keep the hash in step with the section in view (replaceState, so Back leaves
+// the page instead of walking sections). Stands down while a case owns the URL,
+// and waits for vl:scroll-settled so it can't strip a deep link's hash while the
+// engine is still restoring it.
 let allowUrlSync = false;
 let lastSyncedPath = location.pathname + location.hash;
 function syncUrl(id: string): void {
@@ -70,11 +67,9 @@ if (navHome) {
   updateNavHome();
 }
 
-// On desktop the pan engine owns the active state. On mobile / reduced motion
-// it's a center-band scrollspy: a thin band across the viewport middle reports
-// whichever section crosses it. This works no matter how tall a section is — a
-// plain ratio threshold (e.g. 0.55) never fires for sections taller than the
-// viewport, which is exactly why #work (four stacked cards) was never detected.
+// The engine owns the active state. Stacked, a thin band across the viewport
+// middle reports the section crossing it, which works however tall a section is
+// (a ratio threshold never fires for one taller than the viewport).
 const desktopEngine = desktopQuery.matches && !prefersReducedMotion;
 
 if (!desktopEngine) {
@@ -90,9 +85,8 @@ if (!desktopEngine) {
   sections.forEach((section) => observer.observe(section));
 }
 
-// Arrow keys step panel-by-panel — only on the pan engine, where one panel is
-// exactly one screen. In the vertical layouts sections run taller than the
-// viewport, so arrows must keep scrolling line-by-line there.
+// Arrow keys step a panel at a time on the engine only; stacked sections are
+// taller than the viewport, so arrows keep scrolling normally there.
 if (desktopEngine) {
   const sectionIds = sections.map((section) => section.id);
 

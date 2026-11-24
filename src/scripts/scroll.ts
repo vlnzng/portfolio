@@ -19,9 +19,8 @@ const takeReturnY = (): number | null => {
   }
 };
 
-// A bfcache restore (Back from /imprint) revives the page without re-running
-// this module, so the stored key was never consumed — drop it instead of
-// letting a later reload act on it.
+// A bfcache restore (Back from /imprint) never consumes the stored key, so drop
+// it before a later reload acts on it.
 window.addEventListener('pageshow', (event) => {
   if (!event.persisted) return;
   try {
@@ -46,13 +45,9 @@ if (!prefersReducedMotion && desktopQuery.matches) {
   initStandardNavigation();
 }
 
-// The engine-vs-standard choice (and the CSS layout) hinge on the engine
-// boundary (see media.ts) / reduced-motion, decided once at load. Crossing it on
-// a live resize would leave JS and CSS disagreeing — the horizontal engine stays
-// pinned while the layout is vertical, so nav links jump to the wrong section.
-// Re-initialise cleanly by reloading when the boundary is actually crossed (a
-// no-op on real phones, which fail the width test in both orientations; only
-// fires on desktop resize).
+// Engine or not is decided once at load. Crossing the boundary live (a desktop
+// resize, a rotating tablet, toggling reduced motion) would leave JS and CSS
+// disagreeing, so reload instead. Phones stay on one side in both orientations.
 let reinitialising = false;
 const reinitOnBoundaryChange = (): void => {
   if (reinitialising) return;

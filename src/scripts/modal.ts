@@ -41,8 +41,7 @@ function openModal(slug: string, push = true): void {
   if (!modal || !modalBody || !modalMeta || !modalFooter || !data || !template) return;
 
   currentSlug = slug;
-  // Remember what opened the modal so focus can return there on close (keyboard
-  // users land back on the card they activated, not at the top of the page).
+  // focus returns here on close
   openerEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   scrollPositionBeforeOpen = window.scrollY;
 
@@ -57,13 +56,10 @@ function openModal(slug: string, push = true): void {
   }
 
   if (modalHero) {
-    // Real key image when the case ships one; otherwise the deliberate
-    // placeholder stripe. The image carries alt text, so it is exposed to AT;
-    // the decorative stripe stays hidden.
+    // the key image, or the placeholder stripe (hidden from AT) for a case without one
     if (data.heroImage) {
       const alt = data.heroAlt ?? `${data.title} — overview`;
-      // Band takes the image's own ratio, so it fills the width instead of
-      // being pillarboxed inside the default 2400/620 frame.
+      // the band takes the image's own ratio instead of pillarboxing it
       modalHero.style.setProperty('--cs-hero-ar', data.heroRatio ?? '2400 / 620');
       modalHero.innerHTML = `<img class="cs-hero-img" src="${escapeHtml(data.heroImage)}" alt="${escapeHtml(alt)}" />`;
       modalHero.setAttribute('aria-hidden', 'false');
@@ -75,8 +71,7 @@ function openModal(slug: string, push = true): void {
     }
   }
 
-  // Head: title, one-line subtitle, then the "at a glance" lead (`summary`,
-  // which may hold several paragraphs — split on blank lines).
+  // "at a glance": the summary, split into paragraphs on blank lines
   const glance = data.summary
     ? `<div class="cs-glance"><p class="cs-glance-label">At a glance</p>${data.summary
         .split(/\n\s*\n/)
@@ -97,8 +92,7 @@ function openModal(slug: string, push = true): void {
 
   modalBody.replaceChildren(template.content.cloneNode(true));
 
-  // Custom CTAs from frontmatter take over when present; otherwise fall back to
-  // the default buttons built from externalLink / githubLink.
+  // frontmatter CTAs, else the defaults from externalLink / githubLink
   const ctaList =
     data.ctas && data.ctas.length
       ? data.ctas
@@ -121,22 +115,19 @@ function openModal(slug: string, push = true): void {
   document.body.style.overflow = 'hidden';
   if (modalScroll) modalScroll.scrollTop = 0;
 
-  // Focus the case body, not the close button: the button is position:fixed
-  // outside .cs-scroll, so arrow/Page keys had no scrollable ancestor to act
-  // on. preventScroll — the body sits below the hero band and must not skip it.
+  // Focus the case body, inside .cs-scroll, so arrow and Page keys scroll the
+  // case. preventScroll keeps the hero band in view.
   (modalBody ?? modalClose)?.focus({ preventScroll: true });
 }
 
-// Make everything behind the modal inert while it is open: removes the
-// background from the tab order AND hides it from assistive tech, so the
-// dialog is a genuine modal context (no focus escaping behind it).
+// Everything behind the open dialog goes inert: out of the tab order and hidden
+// from assistive tech.
 const inertedEls: HTMLElement[] = [];
 function setBackgroundInert(on: boolean): void {
   const main = document.getElementById('main-content');
   if (!main) return;
   if (on) {
-    // both levels: <main>'s children AND its body-level siblings — the skip
-    // link and the shell furniture live at body level
+    // <main>'s children and its body-level siblings (skip link, shell furniture)
     const candidates = [...Array.from(document.body.children), ...Array.from(main.children)];
     candidates.forEach((child) => {
       if (child === main || child === modal || !(child instanceof HTMLElement)) return;
@@ -149,8 +140,8 @@ function setBackgroundInert(on: boolean): void {
   }
 }
 
-// Hides the dialog. History is NOT touched here — the callers own that, so
-// that a close triggered by the Back button doesn't push anything back on.
+// Hides the dialog. History belongs to the callers, so a close triggered by the
+// Back button pushes nothing back on.
 function closeModal(): void {
   if (!modal || !currentSlug) return;
 
@@ -168,11 +159,10 @@ function closeModal(): void {
   const opener = openerEl;
   openerEl = null;
   if (opener && document.contains(opener)) {
-    // preventScroll — the scroll position was just restored above
+    // preventScroll: the position was just restored
     opener.focus({ preventScroll: true });
-    // Fallback for browsers without the Navigation API (see the navigate
-    // handler below): arriving on the /#work fragment can clear focus right
-    // after popstate, dropping keyboard users onto <body> — re-apply then.
+    // without the Navigation API (see below), arriving on /#work can clear focus
+    // right after popstate — re-apply it
     requestAnimationFrame(() => {
       if (!currentSlug && document.activeElement === document.body) {
         opener.focus({ preventScroll: true });
@@ -246,13 +236,9 @@ modal?.addEventListener('keydown', (event) => {
   }
 });
 
-// Back, X and Escape all close by traversing onto the entry the case was opened
-// from — usually /#work. Chromium handles arriving on that fragment like a
-// fragment navigation: it smooth-scrolls the section to the top and clears
-// focus, undoing closeModal's restore (on a phone: back to the first card).
-// Taking over scroll and focus for that one traversal keeps the visitor where
-// they were. (Navigation API — where it's missing, closeModal's rAF re-focus
-// is the fallback.)
+// Back, X and Escape close by traversing to the entry the case opened from,
+// usually /#work. Chromium treats that like a fragment jump: it scrolls to the
+// section top and clears focus. Intercepting the traversal keeps both in place.
 type TraverseEvent = Event & {
   navigationType: string;
   canIntercept: boolean;
@@ -275,9 +261,8 @@ window.addEventListener('popstate', () => {
 
   if (wanted && wanted !== currentSlug) {
     openModal(wanted, false);
-    // Forward onto an entry an earlier open pushed: the page it was opened
-    // from sits right behind it again, so X/Escape can rewind as usual —
-    // rewriting it instead left a duplicate of that page as a dead Back stop.
+    // Forward onto an entry an earlier open pushed: its opener sits behind it
+    // again, so X/Escape can rewind instead of leaving a dead Back stop
     ownsHistoryEntry = state?.pushed === true;
   } else if (!wanted && currentSlug) {
     ownsHistoryEntry = false;
@@ -302,10 +287,8 @@ document.querySelectorAll<HTMLAnchorElement>('[data-case-link]').forEach((link) 
   });
 });
 
-// Case figures live inside inert <template>s, so the browser never fetches them
-// until a modal opens — which made the first open feel slow. Warm the cache:
-// collect every hero image plus every <img> inside the case templates and kick
-// off the requests ahead of time.
+// Case figures sit in inert <template>s, so nothing fetches them before a case
+// opens. Warm the cache with every hero image and template <img> ahead of time.
 function preloadCaseAssets(): void {
   const urls = new Set<string>();
   showcases.forEach((item) => {
@@ -329,10 +312,9 @@ const requestIdle =
   (window as Window & { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback ??
   ((cb: () => void) => window.setTimeout(cb, 200));
 
-// Warm up only once the visitor heads for the work, so someone who leaves after
-// the hero never pays for ~1.4MB of case imagery. Stacked, that is #work coming
-// within a screen. On the engine the track is clipped, so an off-screen panel
-// never intersects: the panel before it (About) sliding in is the signal.
+// Warm up only once the visitor heads for the work, so leaving after the hero
+// costs none of the ~1.3 MB. Stacked, that is #work within a screen; on the
+// engine an off-screen panel never intersects, so About sliding in is the signal.
 function warmOnApproach(): void {
   const engine = desktopQuery.matches && !prefersReducedMotion;
   const sentinel = document.getElementById(engine ? 'about' : 'work');

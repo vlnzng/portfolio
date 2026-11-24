@@ -19,24 +19,19 @@ const showcases = defineCollection({
       tags: z.array(z.string()),
       heroImage: z.string().optional(),
       heroAlt: z.string().optional(),
-      // Aspect ratio of heroImage as a CSS ratio ("2400 / 620"). The hero band
-      // adopts it, so the image fills the band edge to edge instead of sitting
-      // pillarboxed inside a fixed 2400/620 frame. Case 1's diagram is authored
-      // at the band's native ratio; the photographic heroes are all ~2:1.
+      // heroImage's aspect ratio as CSS ("2400 / 620"), adopted by the hero band.
+      // Omit it for art drawn at the band's native 2400 / 620 (case 1).
       heroRatio: z.string().optional(),
-      // Through astro:assets (responsive srcset + AVIF), unlike heroImage and
-      // the in-body figures — those stay public/ paths because modal.ts injects
-      // them client-side.
+      // Through astro:assets (responsive WebP srcset). heroImage and the in-body
+      // figures stay public/ paths because modal.ts injects them client-side.
       cardImage: image().optional(),
       cardAlt: z.string().optional(),
       order: z.number(),
       externalLink: z.url().optional(),
       githubLink: z.url().optional(),
-      // Custom modal CTAs — when present they replace the default buttons
-      // built from externalLink / githubLink. `url` is a plain string, not
-      // z.url(): site-relative targets (the hosted case PDFs under
-      // /assets/showcases/…) are valid here too. All CTAs share one button
-      // style, so there is no variant to pick.
+      // Custom modal CTAs, replacing the defaults built from externalLink /
+      // githubLink. `url` is a plain string, not z.url(), so site-relative PDF
+      // paths (/assets/showcases/…) work too.
       ctas: z
         .array(
           z.object({

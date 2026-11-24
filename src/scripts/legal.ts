@@ -11,9 +11,8 @@ document.querySelectorAll<HTMLAnchorElement>('a[data-mail-user]').forEach((link)
   if (text) text.textContent = address;
 });
 
-// With a stored return position (Contact.astro), go back to "/" instead of
-// "/#contact": arriving on the fragment made the browser scroll to the top
-// of the section, overriding the exact spot scroll.ts restores.
+// With a stored return position (Contact.astro), Back goes to "/": the #contact
+// fragment would scroll to the section top instead of the spot scroll.ts restores.
 const syncBackLink = (): void => {
   let hasReturnY = false;
   try {

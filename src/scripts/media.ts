@@ -1,18 +1,12 @@
-// The engine boundary: desktop pan engine vs plain vertical scroll. Single
-// source for all scripts; component <style> media queries hardcode the same
-// string and must move in lockstep (see CLAUDE.md). Mobile is simply
-// !desktopQuery.matches.
+// The engine boundary: desktop pan engine vs stacked scroll. The single source
+// for scripts; component <style> blocks repeat the exact string (see CLAUDE.md).
 //
-// Three arms: width for phones; height because a landscape phone is 850–950px
-// wide but only ~390–440px tall (520px clears every phone and no laptop);
-// pointer because a portrait touch tablet (744–1024px) is too narrow for the
-// four-column pan — it reads better stacked. Tablets in landscape start at
-// 1080px (iPad mini 1133, iPad Air 1180) and keep the engine: stacked, their
-// short viewport cut the hero portrait off at the fold.
+// Arms: width for phones; height for landscape phones (~390–440px tall, and 520px
+// clears no laptop); pointer for portrait touch tablets (744–1024px), too narrow
+// for the four-column pan. Landscape tablets (1080px and up) keep the engine.
 //
-// JS negates the CSS string instead of asking its integer complement
-// (`min-width: 821px`): page zoom produces fractional widths that match
-// neither side, leaving the desktop layout running the mobile scripts.
+// JS negates the string instead of asking `min-width: 821px`: page zoom yields
+// fractional widths that match neither side.
 const mobileQuery = window.matchMedia(
   '(max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px)'
 );

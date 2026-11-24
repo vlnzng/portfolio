@@ -1,9 +1,8 @@
-/* Arrival choreography: CSS does the motion, this module only toggles
-   .is-in (early, while the panel slides in) and .is-centred (once the visitor
-   has arrived — e.g. the process diamond draw). Desktop is driven per panel by
-   the pan (desktop-engine.ts calls revealOnPan), mobile per element by an
-   IntersectionObserver; both reset so revisits re-play. The hero load-in waits
-   for fonts so the wordmark write-in never paints with a fallback font. */
+/* Arrival choreography: CSS does the motion, this module toggles .is-in (as a
+   panel slides in) and .is-centred (once it has arrived). Per panel on the engine
+   (desktop-engine.ts calls revealOnPan), per element when stacked; both replay on
+   revisits. The hero load-in waits for fonts, so the wordmark never writes in a
+   fallback font. */
 import { desktopQuery, prefersReducedMotion } from './media';
 
 export const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
@@ -58,9 +57,7 @@ export function revealOnPan(panX: number, vw: number): void {
   }
 }
 
-/* ---- mobile: one IntersectionObserver over the individual elements ------
-   A ratio on the whole section left a blank half screen before #work (about
-   2700px tall on a phone) while its later cards animated off-screen. */
+/* ---- stacked: one IntersectionObserver over the individual elements ---- */
 let io: IntersectionObserver | null = null;
 
 function startIO(): void {
@@ -68,9 +65,8 @@ function startIO(): void {
   io = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        // Resets only below the fold, so scrolling down replays it. Past the top
-        // it stays shown: the hidden state sits 24px lower, which would pull the
-        // element back into view there and make it flicker.
+        // resets only below the fold: past the top, the hidden state (24px lower)
+        // would pull the element back into view and make it flicker
         const passed = entry.boundingClientRect.bottom <= 0;
         entry.target.classList.toggle('is-in', entry.isIntersecting || passed);
       });
