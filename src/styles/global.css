@@ -155,10 +155,6 @@ button:focus-visible,
     }
   }
 
-  body {
-    overflow-x: hidden;
-  }
-
   .horizontal-track {
     flex-direction: column;
     width: 100%;
