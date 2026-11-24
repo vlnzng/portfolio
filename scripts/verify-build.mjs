@@ -81,7 +81,18 @@ for (const file of walk(join(root, 'src')).filter((f) => /\.(astro|css|ts)$/.tes
   }
   for (const c of complements) if (text.includes(c)) drift.push(`${rel(file)}: uses the complement ${c}`);
 }
-check('boundary', drift, `${queries} @media rules and ${sizes} sizes attributes repeat media.ts; no complements`);
+// The shipped CSS keeps that syntax: a minifier that rewrites queries as ranges
+// (width<=820px) asks something Safari before 16.4 can't read, so the layout and
+// media.ts would disagree there.
+let shipped = 0;
+for (const file of distFiles.filter((f) => /\.(css|html)$/.test(f))) {
+  const css = file.endsWith('.css') ? read(file) : [...read(file).matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/g)].map((m) => m[1]).join('');
+  for (const [, prelude] of css.matchAll(/@media([^{]+)\{/g)) {
+    shipped++;
+    if (/[<>]/.test(prelude)) drift.push(`${rel(file)}: @media${prelude} uses range syntax`);
+  }
+}
+check('boundary', drift, `${queries} @media rules and ${sizes} sizes attributes repeat media.ts; no complements; no range syntax in ${shipped} shipped queries`);
 
 // 3. Budgets: WebP-only images; the JS a phone loads eagerly on / (module scripts
 //    and their static imports, the desktop engine is a dynamic import); case
