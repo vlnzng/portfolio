@@ -13,7 +13,6 @@ const showcases = defineCollection({
       summary: z.string().optional(),
       // Gold outcome line on the card — part of the card design, so required.
       result: z.string(),
-      heroCaption: z.string().optional(),
       tools: z.array(z.string()),
       // Card pills. System: six competences, each on exactly two cards — every
       // pair of projects shares exactly one. Keep the invariant when editing.

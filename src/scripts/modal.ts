@@ -11,7 +11,6 @@ interface ShowcaseData {
   title: string;
   subtitle: string;
   summary?: string;
-  heroCaption?: string;
   heroImage?: string;
   heroAlt?: string;
   heroRatio?: string;
@@ -78,7 +77,7 @@ function openModal(slug: string, push = true): void {
       modalHero.innerHTML = `<img class="cs-hero-img" src="${escapeHtml(data.heroImage)}" alt="${escapeHtml(alt)}" />`;
       modalHero.setAttribute('aria-hidden', 'false');
     } else {
-      const caption = data.heroCaption ?? `${data.title} — key image`;
+      const caption = `${data.title} — key image`;
       modalHero.style.removeProperty('--cs-hero-ar');
       modalHero.innerHTML = `<div class="wstripe"></div><span class="wcard-cap">${escapeHtml(caption)}</span>`;
       modalHero.setAttribute('aria-hidden', 'true');
