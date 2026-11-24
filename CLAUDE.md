@@ -49,6 +49,7 @@ npm install           # Node ≥ 22.12
 npm run dev           # dev server
 npm run build         # static build → dist/
 npm run check         # type and template check (astro check)
+npm run verify        # strict check (hints fail too) + build + checks on dist/
 npm run gen:assets    # favicon, touch icon, share card
 npm run gen:diagrams  # Case 1 diagrams with outlined text
 ```
@@ -90,6 +91,7 @@ These are the current baseline, not dogma: change one when a better idea earns i
   stacked layout, where the four-column pan doesn't fit; landscape tablets (1080px and up)
   keep the engine. Image `sizes` attributes that switch on the layout (SharedPortrait,
   Contact) must list every arm too, or the browser picks a candidate for the wrong layout.
+  `npm run verify` checks all of this.
 - Initialize Lenis/GSAP **in the browser only** (Astro renders server-side).
   `desktop-engine.ts` loads dynamically on desktop only, so `scroll.ts` stays light for mobile
   and reduced motion.

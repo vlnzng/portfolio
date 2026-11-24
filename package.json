@@ -13,6 +13,7 @@
     "gen:diagrams": "node scripts/generate-case1-diagrams.mjs",
     "astro": "astro",
     "check": "astro check",
+    "verify": "astro check --minimumFailingSeverity hint && astro build && node scripts/verify-build.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {
