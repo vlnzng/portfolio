@@ -57,7 +57,8 @@ npm run gen:diagrams  # Case 1 diagrams with outlined text
 ## Where things live
 
 - `src/` — the real implementation. Check it before assuming anything.
-- `src/styles/tokens.css` — live design tokens; the authority for colors, fonts, spacing.
+- `src/styles/tokens.css` — live design tokens; the authority for colors, fonts and other
+  shared values. A value with a single consumer stays inline where it's used.
 - `src/content/showcases/*.mdx` — the four case studies (content, not hardcoded markup).
 - `src/data/site.ts` — facts used in more than one file: site title, email parts, social
   links, the legal pages' "Stand" date.

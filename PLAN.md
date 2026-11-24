@@ -8,9 +8,11 @@ us. Finished work is summarised at the end; the full detail lives in the git his
 Live on `valentinlenzing.com` with all five sections, four case studies with real imagery, the
 case-study modal, legal pages, 404, sitemap, and custom V/L brand assets.
 
-Technically hardened across three passes (through Nov 2026): responsive short-laptop and tablet
-layouts, WebP-only responsive images, ~11 KB of mobile JS (`desktop-engine.ts` loads on demand),
-accessible link cards, per-element mobile reveals, and `npm run check`.
+Technically hardened across three passes and a cleanup (through Nov 2026): responsive
+short-laptop and tablet layouts, WebP-only responsive images, ~11 KB of mobile JS
+(`desktop-engine.ts` loads on demand), accessible link cards, per-element mobile reveals, and
+an automated `npm run verify`. Production Lighthouse: mobile 98 / 100 / 100 / 100, desktop 100
+across the board.
 
 From here on it is a **living product**: continuously sharpened for Product Designer (UX/UI)
 hiring managers, and open to structural, visual, or tech changes whenever they make it stronger.
@@ -19,15 +21,25 @@ hiring managers, and open to structural, visual, or tech changes whenever they m
 
 ## Now — Post-Release QA & Maintenance
 
-- [ ] **Production Lighthouse re-check** — run PageSpeed Insights on `valentinlenzing.com` to
-      confirm the Nov 2026 hardening pass in production. Baseline from 2026-10-19: mobile
-      95–96 / 100 / 100 / 100, desktop 100 across the board.
+**System-verified** by `npm run verify` before every release: a strict `astro check` (0 errors,
+warnings and hints), the build, and checks on `dist/` — internal links and assets resolve
+(case images and PDFs included), the engine boundary string matches `media.ts` everywhere, no
+AVIF, at most 25 KB of eager JS on `/`, outlined text in the case SVGs, no block content inside
+a `<button>`.
+
+- [x] **Production Lighthouse re-check** — confirmed on 2026-11-23 and 2026-11-24: mobile
+      98 / 100 / 100 / 100, desktop 100 / 100 / 100 / 100. This is the baseline now.
+
+**Still manual or external:**
+
 - [ ] **Real-device & screen-reader check** — test what headless Chrome cannot: iPad landscape
       touch-panning, Safari's dynamic toolbar against `svh`, and a real NVDA / Narrator /
       VoiceOver pass.
-- [ ] **Dependency & security pass** — address the `npm audit` findings (Astro and sharp are
-      major upgrades, so they get their own tested pass) and migrate the deprecated `z` import
-      in `src/content.config.ts` to `astro/zod`, so `npm run check` drops its deprecation hints.
+- [ ] **Major dependency upgrades** — Astro 6 → 7, `@astrojs/mdx` 5 → 8 and sharp 0.34 → 0.35
+      close the last four `npm audit` findings (one critical, Astro). They need SSR, untrusted
+      input or the dev server, none of which the live static site has, so there is no rush;
+      each gets its own tested pass (`npm run verify` plus a headless parity check) rather
+      than `npm audit fix --force`.
 - [ ] **Optional legal review** of `/imprint/` and `/privacy/`:
   - Vercel Web Analytics' 24h request hash against the wording "anonymous" / "no personal
     reference"
@@ -76,3 +88,7 @@ Exploratory.
   outlined SVG diagrams; short-laptop and tablet layout hardening; centred V/L end state; link
   cards and per-element mobile reveal; WebP-only pictures (5.9 → 2.9 MB) and on-demand desktop
   engine (phone JS ~147 → 11 KB); legal and tooling cleanup (`npm run check`).
+- **Cleanup & automated checks (Nov 2026):** dead code, unused tokens and duplicate rules
+  removed; site facts in `src/data/site.ts` and one `LegalLayout`; comments cut by a third
+  and corrected; `npm run verify`; non-breaking `npm audit` fixes; production Lighthouse 98
+  mobile / 100 desktop.

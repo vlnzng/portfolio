@@ -24,6 +24,7 @@ Open `http://localhost:4321`.
 ```bash
 npm run build
 npm run preview   # Preview the production build locally
+npm run verify    # Strict type check, build, and checks on dist/
 ```
 
 ## Structure
@@ -32,10 +33,11 @@ npm run preview   # Preview the production build locally
 src/
 ├── components/     # Astro components (Hero, About, ShowcaseCard, ...)
 ├── content/        # MDX files for each showcase
-├── layouts/        # BaseLayout with HTML wrapper
-├── pages/          # index.astro + work/[slug].astro
-├── scripts/        # scroll.ts, modal.ts, navigation.ts, reveal.ts, media.ts
-└── styles/         # reset.css, tokens.css, global.css
+├── data/           # site.ts: title, email, social links, legal date
+├── layouts/        # BaseLayout (HTML shell), LegalLayout (legal pages)
+├── pages/          # index.astro, work/[slug].astro, legal pages, 404
+├── scripts/        # scroll.ts, desktop-engine.ts, modal.ts, navigation.ts, reveal.ts, ...
+└── styles/         # reset.css, tokens.css, global.css, legal.css
 ```
 
 ## Adding a new showcase
