@@ -1,12 +1,5 @@
 import { desktopQuery, prefersReducedMotion, reducedMotionQuery } from './media';
 
-declare global {
-  interface Window {
-    __portfolioScrollTo?: (id: string) => void;
-    __portfolioSetActive?: (id: string) => void;
-  }
-}
-
 // Tells navigation.ts that the initial scroll restore is done.
 const markScrollSettled = (): void => {
   window.dispatchEvent(new Event('vl:scroll-settled'));

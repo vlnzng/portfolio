@@ -1,12 +1,6 @@
 import { SITE } from '../data/site';
 import { desktopQuery, prefersReducedMotion } from './media';
 
-declare global {
-  interface Window {
-    __initialModalSlug?: string;
-  }
-}
-
 interface ShowcaseData {
   slug: string;
   title: string;

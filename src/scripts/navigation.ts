@@ -1,12 +1,5 @@
 import { desktopQuery, prefersReducedMotion } from './media';
 
-declare global {
-  interface Window {
-    __portfolioScrollTo?: (id: string) => void;
-    __portfolioSetActive?: (id: string) => void;
-  }
-}
-
 const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-section-link]'));
 const sections = Array.from(document.querySelectorAll<HTMLElement>('.section'));
 const modal = document.getElementById('showcase-modal');
@@ -129,5 +122,3 @@ if (desktopEngine) {
     }
   });
 }
-
-export {};
