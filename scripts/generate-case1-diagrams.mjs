@@ -1,13 +1,9 @@
-// Builds the case 1 diagrams with their text converted to vector outlines.
+// npm run gen:diagrams — the case 1 diagrams with their text as vector outlines.
 //   src/assets/showcases/case1/diagrams/*.source.svg  editable originals
 //   public/assets/showcases/case1/*.svg               what the site serves
-//
-// Run with: npm run gen:diagrams
-//
-// The site loads these through <img>, and an SVG in <img> can't reach the page's
-// @font-face rules, so live text fell back to whatever the visitor had installed.
-// resvg lays the text out with the real fonts and writes it back as paths.
-// Static weights only: resvg 2.6 can't pick a weight out of a variable font.
+// An SVG in <img> can't reach the page's @font-face rules, so resvg lays the text
+// out with the real fonts and writes it back as paths. Static weights only:
+// resvg 2.6 can't pick a weight out of a variable font.
 import { Resvg } from '@resvg/resvg-js';
 import { decompress } from 'wawoff2';
 import { readFileSync, writeFileSync } from 'node:fs';

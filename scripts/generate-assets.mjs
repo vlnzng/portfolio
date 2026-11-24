@@ -1,22 +1,14 @@
-// Generates the brand assets derived from the real Figma marks:
-//   public/favicon.svg           V/L monogram, theme-aware (replaces Astro default)
+// npm run gen:assets — brand assets built from the committed marks:
+//   public/favicon.svg           V/L monogram, theme-aware
 //   public/apple-touch-icon.png  180×180 gold monogram on dark
-//   public/favicon.ico           legacy 16/32/48 fallback
-//   public/og-image.jpg          1200×630 hero-style share card (wordmark + portrait)
+//   public/favicon.ico           16/32/48 fallback
+//   public/og-image.jpg          1200×630 share card (wordmark + portrait)
+// Sources: src/assets/brand/{logo,wordmark}.svg (their path data is read directly,
+// so every asset is the real mark) and src/assets/images/portrait.png.
 //
-// Run with: npm run gen:assets
-//
-// Sources of truth:
-// - src/assets/brand/{logo,wordmark}.svg — the exported Figma vectors (currentColor,
-//   committed). We read the path data straight out of them, so the favicon, icon and
-//   share-card wordmark are the *real* mark, not a trace or a font recreation.
-// - src/assets/images/portrait.png — the portrait on the share card.
-//
-// The share card's eyebrow + domain still need real Inter glyphs. sharp's SVG renderer
-// (librsvg) ignores embedded @font-face, and resvg's font DB reads TTF/OTF — not the
-// woff2 Fontsource ships — so we decompress woff2→TTF (wawoff2) and point resvg at
-// those. resvg 2.6.2 won't pick a weight out of a variable font (renders the 400
-// master), so we load STATIC weights: Inter 600/500.
+// The share card's text needs real Inter glyphs, but resvg reads TTF/OTF only:
+// the Fontsource woff2 files are decompressed first, in static weights, because
+// resvg 2.6 can't pick a weight out of a variable font.
 import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 import { decompress } from 'wawoff2';
@@ -143,9 +135,8 @@ const portraitFaded = await sharp(portrait)
   .png()
   .toBuffer();
 
-// Wordmark lockup — the real Figma vector (src/assets/brand/wordmark.svg), placed
-// top-left. Two-tone to match the site: the V (.mark-v) gold, everything else
-// cream. Height-driven scale so it never crowds the portrait column.
+// Wordmark lockup top-left, two-tone like the site (gold V, cream rest), scaled by
+// height so it never crowds the portrait column.
 const WM_H = 232; // rendered wordmark height
 const WM_X = 96;
 const WM_Y = 122; // top edge of the lockup
