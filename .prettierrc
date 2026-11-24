@@ -3,7 +3,7 @@
   "overrides": [
     {
       "files": "*.astro",
-      "options": { "parser": "astro" }
+      "options": { "parser": "astro", "astroCompressHTML": "html" }
     }
   ],
   "semi": true,

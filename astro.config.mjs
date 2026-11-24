@@ -6,6 +6,7 @@ export default defineConfig({
   site: 'https://valentinlenzing.com', // primary domain (Vercel); .de + www variants redirect here
   // HTML whitespace rules, as before Astro 7. Its 'jsx' default drops the line
   // breaks between inline elements and glues words together across the site.
+  // .prettierrc mirrors this as astroCompressHTML, so formatting keeps the output.
   compressHTML: true,
   vite: {
     build: {
