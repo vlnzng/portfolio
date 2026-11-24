@@ -1,5 +1,6 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const showcases = defineCollection({
   // Flat only — nested paths would put a "/" in the id, which the /work/<slug>
@@ -30,11 +31,11 @@ const showcases = defineCollection({
       cardImage: image().optional(),
       cardAlt: z.string().optional(),
       order: z.number(),
-      externalLink: z.string().url().optional(),
-      githubLink: z.string().url().optional(),
+      externalLink: z.url().optional(),
+      githubLink: z.url().optional(),
       // Custom modal CTAs — when present they replace the default buttons
       // built from externalLink / githubLink. `url` is a plain string, not
-      // z.string().url(): site-relative targets (the hosted case PDFs under
+      // z.url(): site-relative targets (the hosted case PDFs under
       // /assets/showcases/…) are valid here too. All CTAs share one button
       // style, so there is no variant to pick.
       ctas: z
