@@ -4,7 +4,7 @@ Personal portfolio website. Built with Astro, GSAP, and Lenis.
 
 ## Stack
 
-- **Astro 6** — Static Site Generator
+- **Astro 7** — Static Site Generator
 - **TypeScript** — Type-safe scripts
 - **Vanilla CSS** — Custom design system, no frameworks
 - **GSAP + ScrollTrigger** — Scroll-driven animations, horizontal scroll

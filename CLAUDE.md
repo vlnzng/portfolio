@@ -45,7 +45,7 @@ below**. On the site they're labelled "Legal Notice" and "Privacy Policy".
 ## Setup
 
 ```bash
-npm install           # Node ≥ 22.12
+npm install           # Node ≥ 22.23.4
 npm run dev           # dev server
 npm run build         # static build → dist/
 npm run check         # type and template check (astro check)

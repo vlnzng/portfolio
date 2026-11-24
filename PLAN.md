@@ -9,7 +9,7 @@ Live on `valentinlenzing.com` with all five sections, four case studies with rea
 case-study modal, legal pages, 404, sitemap, and custom V/L brand assets.
 
 Technically hardened across three passes and a cleanup (through Nov 2026): responsive
-short-laptop and tablet layouts, WebP-only responsive images, ~11 KB of mobile JS
+short-laptop and tablet layouts, WebP-only responsive images, ~12 KB of mobile JS
 (`desktop-engine.ts` loads on demand), accessible link cards, per-element mobile reveals, and
 an automated `npm run verify`. Production Lighthouse: mobile 98 / 100 / 100 / 100, desktop 100
 across the board.
@@ -23,23 +23,24 @@ hiring managers, and open to structural, visual, or tech changes whenever they m
 
 **System-verified** by `npm run verify` before every release: a strict `astro check` (0 errors,
 warnings and hints), the build, and checks on `dist/` — internal links and assets resolve
-(case images and PDFs included), the engine boundary string matches `media.ts` everywhere, no
-AVIF, at most 25 KB of eager JS on `/`, outlined text in the case SVGs, no block content inside
-a `<button>`.
+(case images and PDFs included), the engine boundary string matches `media.ts` everywhere
+(the shipped CSS included), no AVIF, at most 25 KB of eager JS on `/`, outlined text in the case
+SVGs, no block content inside a `<button>`.
 
 - [x] **Production Lighthouse re-check** — confirmed on 2026-11-23 and 2026-11-24: mobile
       98 / 100 / 100 / 100, desktop 100 / 100 / 100 / 100. This is the baseline now.
+- [x] **Major dependency upgrades** — Astro 7, `@astrojs/mdx` 8 and sharp 0.35 (2026-11-24);
+      `npm audit` reports 0 vulnerabilities. Three fixes keep the output as before:
+      `compressHTML: true` (the new `'jsx'` default glued words together), real CSS targets
+      (the new minifier rewrote media queries as ranges) and a prefixed-first
+      `backdrop-filter` (the minifier dropped the standard one). A headless check of every
+      computed style against the Astro 6 build found no visible change.
 
 **Still manual or external:**
 
 - [ ] **Real-device & screen-reader check** — test what headless Chrome cannot: iPad landscape
       touch-panning, Safari's dynamic toolbar against `svh`, and a real NVDA / Narrator /
       VoiceOver pass.
-- [ ] **Major dependency upgrades** — Astro 6 → 7, `@astrojs/mdx` 5 → 8 and sharp 0.34 → 0.35
-      close the last four `npm audit` findings (one critical, Astro). They need SSR, untrusted
-      input or the dev server, none of which the live static site has, so there is no rush;
-      each gets its own tested pass (`npm run verify` plus a headless parity check) rather
-      than `npm audit fix --force`.
 - [ ] **Optional legal review** of `/imprint/` and `/privacy/`:
   - Vercel Web Analytics' 24h request hash against the wording "anonymous" / "no personal
     reference"
@@ -47,34 +48,31 @@ a `<button>`.
   - Vercel's privacy-contact address, verified directly at the source
   - whether `/imprint/` §2 needs a second fast contact channel under § 5 DDG
 
-## Next — Positioning, Copy & Case Studies
+## Next — Positioning, Copy, README & Case Studies
 
-Aligned with the updated application materials.
+Aligned with the updated application materials, in this order.
 
-- [ ] **Mission statement & slogan update** — sync Hero, About, and meta copy with the updated
-      application documents (new mission statement and, if applicable, a revised slogan).
-- [ ] **Trim copy across the site** — tighten About around the new statement and streamline
-      Process (shorter, more distinct, less textbook catalogue), so busy recruiters can scan the
-      full story in 30–60 seconds.
-- [ ] **Case studies v2 & new work** — make existing cases shorter, sharper, and more focused on
-      problems and decisions; revisit per-case visual and color storytelling; expand existing
-      projects and prepare new case studies. Replace `case3/positioning.webp` (only 1157px wide)
-      at higher resolution if Case 3 stays in its current form.
+1. [ ] **Mission statement, slogan & About/Process tightening** — sync Hero, About, Process, and
+       meta copy with the updated application materials: shorter and more distinct, so busy
+       recruiters can scan the full story in 30–60 seconds.
+2. [ ] **GitHub `README.md` upgrade** — turn the repo front page into a lightweight showcase for
+       recruiters and design engineers clicking through from Contact or Case 4 (preview visual,
+       architecture and performance highlights, live link).
+3. [ ] **Case studies v2 & copy trim** — make existing cases shorter, sharper, and more focused
+       on problems and decisions; revisit per-case visual and color storytelling; expand
+       existing work and prepare new case studies. Replace `case3/positioning.webp` (only
+       1157px wide) at higher resolution if Case 3 keeps it.
 
-## Later — Features, GitHub & Architecture
+## Later — Features & Architecture
 
 Exploratory.
 
-- [ ] **GitHub `README.md` upgrade** — turn the repo front page into a lightweight showcase for
-      recruiters and design engineers clicking through from Contact or Case 4 (preview visual,
-      architecture and performance highlights, live link).
-- [ ] **Small recruiter-friendly features & micro-interactions** — explore targeted additions
-      that add real value or craft, e.g. one-click "Copy email" with subtle feedback, "Next
-      case →" at the end of a modal, quiet reading progress inside cases.
-- [ ] **Architecture, files & UX rethink** — periodically check project structure, components,
-      and tooling. Stay open to larger layout, tech, or navigation changes, including
-      simplifying the desktop horizontal scroll if real recruiter or peer feedback shows more
-      friction than value.
+1. [ ] **Small recruiter-friendly features & micro-interactions** — e.g. one-click "Copy email"
+       with subtle feedback, "Next case →" at the end of a modal, quiet reading progress inside
+       cases.
+2. [ ] **Ongoing UX & architecture evolution** — the first code and architecture cleanup is done
+       (Nov 2026). Stay open to larger layout, tech, or navigation changes, including
+       simplifying the desktop horizontal scroll if real recruiter feedback points there.
 
 ---
 
@@ -91,4 +89,5 @@ Exploratory.
 - **Cleanup & automated checks (Nov 2026):** dead code, unused tokens and duplicate rules
   removed; site facts in `src/data/site.ts` and one `LegalLayout`; comments cut by a third
   and corrected; `npm run verify`; non-breaking `npm audit` fixes; production Lighthouse 98
-  mobile / 100 desktop.
+  mobile / 100 desktop. Then the major upgrade to Astro 7, `@astrojs/mdx` 8 and sharp 0.35,
+  with a clean `npm audit` and no visible change.
