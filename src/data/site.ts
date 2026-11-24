@@ -9,4 +9,7 @@ export const SITE = {
     linkedin: 'https://www.linkedin.com/in/valentinlenzing',
     github: 'https://github.com/vlnzng',
   },
+  // "Stand / Last updated" on both legal pages. Bump it whenever their text
+  // changes; name both months when they differ ("Oktober / October 2026").
+  legalUpdated: 'November 2026',
 };

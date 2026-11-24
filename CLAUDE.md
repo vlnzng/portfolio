@@ -58,6 +58,8 @@ npm run gen:diagrams  # Case 1 diagrams with outlined text
 - `src/` — the real implementation. Check it before assuming anything.
 - `src/styles/tokens.css` — live design tokens; the authority for colors, fonts, spacing.
 - `src/content/showcases/*.mdx` — the four case studies (content, not hardcoded markup).
+- `src/data/site.ts` — facts used in more than one file: site title, email parts, social
+  links, the legal pages' "Stand" date.
 - `design_handoff_portfolio/` — **local**, historical visual reference only (gitignored). The
   live code has moved past it, so `src/` wins wherever they differ.
 - `vercel.json` — response headers and `trailingSlash`. JSON takes no comments, so the
@@ -94,8 +96,9 @@ These are the current baseline, not dogma: change one when a better idea earns i
 - All four cases ship real imagery. The stripe placeholder in `ShowcaseCard` / `modal.ts`
   stays as the fallback for a case without `cardImage` / `heroImage`.
 - **Legal pages** (`imprint`, `privacy`): German first, English version below; real content,
-  an optional lawyer review is still open. When the text changes, bump the "Stand / Last
-  updated" line in both footers. Labelled "Legal Notice" / "Privacy Policy" on the site.
+  an optional lawyer review is still open. Both sit in `src/layouts/LegalLayout.astro`. When
+  the text changes, bump `legalUpdated` in `src/data/site.ts` (the footer's "Stand / Last
+  updated"). Labelled "Legal Notice" / "Privacy Policy" on the site.
 
 ## Deploy
 

@@ -1,0 +1,43 @@
+---
+// Shell of the two legal pages: top bar, reading column, footer.
+import BaseLayout from './BaseLayout.astro';
+import '../styles/legal.css';
+import logo from '../assets/brand/logo.svg?raw';
+import { SITE } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  current: 'imprint' | 'privacy';
+}
+
+const { title, description, current } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <header class="lg-bar" slot="furniture">
+    <a class="lg-mark" href="/" aria-label="Valentin Lenzing — home"><Fragment set:html={logo} /></a>
+    <a class="lg-back" href="/#contact">
+      <span class="arr" aria-hidden="true">&larr;</span><span class="lbl-full">Back to portfolio</span>
+    </a>
+  </header>
+
+  {/* div, not main: BaseLayout already wraps the slot in <main id="main-content">,
+      and a nested main is invalid HTML plus a duplicate landmark. */}
+  <div class="lg-wrap">
+    <slot />
+  </div>
+
+  <footer class="lg-foot">
+    <p class="lg-stand">Stand / Last updated: {SITE.legalUpdated}</p>
+    <nav class="lg-foot-links" aria-label="Legal pages">
+      <a href="/imprint/" aria-current={current === 'imprint' ? 'page' : undefined}>Legal Notice</a>
+      <a href="/privacy/" aria-current={current === 'privacy' ? 'page' : undefined}>Privacy Policy</a>
+      <a href="/">Portfolio</a>
+    </nav>
+  </footer>
+</BaseLayout>
+
+<script>
+  import '../scripts/legal';
+</script>
