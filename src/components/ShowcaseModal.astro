@@ -156,8 +156,9 @@
     border: 1px solid rgb(217 179 108 / 0.45);
     color: var(--color-text);
     cursor: pointer;
-    backdrop-filter: blur(6px);
+    /* prefixed first, or the minifier drops the standard property */
     -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     transition:
       background 0.22s ease,
       color 0.22s ease,

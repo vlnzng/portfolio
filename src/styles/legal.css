@@ -11,8 +11,9 @@
   justify-content: space-between;
   padding: 26px clamp(24px, 6vw, 80px);
   background: color-mix(in srgb, var(--color-bg) 82%, transparent);
-  backdrop-filter: blur(10px);
+  /* prefixed first, or the minifier drops the standard property */
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
 }
 
