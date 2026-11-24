@@ -7,10 +7,10 @@ import portrait from '../assets/images/portrait.png';
 
 <div class="portrait" aria-hidden="true" data-portrait>
   <div class="portrait__glow"></div>
-  {/* the mobile LCP element. fallbackFormat keeps the <img src> off the 2.67MB
-      source PNG; 768/1152 cover a 92vw phone at DPR 2 and 3. `sizes` repeats
-      every arm of the engine boundary — a stacked portrait tablet left out
-      here picked a candidate for 52vw and upscaled it 1.6x */}
+  {/* the mobile LCP element. fallbackFormat keeps the <img src> off the
+      multi-MB source PNG; 768/1152 cover a 92vw phone at DPR 2 and 3. `sizes`
+      lists every arm of the engine boundary, or a stacked tablet gets the
+      52vw candidate */}
   <Picture
     src={portrait}
     formats={['webp']}
@@ -39,8 +39,7 @@ import portrait from '../assets/images/portrait.png';
     will-change: left, width, transform;
   }
 
-  /* picture is the parallax layer (desktop-engine.ts nudges it a few px against the
-     cursor while the figure rests); the img inside carries load-in + breath */
+  /* picture is the parallax layer (desktop-engine.ts); the img carries the load-in */
   .portrait picture {
     position: relative;
     z-index: 2;
@@ -58,11 +57,9 @@ import portrait from '../assets/images/portrait.png';
     object-position: 50% 14%;
   }
 
-  /* ---- load-in: the figure settles in from the first paint, deliberately NOT
-     gated on `body.is-loaded` like the rest of the hero — that flag waits for
-     fonts + the JS bundle, which a photo doesn't need, and it held the mobile
-     LCP element at opacity 0 for seconds. The animation always ends at
-     opacity 1, so the figure can't get stuck hidden without JS either. ---- */
+  /* ---- load-in from the first paint, not gated on body.is-loaded (fonts + JS)
+     like the rest of the hero: this is the mobile LCP element. It always ends at
+     opacity 1, so it can't stay hidden without JS. ---- */
   @media (prefers-reduced-motion: no-preference) {
     .portrait img {
       animation: sp-settle-in 1.2s var(--ease-glide) both;
@@ -100,9 +97,8 @@ import portrait from '../assets/images/portrait.png';
     }
   }
 
-  /* soft warm light behind the whole figure (not a halo around the head).
-     The layer extends past the container so the gradient has fully faded
-     before any edge — no hard cut towards the navbar. */
+  /* warm light behind the figure; it overhangs the box so the gradient has
+     faded out before any edge */
   .portrait__glow {
     position: absolute;
     inset: -14%;
@@ -124,32 +120,21 @@ import portrait from '../assets/images/portrait.png';
   }
 
   @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px), (prefers-reduced-motion: reduce) {
-    /* mobile: the cut-out sits in the LOWER half of the hero, below the text
-       block (wordmark + role + pitch + statement live above it). Scrolls away
-       with the page. */
+    /* stacked: below the hero text, scrolling away with the page */
     .portrait {
       position: absolute;
       left: auto;
       right: 0;
-      /* starts where the text block ends (hero stack, global.css) instead of at
-         a viewport fraction — at 54svh it slid up over the statement on short
-         phones. It may now run past the fold; that is the point, more of the
-         figure comes in as you scroll. */
+      /* starts where the text block ends (hero stack, global.css) */
       top: var(--hero-portrait-top);
       width: 92%;
       height: var(--hero-portrait-h);
       transform: none !important;
     }
 
-    /* Nothing in the hero may stick out sideways here: the panel is exactly
-       as wide as the screen and `.section` is `overflow: visible` on mobile,
-       so any bleed becomes real document overflow — and a mobile browser
-       answers that by rescaling the whole page, which is why the site used to
-       *start* looking zoomed and then settle.
-       1) the glow bled 14% (~51px) past the right edge — bleed vertically
-          only; the gradient is fully transparent well before the side edges
-       2) the load-in scale(1.05) spilled ~9px each side for its first 1.2s —
-          clip it to the frame it is settling into */
+    /* nothing may bleed sideways here: .section is overflow: visible when
+       stacked, and mobile browsers rescale the page to fit any overflow. So
+       the glow bleeds vertically only, and the picture clips the load-in scale. */
     .portrait__glow {
       inset: -14% 0;
     }
@@ -162,8 +147,7 @@ import portrait from '../assets/images/portrait.png';
       height: 16%;
     }
 
-    /* Landscape phone: no room for a figure *below* the text — it takes the
-       right half of the hero instead (see Hero.astro). */
+    /* landscape phone: the figure takes the right half instead (see Hero.astro) */
     @media (max-height: 519px) and (min-width: 560px) {
       .portrait {
         top: 6svh;

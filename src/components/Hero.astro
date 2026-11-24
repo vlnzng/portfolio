@@ -1,7 +1,6 @@
 ---
-// The hero panel now holds only the text block. The wordmark and the portrait
-// are fixed shell elements (Wordmark.astro / SharedPortrait.astro) so they can
-// morph / glide across panels, driven by desktop-engine.ts.
+// The hero panel holds only the text block; the wordmark and portrait are fixed
+// shell elements (Wordmark, SharedPortrait) so they can travel across panels.
 ---
 
 <section class="section hero" id="hero" aria-label="Hero">
@@ -23,14 +22,12 @@
     background: var(--color-bg);
   }
 
-  /* sits right below the wordmark so the left half reads as one composed
-     column (wordmark → role → pitch) instead of two stranded islands */
+  /* right below the wordmark: one column, wordmark → role → pitch */
   .hero-text {
     position: absolute;
     left: 5.5vw;
     top: 54vh;
-    /* scales with --up alongside the type inside it — held at 640px the
-       upscaled pitch broke its deliberate two-line <br> into four ragged ones */
+    /* grows with --up, so the upscaled pitch keeps its two-line break */
     max-width: max(640px, calc(640 / 17 * var(--up)));
     z-index: 40;
     /* the engine's rest position, so nothing moves when its chunk arrives */
@@ -58,8 +55,7 @@
     color: var(--color-text);
   }
 
-  /* On the desktop engine the statement lives in the scroll cue instead;
-     the boundary block below turns it on everywhere else */
+  /* on the engine the statement lives in the scroll cue; shown when stacked */
   .hero-statement {
     display: none;
     gap: 2px;
@@ -67,8 +63,7 @@
     max-width: none;
     font-family: var(--font-body);
     font-weight: 400;
-    /* only rendered on mobile / reduced motion — the upscale matters for the
-       reduced-motion desktop case, where this replaces the scroll cue */
+    /* --up matters for reduced motion on a large desktop */
     font-size: max(16px, calc(16 / 17 * var(--up)));
     letter-spacing: 0.01em;
     line-height: 1.6;
@@ -116,10 +111,8 @@
   }
 
   @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px), (prefers-reduced-motion: reduce) {
-    /* mobile composition: the text block sits at the top, just under the
-       wordmark; the portrait drops to the lower half (see SharedPortrait) */
-    /* the portrait is a shell sibling and contributes no flow height, so the
-       panel has to reserve the band it occupies itself */
+    /* the portrait below the text is a shell sibling with no flow height, so
+       the panel reserves its band */
     .hero {
       min-height: max(100svh, calc(var(--hero-portrait-top) + var(--hero-portrait-h)));
     }
@@ -127,8 +120,7 @@
     .hero-text {
       left: 7vw;
       right: 7vw;
-      /* placed off the hero stack (global.css) rather than a viewport
-         fraction, so the gap under the lockup is the same on every phone */
+      /* placed off the hero stack (global.css) */
       top: var(--hero-text-top);
       max-width: none;
       transform: none;
@@ -147,12 +139,9 @@
       text-wrap: balance;
     }
 
-    /* Landscape phone: wide and short. Stacking lockup → text → portrait
-       needs ~700px of height and there are ~400, so the figure moves beside
-       the text (the desktop composition, statically placed). */
+    /* landscape phone: too short to stack (~400px of the ~700 needed), so the
+       figure sits beside the text and the panel is one viewport again */
     @media (max-height: 519px) and (min-width: 560px) {
-      /* the stack above is a portrait-phone composition — here the figure sits
-         beside the text, so the panel is back to exactly one viewport */
       .hero {
         min-height: 100svh;
       }

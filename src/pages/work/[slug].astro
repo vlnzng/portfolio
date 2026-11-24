@@ -12,8 +12,7 @@ export async function getStaticPaths() {
     params: { slug: showcase.id },
     props: {
       title: `${showcase.data.title} — Valentin Lenzing`,
-      // Without this every shared case link previewed with the generic
-      // homepage blurb under a case-specific title.
+      // a case-specific share preview, not the homepage blurb
       description: `${sentence(showcase.data.subtitle)} ${sentence(showcase.data.result)} A case study by Valentin Lenzing, Product Designer · UX/UI.`,
     },
   }));

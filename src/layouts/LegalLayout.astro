@@ -22,8 +22,7 @@ const { title, description, current } = Astro.props;
     </a>
   </header>
 
-  {/* div, not main: BaseLayout already wraps the slot in <main id="main-content">,
-      and a nested main is invalid HTML plus a duplicate landmark. */}
+  {/* a div: BaseLayout already provides <main> */}
   <div class="lg-wrap">
     <slot />
   </div>

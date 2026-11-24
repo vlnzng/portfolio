@@ -55,18 +55,12 @@ const phases = [
   <div class="process-inner">
     <h2 class="sr-only">Process</h2>
 
-    <!-- the diamonds live in the same box as the columns, so their tips sit
-         exactly on the column boundaries and their waist on the columns'
-         vertical centre — double diamond: Discover widens, Define narrows
-         to the brief, Develop widens, Deliver narrows -->
+    {/* the double diamond shares the columns' box: tips on the column
+        boundaries, waist on their vertical centre */}
     <div class="pr-grid">
-      <!-- One continuous line drawn in a single stroke, "Haus vom Nikolaus"
-           style. Point order (labelled left→right, top/centre/bottom):
-             1 left tip · 2 peak 1 · 3 centre · 6 valley 2 · 5 right tip ·
-             4 peak 2 · (3) centre · 7 valley 1 · close.
-           So: over the first peak, down through the centre into the far
-           valley, up the right tip, back over the second peak to the centre,
-           and down to close — a flowing wave rather than two separate loops. -->
+      {/* one continuous stroke ("Haus vom Nikolaus"): over the first peak, down
+          through the centre into the far valley, up the right tip, back over
+          the second peak to the centre, and down to close */}
       <svg class="pr-dia" viewBox="0 0 1600 760" preserveAspectRatio="none" aria-hidden="true">
         <path
           d="M0,380 L400,80 L800,380 L1200,680 L1600,380 L1200,80 L800,380 L400,680 Z"
@@ -120,12 +114,8 @@ const phases = [
     position: relative;
   }
 
-  /* anchored to the columns' box: tips on the column boundaries, waist on
-     their vertical centre, peaks reaching a little beyond the text.
-     width must be explicit: as a replaced element an absolutely positioned
-     SVG may resolve its width from the viewBox aspect ratio instead of the
-     left/right stretch — on wide screens that left it ~40% too narrow and
-     the whole figure misaligned. */
+  /* explicit width: an absolutely positioned SVG may size itself from its
+     viewBox ratio instead of stretching across the columns */
   .pr-dia {
     position: absolute;
     left: 0;
@@ -138,22 +128,11 @@ const phases = [
     pointer-events: none;
   }
 
-  /* The line draws itself in one continuous stroke — but only once the
-     visitor has actually arrived on the panel (.is-centred, not the early
-     .is-in), so the drawing is never half-missed while reading the previous
-     panel. pathLength="1" normalises the dash to the whole outline so the
-     single offset animation traces it end to end. Without JS or with
-     reduced motion it is simply visible. */
-  /* stroke-width is in user units and scales with the box — deliberately NOT
-     `vector-effect: non-scaling-stroke`. The SVG is stretched hard and
-     non-uniformly (preserveAspectRatio="none": ~1.4x across, ~0.63x down at
-     2560px), and Chrome converts the dash pattern for a non-scaling stroke
-     with a single averaged scale factor. That average is far smaller than the
-     path's real on-screen length, so `stroke-dasharray: 1` covered only ~79%
-     of the outline at 2560px (~88% at 1920px) and the draw-in stopped around
-     Define instead of closing back to Discover. Letting the stroke scale keeps
-     the dash maths in user space, where pathLength="1" is exact.
-     2.7 user units ≈ the previous 2.2px on a 1920px viewport. */
+  /* The line draws once the visitor has arrived (.is-centred, not .is-in);
+     pathLength="1" lets one dash offset trace the whole outline.
+     The stroke scales with the box on purpose. With non-scaling-stroke, Chrome
+     converts the dash using one averaged scale factor, and on this non-uniformly
+     stretched SVG the draw-in stopped before closing. */
   .pr-dia path {
     fill: none;
     stroke: var(--color-accent);
@@ -191,8 +170,6 @@ const phases = [
     grid-template-columns: repeat(4, 1fr);
   }
 
-  /* hover-lift transition rides on the .reveal primitive (translate 0.45s),
-     so the column's own transition must not shadow the reveal transition */
   .pr-col {
     padding: 0 clamp(22px, 2.2vw, 44px);
   }
@@ -249,8 +226,7 @@ const phases = [
     font-size: max(14.5px, calc(14.5 / 17 * var(--up)));
     line-height: 1.45;
     color: var(--color-text-soft);
-    /* on narrow desktop the longer labels can wrap; balance splits them into
-       two even lines instead of leaving a single orphaned word */
+    /* even lines when a label wraps on a narrow desktop */
     text-wrap: balance;
     transition: color 0.3s ease;
   }
@@ -259,8 +235,7 @@ const phases = [
     padding-top: 0;
   }
 
-  /* toolkit line in permanent gold — ties the four columns together. No hover
-     states on the columns: they are a reference, not a control. */
+  /* gold toolkit line. No hover states: the columns are a reference, not a control. */
   .pr-tools {
     margin: 32px 0 0;
     font-family: var(--font-body);
@@ -268,8 +243,7 @@ const phases = [
     letter-spacing: 0.02em;
     line-height: 1.6;
     color: var(--color-accent);
-    /* balance the toolkit across two even lines when it wraps at narrow
-       desktop widths, rather than orphaning a lone tool (e.g. "· Git") */
+    /* no lone orphaned tool when it wraps */
     text-wrap: balance;
   }
 
@@ -287,8 +261,7 @@ const phases = [
     text-align: center;
   }
 
-  /* Short desktop windows — see the matching block in About.astro; here it is
-     the statement under the four columns that fell out of the 100vh frame. */
+  /* short desktop windows: keep the statement inside the 100vh frame */
   @media (max-height: 760px) {
     .process-inner {
       padding: var(--nav-clearance) 5.5vw clamp(24px, 4vh, 48px);
@@ -357,8 +330,7 @@ const phases = [
       padding: 0;
     }
 
-    /* the stacked page scrolls, so a short phone keeps the normal spacing
-       instead of inheriting the short-laptop compaction above */
+    /* stacked: undo the short-laptop compaction above */
     .pr-mark {
       margin-bottom: 22px;
     }
@@ -385,8 +357,7 @@ const phases = [
       text-wrap: pretty;
     }
 
-    /* the authored line breaks are measured for the desktop panel and land
-       mid-sentence in a phone column — same treatment as .hero-pitch */
+    /* the authored breaks are for the desktop panel */
     .pr-statement br {
       display: none;
     }

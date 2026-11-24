@@ -91,10 +91,9 @@ const { emailUser: mailUser, emailDomain: mailDomain } = SITE;
     if (text) text.textContent = address;
   }
 
-  // Remember the scroll position when leaving for a legal page, so returning
-  // lands exactly where the link was clicked (restored in scroll.ts on load).
-  // Only for a plain left click: a modified click opens a new tab, and storing
-  // in this one would teleport its next load deep into the pan.
+  // Leaving for a legal page stores the scroll position, which scroll.ts restores
+  // on return. Plain left clicks only: a modified click opens a new tab, and this
+  // tab's next load would jump deep into the pan.
   document.querySelectorAll<HTMLAnchorElement>('.clegal a').forEach((a) => {
     a.addEventListener('click', (event) => {
       if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
@@ -114,19 +113,15 @@ const { emailUser: mailUser, emailDomain: mailDomain } = SITE;
     background: var(--color-bg);
   }
 
-  /* two-column layout: framed photo + quote · contact info. Shares the
-     5.5vw gutter of the other panels so the pan rhythm stays even — the
-     gap to the previous section reads like every other section break. */
+  /* framed photo + quote · contact info, on the panels' shared 5.5vw gutter */
   .c-inner {
     position: absolute;
     inset: 0;
     z-index: 3;
     padding: var(--nav-clearance) 5.5vw;
     display: grid;
-    /* the photo column scales with --up too, so it keeps its weight against
-       the upscaled email/labels instead of shrinking into the left margin.
-       The second arm caps it on short screens: what's left of the viewport
-       after the insets and ~130px of quote, divided by the 4/5 photo ratio. */
+    /* the photo column scales with --up; on short screens it is capped to the
+       height left after the insets and ~130px of quote, over the 4/5 ratio */
     grid-template-columns:
       min(
         max(clamp(348px, 29vw, 384px), calc(384 / 17 * var(--up))),
@@ -139,8 +134,7 @@ const { emailUser: mailUser, emailDomain: mailDomain } = SITE;
     gap: clamp(56px, 7vw, 120px);
   }
 
-  /* the whole left block (photo + quote) is one hover zone — the effect is
-     the same wherever inside it the cursor rests */
+  /* photo + quote are one hover zone */
   .c-left {
     min-width: 0;
   }
@@ -164,7 +158,6 @@ const { emailUser: mailUser, emailDomain: mailDomain } = SITE;
     transition: box-shadow 1.7s var(--ease-glide);
   }
 
-  /* soft gold glow on hover — quiet, elegant */
   .c-left:hover .cphoto {
     box-shadow: 0 0 30px rgb(217 179 108 / 0.2);
   }
@@ -250,9 +243,8 @@ const { emailUser: mailUser, emailDomain: mailDomain } = SITE;
     font-size: max(clamp(14.5px, 1.1vw, 16px), calc(16 / 17 * var(--up)));
     line-height: 1.5;
     color: var(--color-muted);
-    /* let the quote fill the (photo-width) left column; that column width is
-       tuned so the line wraps cleanly — "…dreamed of optimising" stays whole
-       on line 1 at every desktop width instead of orphaning "optimising" */
+    /* fills the photo-width column, which is tuned so "…dreamed of optimising"
+       stays whole on line 1 at every desktop width */
     max-width: none;
     transition: color 0.9s ease, text-shadow 0.9s ease;
   }
@@ -264,8 +256,7 @@ const { emailUser: mailUser, emailDomain: mailDomain } = SITE;
   }
 
   /* ---- right: contact info ---- */
-  /* centres itself in the room left of the photo, so the free space splits
-     evenly instead of pooling at the right edge */
+  /* centred in the room beside the photo, so the free space splits evenly */
   .c-right {
     min-width: 0;
     max-width: max(640px, calc(640 / 17 * var(--up)));
@@ -390,7 +381,7 @@ const { emailUser: mailUser, emailDomain: mailDomain } = SITE;
     transform: translate(3px, -3px);
   }
 
-  /* based in / status — side by side, gold values, no pulsing dot */
+  /* based in / status, side by side */
   .cmeta-row {
     display: flex;
     gap: clamp(40px, 5vw, 72px);
@@ -466,10 +457,7 @@ const { emailUser: mailUser, emailDomain: mailDomain } = SITE;
       padding: 10vh 7vw 8vh;
     }
 
-    /* photo and quote are one column, so cap them together. Capping only the
-       photo left the quote free to run up to 541px wider than it once the
-       viewport got past ~700px (tablet portrait, phone landscape) — a stray
-       full-width line under a small left-aligned image. */
+    /* cap photo and quote together, so the quote never runs wider than the photo */
     .c-left {
       max-width: 340px;
     }

@@ -36,9 +36,8 @@ const links = [
 </div>
 
 <style>
-  /* full-width bar with the items flushed right via flex + padding — this can
-     never extend past the right edge the way a shrink-to-fit right:X element
-     can if its containing block is mis-resolved */
+  /* full-width bar with the items flushed right: it can't overhang the right
+     edge the way a shrink-to-fit `right: X` box can */
   .navbar {
     position: fixed;
     top: calc(var(--nav-top) + env(safe-area-inset-top, 0px));
@@ -52,12 +51,9 @@ const links = [
     pointer-events: none;
   }
 
-  /* compact VL home mark — the mobile counterpart of the desktop wordmark
-     morph. Hidden on desktop (the morphing wordmark already is the home
-     button); on mobile it fades in once the hero has scrolled away. */
-  /* padding, with the offsets pulled back by the same amount: the mark is a
-     26px glyph, and bare it was a ~26px tap target on the one control that
-     takes a phone visitor back to the top */
+  /* compact V/L home mark: the stacked layout's counterpart of the morphed
+     wordmark, fading in once the hero has scrolled away. The padding (offsets
+     pulled back to match) makes the 26px glyph a real tap target. */
   .nav-home {
     position: fixed;
     top: calc(4px + env(safe-area-inset-top, 0px));
@@ -201,10 +197,8 @@ const links = [
   }
 
   @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px), (prefers-reduced-motion: reduce) {
-    /* The bar is the only navigation a phone has, and its links were ~20px
-       tall bare — under the 24px minimum, on the four controls a phone visitor
-       uses most. The item padding below grows the hit area; the equal negative
-       margin takes it back out of the line box, so nothing moves visually. */
+    /* the item padding grows the tap targets past 24px; the equal negative
+       margin keeps it out of the line box, so nothing moves */
     .navbar {
       top: calc(20px + env(safe-area-inset-top, 0px));
       padding-right: calc(18px + env(safe-area-inset-right, 0px));
@@ -231,8 +225,7 @@ const links = [
       display: inline-flex;
     }
 
-    /* a soft top scrim so page text fades out behind the fixed bar instead of
-       colliding with it (mobile scrolls vertically under the nav) */
+    /* a soft top scrim, so text fades out behind the fixed bar */
     .navbar::before {
       content: "";
       position: fixed;

@@ -1,9 +1,7 @@
 @import './reset.css';
 @import './tokens.css';
 
-/* Fonts: self-hosted via @fontsource-variable (Lora + Inter), imported in
-   src/layouts/BaseLayout.astro. No Google CDN, no external requests (GDPR).
-   Families: 'Lora Variable' / 'Inter Variable'. */
+/* Fonts are self-hosted (@fontsource-variable, imported in BaseLayout.astro). */
 
 html {
   font-size: 16px;
@@ -13,9 +11,8 @@ html {
   color-scheme: dark;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  /* NOTE: do NOT set overflow here — overflow on <html> breaks position:fixed
-     (the navbar/wordmark stop sticking). The wide track is clipped on
-     .scroll-container instead. */
+  /* no overflow here: on <html> it breaks position: fixed (nav, wordmark).
+     .scroll-container clips the wide track instead. */
 }
 
 body {
@@ -55,9 +52,8 @@ button:focus-visible,
   outline-offset: 4px;
 }
 
-/* Programmatic focus targets — the case body a modal opens on, <main> behind
-   the skip link — are starting points, not controls; the UA ring framed the
-   entire case text in white whenever a case was opened from the keyboard. */
+/* programmatic focus targets (the opened case body, <main> behind the skip
+   link) are starting points, not controls: no ring */
 [tabindex='-1']:focus {
   outline: none;
 }
@@ -94,9 +90,7 @@ button:focus-visible,
 
 .scroll-container {
   position: relative;
-  /* the horizontal track is many viewports wide; clip it here (the pinned
-     container is viewport-sized) so it never leaks a horizontal scrollbar —
-     done on this element, not <html>, so position:fixed keeps working */
+  /* clips the many-viewports-wide track (here, not on <html>: see above) */
   overflow-x: hidden;
 }
 
@@ -117,26 +111,17 @@ button:focus-visible,
 
 @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px), (prefers-reduced-motion: reduce) {
   /* ===== Mobile hero stack ================================================
-     The hero's three pieces live in different components (Wordmark, Hero,
-     SharedPortrait) and the portrait is not even a DOM descendant of the
-     panel, so each used to be placed on its own viewport fraction — 8vh, 25svh,
-     54svh. The copy inside them is sized in px, so on a short phone the
-     fractions collapsed around content that did not: the gap under the wordmark
-     fell from 49px to 9px, and the portrait covered the statement by 31px on a
-     667px screen and 93px on a 568px one.
-     Resolving the stack as one chain here gives every phone the same rhythm.
-     The portrait absorbs the difference by running past the fold, which is
-     fine — it is meant to reveal itself as you scroll. */
+     Wordmark, hero text and portrait live in different components, so they are
+     placed here as one chain, each off the one before. That gives every phone
+     the same rhythm; the portrait absorbs the rest by running past the fold. */
   :root {
     --wm-h: clamp(5.5rem, 26vw, 9.5rem);
     --hero-wm-top: clamp(46px, 8svh, 72px);
-    /* 52px ≈ the rhythm between the text pieces below, so the lockup sits in
-       the same column rather than crowding the role line */
+    /* 52px ≈ the rhythm between the text pieces below */
     --hero-text-top: calc(var(--hero-wm-top) + var(--wm-h) + 52px);
-    /* the text block is content-sized, not viewport-sized. These are its
-       measured heights plus a 28px gap, so the first paint is already right;
-       scroll.ts only corrects it when the text wraps differently (text
-       scaling, unusual widths). Re-measure if the hero copy ever grows. */
+    /* the text block's measured height + a 28px gap, so the first paint is
+       right; scroll.ts corrects it for unusual wraps. Re-measure when the hero
+       copy changes. */
     --hero-text-h: 253px;
     --hero-portrait-top: calc(var(--hero-text-top) + var(--hero-text-h));
     --hero-portrait-h: 46svh;
@@ -161,18 +146,15 @@ button:focus-visible,
   }
 
   .section {
-    /* 100% (the content box), NOT 100vw — 100vw includes the vertical
-       scrollbar's width, which overflowed by ~15px and produced a horizontal
-       scrollbar (and made the fixed navbar look pushed off the right edge) */
+    /* 100%, not 100vw: 100vw includes the scrollbar and overflows sideways */
     width: 100% !important;
     height: auto;
     min-height: 100svh;
     overflow: visible;
   }
 
-  /* No side-pan here, so nothing should ride in from the right: the +30px
-     offset put un-revealed content past the viewport edge, and that document
-     overflow makes mobile browsers shrink the whole page to fit. Rise only. */
+  /* rise only: a sideways offset puts hidden content past the edge, and mobile
+     browsers shrink the whole page to fit that overflow */
   html.js .reveal-x {
     --rx: 0px;
     --ry: 24px;
@@ -180,16 +162,10 @@ button:focus-visible,
 }
 
 /* ===== Entrance choreography ============================================
-   Generic reveal primitive (from the design handoff). Content is hidden
-   until it gets .is-in: on desktop its owning panel, driven by the pan
-   position (desktop-engine.ts → reveal.ts); on mobile each element on its own,
-   driven by an IntersectionObserver.
-   Side-panel content rides in from the +X direction so each arrival echoes
-   the leftward pan: the horizontal motion is the signature, so the
-   choreography leans into it. Gated behind html.js so nothing is ever
-   hidden without JavaScript. The `translate` transition keeps hover-lifts
-   (.wcard, .pr-col use the separate translate property) smooth without
-   fighting the reveal transform. */
+   .reveal content stays hidden until .is-in (reveal.ts): per panel on the
+   engine, per element when stacked. Gated behind html.js, so nothing hides
+   without JavaScript. The separate `translate` transition carries the card
+   hover lift without fighting the reveal transform. */
 html.js .reveal {
   --d: calc(var(--i, 0) * 70ms);
   opacity: 0;
@@ -207,20 +183,18 @@ html.js .reveal.is-in {
   transform: none;
 }
 
-/* Stacked, each element reveals as it scrolls in, so the scroll is the stagger.
-   A per-panel delay would only hold back what is already on screen. */
+/* stacked, the scroll itself is the stagger */
 @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px), (prefers-reduced-motion: reduce) {
   html.js .reveal {
     --d: 0ms;
   }
 }
 
-/* short offsets: the panel itself is already moving during the pan, so the
-   content only settles a little — large travel read as "loading late" */
+/* short offsets: the panel already moves with the pan, more travel reads as late */
 .reveal-x {
   --rx: 30px;
   --ry: 8px;
-} /* rides in from the right */
+} /* rides in from the right, echoing the leftward pan */
 
 .reveal-rise {
   --rx: 0px;

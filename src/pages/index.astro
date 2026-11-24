@@ -107,9 +107,8 @@ const showcaseData = showcases.map((showcase) => ({
     padding: var(--nav-clearance) 5.5vw;
   }
 
-  /* enumeration row — four image-top cards whose zones row-align via the
-     cards' subgrid. column-gap only: a row-gap would reappear INSIDE every
-     card, between its subgridded tracks. */
+  /* four cards whose zones align via subgrid. column-gap only: a row-gap would
+     reappear inside every card, between its subgridded tracks. */
   .work-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -136,10 +135,8 @@ const showcaseData = showcases.map((showcase) => ({
       gap: 40px;
     }
 
-    /* Wide, but laid out vertically — a tablet in portrait, a phone in
-       landscape, or reduced motion on a desktop. One column there turns every
-       card into a screen-filling square image; two (four on a real desktop
-       width) keeps the media at a readable size and the section scannable. */
+    /* wide but stacked (portrait tablet, landscape phone, reduced motion): two
+       columns, four from 1100px, so the square art doesn't fill the screen */
     @media (min-width: 600px) {
       .work-row {
         grid-template-columns: 1fr 1fr;

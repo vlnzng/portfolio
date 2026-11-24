@@ -50,9 +50,7 @@
     background: var(--color-bg);
   }
 
-  /* the whole right column (intro + footer) is one vertically-centred flex
-     stack, so the footer always sits below the body with a real gap — it can
-     never overlap the paragraphs on short or narrow desktop viewports */
+  /* one vertically centred stack, so the footer can never overlap the copy */
   .about-content {
     position: absolute;
     left: 50vw;
@@ -64,19 +62,14 @@
     /* `safe`: a column taller than the frame spills down, never up under the nav */
     justify-content: safe center;
     gap: clamp(26px, 4vh, 56px);
-    /* headroom so the vertically-centred column never rises under the fixed
-       navbar (top-right) on short viewports, plus matching bottom breathing room */
+    /* headroom under the fixed navbar, plus matching room below */
     padding: clamp(92px, 13vh, 150px) 0 clamp(56px, 8vh, 104px);
     z-index: 20;
   }
 
   .ab-body {
-    /* `ch` resolves against THIS element's font-size, and it has none of its
-       own — so the measure stayed pinned to the 16px page default while the
-       paragraphs inside grew with --up. At 2560 that squeezed the copy to ~55
-       characters and left 521px of the column empty, which is what made the
-       panel look unbalanced on a large screen. The --up arm keeps the measure
-       at the ~73 characters it was tuned for; 60ch still governs below 1920. */
+    /* ch resolves against this element's own 16px, not the upscaled paragraphs,
+       so the --up arm keeps the ~73-character measure on large screens */
     max-width: max(60ch, calc(606 / 17 * var(--up)));
   }
 
@@ -105,7 +98,7 @@
     margin-bottom: 0;
   }
 
-  /* footer strip, divided by thin rules — sits in the flow below the intro */
+  /* footer strip, divided by thin rules */
   .about-foot {
     display: grid;
     grid-template-columns: 1.7fr 1fr 1.05fr;
@@ -154,9 +147,8 @@
     color: var(--color-faint);
   }
 
-  /* Short or narrow desktop windows (a 720p laptop leaves ~590px, still engine
-     range): the panel is a fixed 100vh overflow:hidden box, and the tall
-     layout's spacing needs ~700px at full column width — tighten to fit. */
+  /* short or narrow desktop windows: the panel is a fixed 100vh box and the tall
+     layout's spacing needs ~700px, so tighten */
   @media (max-height: 760px), (max-width: 1150px) {
     .about-content {
       gap: clamp(14px, 2.2vh, 26px);
@@ -243,8 +235,7 @@
       max-width: none;
     }
 
-    /* the stacked page scrolls freely, so it keeps the full reading type
-       instead of the fixed-frame compaction above */
+    /* stacked: undo the compaction above */
     .ab-body .ab-hook {
       margin-bottom: 24px;
       font-size: max(clamp(21px, 1.9vw, 27px), calc(27 / 17 * var(--up)));

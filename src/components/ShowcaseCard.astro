@@ -10,10 +10,8 @@ const { showcase } = Astro.props;
 const { title, subtitle, result, tags, order, cardImage, cardAlt, tools } = showcase.data;
 const num = String(order).padStart(2, '0');
 
-// Rendered card widths: ~86vw stacked, ~42vw in the two-column band, ~22vw in
-// the four-column rows (engine and ≥1100px vertical alike). 1080 is for a
-// stacked phone at DPR 3 (~1000 device px) — the old public/ originals were
-// 1200px, so stopping at 720 upscaled the card art there.
+// Rendered widths: ~86vw stacked, ~42vw in two columns, ~22vw in four.
+// 1080 covers a stacked phone at DPR 3.
 const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
 ---
 
@@ -80,13 +78,9 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
 </script>
 
 <style>
-  /* The hover lift uses the separate `translate` property (transitioned by
-     the .reveal primitive) so it composes with the reveal's transform. */
-  /* The six card zones (media, number, title, hook, result, foot) each share
-     one row track across all four cards via subgrid, so results and footers
-     align even when titles/hooks differ in length. Desktop-first, switched off
-     in the vertical block below (must be the boundary's exact inverse, per
-     CLAUDE.md); browsers without subgrid keep the plain column stack. */
+  /* The six card zones (media … foot) share one row track across all four
+     cards via subgrid, so they align whatever the text lengths. The hover lift
+     uses `translate`, which composes with the .reveal transform. */
   .wcard {
     position: relative;
     display: grid;
@@ -101,9 +95,8 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
     translate: 0 -10px;
   }
 
-  /* The title is the card's one real link. Its ::after stretches over the whole
-     card, so every click target (new tab, context menu, middle click) is that
-     link. Above the placeholder caption; below the trailing pill. */
+  /* The title is the card's one real link; its ::after covers the whole card,
+     so new tab, context menu and middle click work anywhere on it. */
   .wcard-link {
     cursor: inherit;
   }
@@ -208,7 +201,7 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
     color: var(--color-muted);
   }
 
-  /* outcome line — surfaces the result up onto the card, with a gold diamond */
+  /* outcome line with a gold diamond */
   .wcard-result {
     display: flex;
     align-items: center;
@@ -236,7 +229,7 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
     box-shadow: 0 0 0 4px rgb(217 179 108 / 0.18), 0 0 12px rgb(217 179 108 / 0.4);
   }
 
-  /* the outcome diamond pulses on hover — same beat as the process marks */
+  /* the diamond pulses on hover */
   @media (prefers-reduced-motion: no-preference) {
     .wcard:hover .wcard-result::before {
       animation: wcard-diamond-pulse 1.8s ease-in-out infinite;
@@ -294,9 +287,8 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
     border-color: rgb(217 179 108 / 0.55);
   }
 
-  /* Short laptops: the text zones give back their spacing, and the square art
-     takes what's left of the viewport after the insets and ~236px of card
-     text. It stays uncropped and only narrows when the column would not fit. */
+  /* short laptops: tighter text zones, and the square art narrows (uncropped)
+     to the height left after the insets and ~236px of card text */
   @media (max-height: 760px) {
     .wcard-media {
       width: min(
@@ -343,7 +335,7 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
     }
   }
 
-  /* ---- arrival: a one-time light sweep across each placeholder ---- */
+  /* ---- arrival: a one-time light sweep across each card image ---- */
   .wcard-media-inner::after {
     content: '';
     position: absolute;
@@ -419,13 +411,8 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
     }
   }
 
-  /* Wherever the trailing pill can't appear, the same label becomes a static
-     line at the foot of the card, so touch visitors still see that cards
-     open. Must be the exact engine boundary (see CLAUDE.md / media.ts): a
-     bare (pointer: coarse) here previously fired at any width, so a coarse
-     pointer on a wide screen dropped the card out of the 4-column subgrid
-     even though .work-row and the JS engine still ran the desktop layout.
-     Must also follow the hover block: same specificity, later rule wins. */
+  /* stacked: a plain column per card. Must follow the hover block above (same
+     specificity, the later rule wins). */
   @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px),
     (prefers-reduced-motion: reduce) {
     .wcard {
@@ -434,8 +421,7 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
       cursor: pointer;
     }
 
-    /* The stacked page scrolls, so a short phone must not inherit the short
-       laptop compaction above: full column for the art, normal spacing. */
+    /* undo the short-laptop compaction above */
     .wcard-media {
       width: 100%;
     }
@@ -483,7 +469,8 @@ const cardSizes = '(max-width: 599px) 86vw, (max-width: 1099px) 42vw, 22vw';
     }
   }
 
-  /* the engine boundary plus any touch pointer */
+  /* where the trailing pill can't appear (stacked, or any touch pointer), its
+     label becomes a static line at the foot of the card */
   @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px),
     (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
     .wcard-cursor {

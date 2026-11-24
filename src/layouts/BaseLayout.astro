@@ -1,15 +1,11 @@
 ---
 import '@fontsource-variable/lora/index.css';
 import '@fontsource-variable/inter/index.css';
-// Lora's real italic. Without it every font-style:italic on the site — the
-// contact quote, the case pull quotes, the process statement, the 404 tagline —
-// was a browser-synthesised oblique of the upright, which throws away the
-// calligraphic italic the wordmark's own tails are drawn from. unicode-range +
-// style matching mean the file only downloads when italic text actually renders.
+// Lora's real italic instead of a synthesised oblique; it only downloads where
+// italic text renders.
 import '@fontsource-variable/lora/wght-italic.css';
-// Preloaded below: these two are declared inside the stylesheet, so they were
-// discovered a full round trip after the HTML and the hero typography visibly
-// swapped in late. Imported as URLs so the hash stays in step with the build.
+// Preloaded below, or they're found a round trip late and the hero type swaps in
+// visibly. Imported as URLs so the hash matches the build.
 import loraLatin from '@fontsource-variable/lora/files/lora-latin-wght-normal.woff2?url';
 import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import SpeedInsights from '@vercel/speed-insights/astro';
@@ -34,11 +30,8 @@ const site = Astro.site ?? new URL(Astro.url.origin);
 // The /work/<slug> deep links serve the homepage HTML (the modal opens via JS),
 // so they're duplicate content — point their canonical at the homepage.
 const canonicalURL = new URL(initialModalSlug ? '/' : Astro.url.pathname, site);
-// og:url deliberately does NOT follow canonical here. Facebook and LinkedIn
-// resolve a share through og:url, so pointing it at "/" made them replace the
-// case-specific title and description with the homepage's — the same link
-// previewed differently depending on where it was pasted. Keeping the real
-// address here fixes the preview; canonical alone does the SEO consolidation.
+// og:url keeps the real address: Facebook and LinkedIn resolve shares through it
+// and would show a case link with the homepage preview. Canonical does the SEO.
 const ogURL = new URL(Astro.url.pathname, site);
 ---
 
@@ -89,18 +82,15 @@ const ogURL = new URL(Astro.url.pathname, site);
       })}
     />
 
-    <!-- Entrance choreography is gated behind html.js so content is never
-         hidden when JavaScript doesn't run (progressive enhancement). -->
+    {/* entrance choreography is gated behind html.js, so nothing hides without JS */}
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
 
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    {/* Site chrome renders here, outside <main> — the home page's fixed shell
-        (nav, wordmark, portrait, scroll cue) and the legal / 404 page headers.
-        While it sat inside <main>, the skip link landed the visitor directly
-        in front of the links it exists to skip. */}
+    {/* site chrome (the home shell, the legal / 404 headers) sits outside <main>,
+        so the skip link really skips it */}
     <slot name="furniture" />
 
     <main id="main-content" tabindex="-1">

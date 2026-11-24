@@ -1,7 +1,5 @@
-/* legal.css — shared shell for the Imprint & Privacy pages.
-   Quiet, near-academic single-column layout in the portfolio's editorial dark
-   palette. Ported from the design handoff (legal.css), mapped to project
-   tokens. Lora headings, Inter body, mono section numbers. */
+/* The legal pages (LegalLayout.astro): one quiet reading column. Lora
+   headings, Inter body, mono section numbers. */
 
 /* ===== Top bar ===================================================== */
 .lg-bar {
@@ -72,9 +70,8 @@
   max-width: 760px;
   margin: 0 auto;
   padding: clamp(56px, 9vh, 104px) clamp(24px, 6vw, 40px) 0;
-  /* the German half is full of long legal compounds ("Verbraucher-
-     streitbeilegung") — at 320px one of those headings is wider than the
-     column and pushed the whole page into a horizontal overflow */
+  /* long German compounds ("Verbraucherstreitbeilegung") would overflow the
+     column at 320px */
   overflow-wrap: break-word;
 }
 

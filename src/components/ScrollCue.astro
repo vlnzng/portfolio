@@ -1,8 +1,7 @@
 ---
-// Hero statement + scroll hint fused into one line, bottom centre. desktop-engine.ts
-// toggles .is-broken at the down-to-pan hinge, rotates the arrow and drives the
-// container's opacity per frame. Clicking advances (morph first, then a panel).
-// Hidden on mobile / reduced motion — the statement lives in the hero there.
+// Hero statement + scroll hint in one line, bottom centre. desktop-engine.ts breaks
+// the phrase, turns the arrow and fades it; a click advances (morph, then panels).
+// Hidden when stacked, where the statement lives in the hero.
 ---
 
 <button
@@ -70,8 +69,7 @@
     transform: none;
   }
 
-  /* the arrow stays the brand gold throughout — its idle pulse only dips to
-     0.82 so the gold never washes out to a grey/white read on the dark bg */
+  /* gold throughout; the idle pulse only dips to 0.82, so it never greys out */
   .scrollcue__arrow {
     font-size: max(20px, calc(20 / 17 * var(--up)));
     line-height: 1;

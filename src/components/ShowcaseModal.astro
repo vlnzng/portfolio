@@ -1,7 +1,7 @@
 ---
-// Full-screen case-study modal (handoff cs-* design). The shell is static;
-// the hero band, head (number/title/subtitle/meta) and CTAs are built by
-// modal.ts from the showcase data, and the body is the MDX-rendered case.
+// Full-screen case-study modal. The shell is static: modal.ts fills the hero
+// band, the head (title, subtitle, at a glance) and the CTAs, and clones in the
+// MDX-rendered body.
 ---
 
 <div
@@ -58,9 +58,8 @@
     scrollbar-color: var(--color-accent) transparent;
   }
 
-  /* keyboard scrolling (focus opens on #modal-body, inside this container)
-     animates each arrow press through scroll-behavior — not what someone who
-     asked for less motion wants from a plain scroll */
+  /* the case opens with focus in here, so arrow keys scroll it: no animated
+     steps for reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .cs-scroll {
       scroll-behavior: auto;
@@ -85,10 +84,9 @@
     background: var(--color-accent-bright);
   }
 
-  /* ---- open choreography: the hero image settles, then the head and the
-     body rise in, the close button turning in last. Keyframes (not
-     transitions) so the stagger re-plays on every open, even though the
-     content is injected fresh. Closing fades the modal as one piece. ---- */
+  /* ---- open choreography: the hero settles, head and body rise, the close
+     button comes last. Keyframes, not transitions, so it replays on every
+     open; closing is one fade. ---- */
   @media (prefers-reduced-motion: no-preference) {
     .cs-modal[aria-hidden='false'] .cs-hero {
       animation: cs-hero-in 0.9s var(--ease-glide) backwards;
@@ -143,8 +141,7 @@
     }
   }
 
-  /* same read as the CTAs below: gold-outlined at rest, filled gold on hover.
-     The colour change carries the whole state — no rotation. */
+  /* gold-outlined at rest, filled gold on hover, like the CTAs */
   .cs-close {
     position: fixed;
     top: calc(26px + env(safe-area-inset-top, 0px));
@@ -182,8 +179,7 @@
     border-color: var(--color-accent);
   }
 
-  /* keyboard focus reads as a ring, not the loud gold fill — so opening the
-     modal by keyboard (which moves focus here) doesn't leave it stuck gold */
+  /* keyboard focus is a ring, not the hover fill */
   .cs-close:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 3px;
@@ -193,12 +189,9 @@
   .cs-hero {
     position: relative;
     width: 100%;
-    /* full-bleed banner. modal.ts sets --cs-hero-ar per case from the image's
-       own ratio so it fills the width edge-to-edge with no crop; the fallback
-       is the band's native 2400/620, which case 1's diagram is drawn at and
-       which the placeholder stripe uses. Capped so a ~2:1 hero can't swallow
-       the viewport before any copy — when the cap bites, `contain` leaves
-       narrow --color-bg bars rather than cropping into the artwork. */
+    /* modal.ts sets the image's own ratio (fallback: 2400/620, case 1's diagram
+       and the stripe). Capped so a ~2:1 hero leaves room for copy; `contain`
+       then shows thin background bars instead of cropping the artwork. */
     aspect-ratio: var(--cs-hero-ar, 2400 / 620);
     max-height: 68vh;
     overflow: hidden;
@@ -240,16 +233,12 @@
     color: var(--color-muted);
   }
 
-  /* head + body share one centred column so the intro and the sections line
-     up (the full-bleed hero already gives the wide-to-narrow step) — overlaps
-     up into the hero */
+  /* head and body share one centred column; the head overlaps the hero */
   .cs-head {
     position: relative;
     z-index: 2;
-    /* grows with --up alongside the type inside it so the measure holds, but
-       caps at 1000px: the figures below break out of this column and they are
-       themselves capped by source resolution (see .case-figure), so letting the
-       column run to the full +33% would have swallowed that step. */
+    /* grows with --up so the measure holds, capped at 1000px so the figures
+       (capped by their source size, see .case-figure) still break out wider */
     max-width: min(max(820px, calc(820 / 17 * var(--up))), 1000px);
     margin: -40px auto 0;
     padding: 0 clamp(20px, 5vw, 40px);
@@ -375,17 +364,11 @@
     font-weight: 600;
   }
 
-  /* in-body figures break out wider than the reading column for legibility
-     (centred on the viewport via the 50% + translateX trick). The shot_*
-     screenshots bake in the rounded "product window" + shadow; diagrams are
-     flat, site-native data viz. Captions sit centred beneath. */
+  /* in-body figures break out of the reading column, centred on the viewport */
   .cs-body :global(.case-figure) {
-    /* Scales with --up like the column it breaks out of — held at 1080px, the
-       upscaled column (1025px at 2560) all but caught up and the deliberate
-       wide-to-narrow step disappeared. The 1200px ceiling is an asset limit,
-       not a design one: the narrowest figures in use are case 2's participant
-       and manager shots at ~1195px, so anything past 1200 would upscale them.
-       Raise it if those are ever re-exported wider. */
+    /* scales with --up like the column it breaks out of. 1200px is an asset
+       limit: case 2's participant and manager shots are ~1195px wide. Raise it
+       if they are ever re-exported wider. */
     width: min(max(1080px, calc(1080 / 17 * var(--up))), 1200px, 92vw);
     margin-top: 5vh;
     margin-bottom: 5vh;
@@ -399,9 +382,8 @@
     height: auto;
   }
 
-  /* guided-question / archetype callouts (case 1 & 3) — a gold-ruled block so
-     the bold label + line read as a distinct example, not body copy. Selector
-     carries .case-content to outrank the generic `.case-content p` rule. */
+  /* callouts: a gold-ruled example block, not body copy. .case-content in the
+     selector outranks the generic `.case-content p` rule. */
   .cs-body :global(.case-content p.case-q) {
     margin: 0 0 14px;
     padding: 15px 20px;
@@ -452,9 +434,7 @@
     display: none;
   }
 
-  /* One button style for every case: gold-outlined at rest, filled gold on
-     hover. No primary/secondary split — each case has one thing to open, so
-     ranking them against each other would be noise. */
+  /* one button style for every CTA, no primary/secondary split */
   .cs-cta :global(.cs-btn) {
     display: inline-flex;
     align-items: center;
@@ -479,8 +459,7 @@
     color: var(--color-bg);
   }
 
-  /* the arrow is the gold note while the button is empty, then joins the
-     filled state — same beat as the contact links */
+  /* gold arrow at rest; it takes the text colour on the filled hover */
   .cs-cta :global(.cs-btn-arrow) {
     color: var(--color-accent);
     font-size: max(14px, calc(14 / 17 * var(--up)));
@@ -493,8 +472,7 @@
   }
 
   @media (max-width: 820px), (max-height: 519px), (pointer: coarse) and (max-width: 1024px) {
-    /* bigger, solid, gold-ringed close so it's unmistakable and easy to tap
-       on top of any hero image */
+    /* bigger and solid, so it reads and taps well on any hero image */
     .cs-close {
       top: calc(12px + env(safe-area-inset-top, 0px));
       right: calc(12px + env(safe-area-inset-right, 0px));
@@ -512,9 +490,8 @@
     }
 
     .cs-hero {
-      /* let the per-case ratio set the height here too — a fixed height
-         letterboxed every hero on phones. The floor keeps the band reading as
-         a banner for the widest artwork (case 1's 3.87:1 diagram). */
+      /* the per-case ratio sets the height here too; the floor keeps case 1's
+         3.87:1 diagram reading as a banner */
       min-height: 160px;
       max-height: 42vh;
     }
@@ -527,9 +504,7 @@
       padding: 6vh 22px 11vh;
     }
 
-    /* on mobile the modal is already near full-width — drop the viewport
-       break-out (the 50% margin + translate overflowed the right edge and
-       dragged the text columns with it). Figures just fill the column. */
+    /* no break-out here: the 50% + translate trick overflowed the right edge */
     .cs-body :global(.case-figure) {
       width: 100%;
       margin-left: 0;

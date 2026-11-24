@@ -1,9 +1,7 @@
 ---
-// Fixed, morphing wordmark — the real Figma lockup, inlined from
-// src/assets/brand/wordmark.svg: a V/L monogram with "alentin"/"enzing" tails in a
-// calligraphic italic. The tails carry data-wm-tail so the morph can fade them,
-// leaving the V (.mark-v, gold) + L — exactly the collapsed monogram (same paths as
-// logo.svg / the favicon). desktop-engine.ts drives the fly-to-navbar.
+// The fixed, morphing wordmark (src/assets/brand/wordmark.svg, inlined). The
+// morph fades the data-wm-tail groups ("alentin", "enzing"), leaving the V/L
+// monogram, the same paths as logo.svg. desktop-engine.ts drives it.
 import wordmark from '../assets/brand/wordmark.svg?raw';
 ---
 
@@ -19,14 +17,11 @@ import wordmark from '../assets/brand/wordmark.svg?raw';
 
 <style>
   .wordmark {
-    /* --wm-h (the rendered height of the lockup) is a token: the mobile hero
-       stack in global.css positions the text block off it */
     position: fixed;
     left: 0;
     top: 0;
     z-index: 65;
-    /* resting position ≈ hero left, vertically present (also the
-       reduced-motion fallback); the engine takes over from here */
+    /* hero rest position; the engine takes over from here */
     transform: translate(5.5vw, 20vh);
     transform-origin: left top;
     display: block;
@@ -62,9 +57,8 @@ import wordmark from '../assets/brand/wordmark.svg?raw';
     cursor: pointer;
   }
 
-  /* ---- load-in: the V/L monogram is there from the first frame (it fades up
-     with the block); only "alentin" then "enzing" are written in — each clipped
-     open left → right on a slight slant that follows the italic (a pen angle) ---- */
+  /* ---- load-in: the V/L fades up with the block; only the tails are written
+     in, clipped open on a slant that follows the italic ---- */
   :global(html.js) .wordmark {
     opacity: 0;
     transition: opacity 0.45s ease;
@@ -80,8 +74,7 @@ import wordmark from '../assets/brand/wordmark.svg?raw';
       clip-path: polygon(-50% -50%, -12% -50%, -26% 150%, -50% 150%) fill-box;
     }
 
-    /* both words are written in one continuous, flowing sweep on identical timing,
-       so "alentin" and "enzing" glide out together and finish at the same moment */
+    /* both words write in together, on identical timing */
     :global(html.js body.is-loaded) .wordmark :global([data-wm-tail]) {
       animation: wm-write 2.4s cubic-bezier(0.4, 0.05, 0.35, 1) 0.5s both;
     }
@@ -176,9 +169,7 @@ import wordmark from '../assets/brand/wordmark.svg?raw';
       transform: none !important;
     }
 
-    /* A phone in landscape has ~400px of height, so a width-driven lockup
-       (26vw of 852px = the 9.5rem cap) ate the whole hero and collided with
-       the role line. Size it off the height there instead. */
+    /* landscape phone: size off the height, or the lockup fills the hero */
     @media (max-height: 519px) {
       .wordmark {
         top: 5svh;
